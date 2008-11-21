@@ -35,7 +35,7 @@
   
   <METS:fileSec>
     <METS:fileGrp>
-      <METS:file ID="FILE-0">
+      <METS:file ID="FILE-0" CHECKSUM="baf80e89047e19e6616597b6403a4e025bf3ebe0" CHECKSUMTYPE="SHA-1">
 	<METS:FLocat xlink:href="ateam.tiff" LOCTYPE="URL"/>
       </METS:file>
     </METS:fileGrp>
