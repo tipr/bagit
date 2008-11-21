@@ -1,0 +1,50 @@
+<METS:mets 
+    xmlns:METS="http://www.loc.gov/METS/"
+    xmlns:daitss="http://www.fcla.edu/dls/md/daitss/"
+    xmlns:mods="http://www.loc.gov/mods/v3"
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.loc.gov/METS/ http://www.loc.gov/standards/mets/version17/mets.v1-7.xsd 
+			http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd
+			http://www.fcla.edu/dls/md/daitss/ http://www.fcla.edu/dls/md/daitss/daitss.xsd"
+    OBJID="FDA0666001">
+
+  <METS:dmdSec ID="DMD-0">
+    <METS:mdWrap MDTYPE="MODS">
+      <METS:xmlData>
+	<mods:mods>
+	  <mods:titleInfo>
+	    <mods:title >The fdA Team</mods:title>
+	  </mods:titleInfo>
+	</mods:mods>
+      </METS:xmlData>
+    </METS:mdWrap>
+  </METS:dmdSec>
+
+  <METS:amdSec>
+    <METS:digiprovMD ID="DPMD-0">
+      <METS:mdWrap OTHERMDTYPE="DAITSS" MDTYPE="OTHER">
+	<METS:xmlData>
+	  <daitss:daitss >
+	    <daitss:AGREEMENT_INFO ACCOUNT="FDA" PROJECT="FDA"/>
+	  </daitss:daitss>
+        </METS:xmlData>
+      </METS:mdWrap>
+    </METS:digiprovMD>
+  </METS:amdSec>
+  
+  <METS:fileSec>
+    <METS:fileGrp>
+      <METS:file ID="FILE-0" CHECKSUM="baf80e89047e19e6616597b6403a4e025bf3ebe0" CHECKSUMTYPE="SHA-1">
+	<METS:FLocat xlink:href="ateam.tiff" LOCTYPE="URL"/>
+      </METS:file>
+    </METS:fileGrp>
+  </METS:fileSec>
+  
+  <METS:structMap>
+    <METS:div>
+      <METS:fptr FILEID="FILE-0"/>
+    </METS:div>
+  </METS:structMap>
+
+</METS:mets>
