@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mets xmlns="http://www.loc.gov/METS/" OBJID="FDA0666001">
-
+<mets xmlns="http://www.loc.gov/METS/"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      OBJID="E20081121_AAAAEW"
+      LABEL="FDA0666001">
+  
   <!-- Based on  http://wiki.fcla.edu:8000/TIPR/7 -->
 
   <!-- Need mechanism to keep track of affiliate's identifier. Use
        LABEL in METS header. -->
 
+  <!-- CREATEDATE = date of creation of UberDescriptor. -->
   <!-- METs agent role= DISSEMINATOR type= ORGANIZATION name =
        contributing repository identifier. (so don't have to parse out of
        OBJID) -->
+  <metsHdr CREATEDATE="2008-11-24T13:58:43-05:00">
+    <agent ROLE="DISSEMINATOR" TYPE="ORGANIZATION">
+      <name>FCLA</name>
+    </agent>
+  </metsHdr>
   
-  <!-- CREATEDATE = date of creation of UberDescriptor. -->
-
   <!-- No dmdSec.  -->
 
   <!-- Need amdSec with: -->
@@ -19,16 +26,34 @@
   <!-- no sourceMD -->
   <!-- rightsMD (see below) -->
   <!-- digiProv (see below) -->
+  <amdSec>
+    
+    <!-- Put global, summary PREMIS preservation rights in UberDescriptor. Put
+	 detailed access rights within representation. -->
+    <rightsMD ID="rights-metadata-0">
+      <mdRef LOCTYPE="URL" MDTYPE="PREMIS" xlink:href="rights.xml"/>
+    </rightsMD>
+    
+    <!-- In DigiProv point to PREMIS Events applying to our creation of Uber
+	 package. Is this transient processing information or part of the
+	 permanent provenance of the object? -->
+    <digiprovMD ID="digiprov-metadata-0">
+      <mdRef LOCTYPE="URL" MDTYPE="PREMIS" xlink:href="digiprov.xml"/>
+    </digiprovMD>
 
-
-  <!-- Put global, summary PREMIS preservation rights in UberDescriptor. Put
-       detailed access rights within representation. -->
-
-  <!-- In DigiProv point to PREMIS Events applying to our creation of Uber
-       package. Is this transient processing information or part of the
-       permanent provenance of the object? -->
-
+  </amdSec>
+  
   <!-- FileSec points to representation descriptors. -->
+  <fileSec>
+    <fileGrp>
+      <file ID="file-0" CHECKSUM="0f54ff41ae805cef2cc36ae17b4041d1dba32b0c" CHECKSUMTYPE="SHA-1">
+	<FLocat LOCTYPE="URL" xlink:href="rep-original.xml"/>
+      </file>
+      <file ID="file-1" CHECKSUM="0f54ff41ae805cef2cc36ae17b4041d1dba32b0c" CHECKSUMTYPE="SHA-1">
+	<FLocat LOCTYPE="URL" xlink:href="rep-current.xml"/>
+      </file>
+    </fileGrp>
+  </fileSec>
 
   <!-- The current version (last, best representation) is designated in the
        structMap by div attribute type= current. Use attribute order to
@@ -38,7 +63,17 @@
   
   <!-- r(n) is the core TIPR exchange descriptor.  -->
   <structMap>
-    <div/>
-  </structMap>
+    <div>
 
+      <div TYPE="original">
+	<fptr FILEID="file-0"/>
+      </div>
+
+      <div TYPE="current">
+	<fptr FILEID="file-1"/>
+      </div>
+
+    </div>
+  </structMap>
+  
 </mets>
