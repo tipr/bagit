@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/daitss/" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes_LOC.xsd"></xsd:include>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining specifications corresponding to file formats recognized by 
+			daitss.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="SPECIFICATION" type="SpecificationType"></xsd:element>
+	
+	<xsd:complexType name="SpecificationType">
+  		<xsd:sequence>
+  			<xsd:element name="ID" type="SpecificationIdType"></xsd:element>
+  			<xsd:element name="NUMBER" type="VarChar64Type" minOccurs="0"></xsd:element>
+  			<xsd:element name="NAME" type="VarChar255Type"></xsd:element>
+  			<xsd:element name="DESCRIPTION" type="VarChar255Type"></xsd:element>
+  			<xsd:element name="DATE" type="DateType" minOccurs="0"></xsd:element>
+  			<xsd:element name="MEDIUM" type="SpecificationMediumType"></xsd:element>
+  			<xsd:element name="SUBJECT" type="VarChar64Type"></xsd:element>
+  			<xsd:element name="AUTHOR_LIST" type="VarChar255Type"></xsd:element>
+  			<xsd:element name="PUBLISHER_LIST" type="VarChar255Type"></xsd:element>
+  			<xsd:element name="LOCATION" type="DocumentLocationCodeType"></xsd:element>
+  			<xsd:element name="PAGE_COUNT" type="SmallInt5UnsignedType" minOccurs="0"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:simpleType name="SpecificationIdType">
+		<xsd:restriction base="Int10UnsignedType"></xsd:restriction>
+	</xsd:simpleType>
+		
+	<xsd:simpleType name="SpecificationMediumType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="PAPER-UNBOUND"></xsd:enumeration>
+			<xsd:enumeration value="BINDER"></xsd:enumeration>
+			<xsd:enumeration value="BOOK"></xsd:enumeration>
+			<xsd:enumeration value="CD"></xsd:enumeration>
+			<xsd:enumeration value="DVD"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>		
+		
+</xsd:schema>
+

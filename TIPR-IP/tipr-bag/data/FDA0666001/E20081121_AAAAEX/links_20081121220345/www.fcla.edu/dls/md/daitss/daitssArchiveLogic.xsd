@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ -->
+<xsd:schema 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      	xmlns="http://www.fcla.edu/dls/md/daitss/"
+        targetNamespace="http://www.fcla.edu/dls/md/daitss/"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes.xsd"/>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining partner agreements related to preservation level
+			of formats.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="ARCHIVE_LOGIC" type="ArchiveLogicType"/>
+		
+	<xsd:complexType name="ArchiveLogicType">
+  		<xsd:sequence>
+  			<xsd:element name="ID" type="ArchiveLogicIdType"/>
+  			<xsd:element name="ACCOUNT_PROJECT" type="AccountProjectIdType"/>
+  			<xsd:element name="START_DATE" type="DateType"/>
+  			<xsd:element name="END_DATE" type="DateType" minOccurs="0"/>
+  			<xsd:element name="MEDIA_TYPE" type="MediaType"/>
+  			<xsd:element name="PRES_LEVEL" type="LogicalPresLevelType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:simpleType name="ArchiveLogicIdType">
+		<xsd:restriction base="VarChar32Type"/>
+	</xsd:simpleType>
+	
+</xsd:schema>
+

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ -->
+<xsd:schema 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      	xmlns="http://www.fcla.edu/dls/md/daitss/"
+        targetNamespace="http://www.fcla.edu/dls/md/daitss/"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes.xsd"/>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata corresponding to events in DAITSS. Events can happen to 
+			any ype of ArchiveEntity which includes intellection entities and data files.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="EVENT" type="EventType"/>
+	
+	<xsd:complexType name="EventType">
+  		<xsd:sequence>
+  			<xsd:element name="ID" type="EventIDType"/>
+  			<xsd:element name="OID" type="OIDType"/>
+  			<xsd:element name="EVENT_TYPE" type="EventTypeType"/>
+  			<xsd:element name="DATE_TIME" type="DateTimeType"/>
+  			<xsd:element name="EVENT_PROCEDURE" type="VarChar255Type"/>
+  			<xsd:element name="OUTCOME" type="EventOutcomeType"/>
+  			<xsd:element name="NOTE" type="VarChar255Type"/>
+  			<xsd:element name="REL_OID" type="OIDType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+		
+	<xsd:simpleType name="EventIDType">
+		<xsd:restriction base="BigInt20Type"/>
+	</xsd:simpleType>
+	
+		
+	<xsd:simpleType name="EventTypeType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="CPD"/>
+			<xsd:enumeration value="CPU"/>
+			<xsd:enumeration value="CV"/>
+			<xsd:enumeration value="D"/>
+			<xsd:enumeration value="DEL"/>
+			<xsd:enumeration value="DLK"/>
+			<xsd:enumeration value="I"/>
+			<xsd:enumeration value="L"/>
+			<xsd:enumeration value="M"/>
+			<xsd:enumeration value="N"/>
+			<xsd:enumeration value="RM"/>
+			<xsd:enumeration value="UNKNOWN"/>
+			<xsd:enumeration value="VC"/>
+			<xsd:enumeration value="WA"/>			
+			<xsd:enumeration value="WO"/>			
+		</xsd:restriction>
+	</xsd:simpleType>			
+
+	<xsd:simpleType name="EventOutcomeType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="UNKNOWN"/>
+			<xsd:enumeration value="N/A"/>
+			<xsd:enumeration value="SUCCESS"/>
+			<xsd:enumeration value="P_SUCCESS"/>
+			<xsd:enumeration value="FAIL"/>
+		</xsd:restriction>
+	</xsd:simpleType>			
+		
+</xsd:schema>
+
+
+
+
+
+
+
+
+

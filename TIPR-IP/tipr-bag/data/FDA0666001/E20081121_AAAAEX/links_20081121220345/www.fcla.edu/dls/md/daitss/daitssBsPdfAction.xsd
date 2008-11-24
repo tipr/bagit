@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ -->
+<xsd:schema 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      	xmlns="http://www.fcla.edu/dls/md/daitss/"
+        targetNamespace="http://www.fcla.edu/dls/md/daitss/"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes.xsd"/>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining association between pdf files and the actions they contain.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="BS_PDF_ACTION" type="BsPdfActionType"/>
+	
+	<xsd:complexType name="BsPdfActionType">
+  		<xsd:sequence>
+  			<xsd:element name="BSID" type="BsidType"/>
+  			<xsd:element name="PDF_ACTION" type="PdfActionCodeType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+		
+</xsd:schema>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/daitss/" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes_LOC.xsd"></xsd:include>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata elements corresponding to audio bistreams.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="BS_AUDIO_WAVE" type="BSAudioWaveType"></xsd:element>
+		
+	<xsd:complexType name="BSAudioWaveType">
+  		<xsd:sequence>
+  			<xsd:element name="DFID" type="DfidType"></xsd:element>
+  			<xsd:element name="BSID" type="BsidType"></xsd:element>
+  			<xsd:element name="VALID_BITS_PER_SAMPLE" type="Int10UnsignedType" minOccurs="0"></xsd:element>
+  			<xsd:element name="SAMPLES_PER_BLOCK" type="Int10UnsignedType" minOccurs="0"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>
+

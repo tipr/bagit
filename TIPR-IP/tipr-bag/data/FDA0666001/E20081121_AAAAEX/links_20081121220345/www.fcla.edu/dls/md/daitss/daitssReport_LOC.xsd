@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+     2006-1-30 Withdrawal elements added
+  --><xsd:schema xmlns="http://www.fcla.edu/dls/md/daitss/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+  <xsd:include schemaLocation="daitssAgreementInfo_LOC.xsd"></xsd:include>
+  
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      Schema defining the reporting system used in daitss.      
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="REPORT" type="reportType"></xsd:element>
+
+  <xsd:complexType name="reportType">
+    <xsd:choice>
+      <xsd:element name="INGEST" type="ingestType"></xsd:element>
+      <xsd:element name="DISSEMINATION" type="ingestType"></xsd:element>
+      <xsd:element name="WITHDRAWAL" type="withdrawalType"></xsd:element>
+      <xsd:element name="ERROR" type="errorType"></xsd:element>
+    </xsd:choice>
+  </xsd:complexType>
+
+  <xsd:complexType name="ingestType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	Represents a summary of an ingest.
+	ingest ::= accountInfo, files, 
+	ingest := ieid, time, packageName
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ref="AGREEMENT_INFO"></xsd:element>
+      <xsd:element name="FILES" type="fileSectionType"></xsd:element>
+      <xsd:element name="EVENTS" type="eventSectionType" minOccurs="0"></xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="IEID" type="xsd:string"></xsd:attribute>
+    <xsd:attribute name="INGEST_TIME" type="xsd:dateTime"></xsd:attribute>
+    <xsd:attribute name="PACKAGE" type="xsd:string"></xsd:attribute>
+  </xsd:complexType>
+  
+  <xsd:complexType name="errorType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	Represents a package level error.
+	error ::= message
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="MESSAGE" type="xsd:string"></xsd:element>
+      <xsd:element name="PACKAGE" type="xsd:string"></xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="REJECT_TIME" type="xsd:dateTime"></xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:complexType name="withdrawalType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        Represents a package withdrawal.
+        withdrawal ::= message
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="FILE" type="fileType" minOccurs="1" maxOccurs="unbounded"></xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="WITHDRAWAL_TIME" type="xsd:dateTime"></xsd:attribute>
+    <xsd:attribute name="AGENT" type="xsd:string"></xsd:attribute>
+    <xsd:attribute name="TYPE" type="withdrawalRequestType"></xsd:attribute>
+    <xsd:attribute name="IEID" type="xsd:string"></xsd:attribute>
+    <xsd:attribute name="PACKAGE_NAME" type="xsd:string"></xsd:attribute>
+    <xsd:attribute name="NOTE" type="xsd:string"></xsd:attribute>
+  </xsd:complexType>
+  
+  <xsd:complexType name="fileSectionType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	fileSectionType ::= file+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="FILE" type="fileType" maxOccurs="unbounded"></xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="eventSectionType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	eventSectionType ::= event+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="EVENT" type="eventType" maxOccurs="unbounded"></xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="fileType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	Describes a file.
+	file ::= comment, messageDigests+, storage description*, event+, brokenLink+, anomaly*
+	file := id, path, size, preservation, origin, action,
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="COMMENT" type="xsd:string" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+      <xsd:element name="MESSAGE_DIGEST" type="mdType" minOccurs="1" maxOccurs="unbounded"></xsd:element>
+      <xsd:element name="STORAGE" type="xsd:string" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+      <xsd:element name="EVENT" type="eventType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+      <xsd:element name="BROKEN_LINK" type="xsd:string" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+      <xsd:element name="WARNING" type="warningType" minOccurs="0" maxOccurs="unbounded"></xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="DFID" type="xsd:string" use="required"></xsd:attribute>
+    <xsd:attribute name="PATH" type="xsd:string" use="required"></xsd:attribute>
+    <xsd:attribute name="SIZE" type="xsd:integer" use="required"></xsd:attribute>
+    <xsd:attribute name="PRESERVATION" type="PresLevelType"></xsd:attribute>
+    <xsd:attribute name="ORIGIN" type="fileOriginType"></xsd:attribute>
+    <xsd:attribute name="GLOBAL" type="xsd:boolean"></xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:simpleType name="fileOriginType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	Possible file origins
+	fileOriginType := archive|depositor|internet|unknown
+      </xsd:documentation>
+    </xsd:annotation> 
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="ARCHIVE"></xsd:enumeration>
+      <xsd:enumeration value="DEPOSITOR"></xsd:enumeration>
+      <xsd:enumeration value="INTERNET"></xsd:enumeration>
+      <xsd:enumeration value="UNKNOWN"></xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="fileActionType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	Possible file actions
+	fileActionType := ingested|globlaized
+      </xsd:documentation>
+    </xsd:annotation> 
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="INGESTED"></xsd:enumeration>
+      <xsd:enumeration value="GLOBALIZED"></xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="eventType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	event ::= procedure, note?
+	event := outcome, time
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="PROCEDURE" type="xsd:string"></xsd:element>
+      <xsd:element name="NOTE" type="xsd:string"></xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="OUTCOME" type="eventOutcomeType"></xsd:attribute>
+    <xsd:attribute name="TIME" type="xsd:dateTime"></xsd:attribute>
+  </xsd:complexType>
+
+  <xsd:complexType name="warningType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	String representing an anomaly.
+	anomaly := code
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="CODE" type="xsd:string" use="required"></xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  
+  <xsd:complexType name="mdType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	String representing a message digest.
+	messageDigestType := algorithm
+      </xsd:documentation>
+    </xsd:annotation> 
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="ALGORITHM" type="mdAlgorithm" use="required"></xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:simpleType name="eventOutcomeType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	presLevelType := UNKNOWN|N/A|SUCCESS|P_SUCCESS|FAIL
+      </xsd:documentation>
+    </xsd:annotation> 
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="UNKNOWN"></xsd:enumeration>
+      <xsd:enumeration value="N/A"></xsd:enumeration>
+      <xsd:enumeration value="SUCCESS"></xsd:enumeration>
+      <xsd:enumeration value="P_SUCCESS"></xsd:enumeration>
+      <xsd:enumeration value="FAIL"></xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="mdAlgorithm">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+	Codes to identify message digest algorithms.
+	mdAlgorithm := HAVAL|MD5|SHA-1|SHA-256|SHA-384|SHA-512|TIGER|WHIRLPOOL
+      </xsd:documentation>
+    </xsd:annotation> 
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="HAVAL"></xsd:enumeration>
+      <xsd:enumeration value="MD5"></xsd:enumeration>
+      <xsd:enumeration value="SHA-1"></xsd:enumeration>
+      <xsd:enumeration value="SHA-256"></xsd:enumeration>
+      <xsd:enumeration value="SHA-384"></xsd:enumeration>
+      <xsd:enumeration value="SHA-512"></xsd:enumeration>
+      <xsd:enumeration value="TIGER"></xsd:enumeration>
+      <xsd:enumeration value="WHIRLPOOL"></xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="withdrawalRequestType">
+    <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+        Codes to identify withdrawal types
+        withdrawalType := ACCOUNT|ARCHIVE
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="ACCOUNT"></xsd:enumeration>
+      <xsd:enumeration value="ARCHIVE"></xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>
+

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ -->
+<xsd:schema 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      	xmlns="http://www.fcla.edu/dls/md/daitss/"
+        targetNamespace="http://www.fcla.edu/dls/md/daitss/"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes.xsd"/>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata corresponding to the Admin/ArchiveEntity level of the 
+			DAITSS object hierarchy.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="ADMIN" type="AdminType"/>
+		
+	<xsd:complexType name="AdminType">
+  		<xsd:sequence>
+  			<xsd:element name="OID" type="OIDType"/>
+  			<xsd:element name="INGEST_TIME" type="DateTimeType"/>
+  			<xsd:element name="ACCOUNT_PROJECT" type="AccountProjectIdType"/>
+  			<xsd:element name="SUB_ACCOUNT" type="SubAccountIdType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:simpleType name="OIDType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="(E|F)\d{8}_[A-Z]{6}"/>
+		</xsd:restriction>
+	</xsd:simpleType>	
+</xsd:schema>
+
+
+

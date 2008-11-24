@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ -->
+<xsd:schema 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      	xmlns="http://www.fcla.edu/dls/md/daitss/"
+        targetNamespace="http://www.fcla.edu/dls/md/daitss/"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes.xsd"/>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata corresponding to text bitstreams
+			in DAITSS.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="BS_TEXT" type="BSTextType"/>
+	
+	<xsd:complexType name="BSTextType">
+  		<xsd:sequence>
+  			<xsd:element name="DFID" type="DfidType"/>
+  			<xsd:element name="BSID" type="BsidType"/>
+  			<xsd:element name="CHARSET" type="VarChar255Type"/>
+  			<xsd:element name="CHARSET_ORIGIN" type="OriginType"/>
+  			<xsd:element name="LINE_BREAK" type="VarChar16Type"/>
+  			<xsd:element name="NATL_LANG" type="VarChar16Type"/>
+  			<xsd:element name="NUM_LINES" type="BigInt20Type"/>
+		</xsd:sequence>
+	</xsd:complexType>
+		
+</xsd:schema>
+
+
+
+
+
+
+
