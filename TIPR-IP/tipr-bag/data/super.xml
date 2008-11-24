@@ -1,5 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <mets xmlns="http://www.loc.gov/METS/" OBJID="FDA0666001">
+
+  <!-- Based on  http://wiki.fcla.edu:8000/TIPR/7 -->
+
+  <!-- Need mechanism to keep track of affiliate's identifier. Use
+       LABEL in METS header. -->
+
+  <!-- METs agent role= DISSEMINATOR type= ORGANIZATION name =
+       contributing repository identifier. (so don't have to parse out of
+       OBJID) -->
+  
+  <!-- CREATEDATE = date of creation of UberDescriptor. -->
+
+  <!-- No dmdSec.  -->
+
+  <!-- Need amdSec with: -->
+  <!-- no techMD -->
+  <!-- no sourceMD -->
+  <!-- rightsMD (see below) -->
+  <!-- digiProv (see below) -->
+
+
+  <!-- Put global, summary PREMIS preservation rights in UberDescriptor. Put
+       detailed access rights within representation. -->
+
+  <!-- In DigiProv point to PREMIS Events applying to our creation of Uber
+       package. Is this transient processing information or part of the
+       permanent provenance of the object? -->
+
+  <!-- FileSec points to representation descriptors. -->
+
+  <!-- The current version (last, best representation) is designated in the
+       structMap by div attribute type= current. Use attribute order to
+       indicate historical order of representations from earliest to most
+       recent. So original, if there is an original, is first and has
+       attribute type= original. -->
+  
+  <!-- r(n) is the core TIPR exchange descriptor.  -->
   <structMap>
     <div/>
   </structMap>
+
 </mets>

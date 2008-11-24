@@ -1,4 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <mets xmlns="http://www.loc.gov/METS/">
+
+  <!-- based from: http://wiki.fcla.edu:8000/TIPR/7 -->
+
+  <!-- METS header = required. 
+       Must contain OBJID with identifier assigned by submitting
+       repository.  For Bill, this will be his AIP identifier.  CREATEDATE
+       and agent with same conventions as for UberDescriptor. -->
+
+  <!-- dmdSec = optional. 
+       No obligation by receiving repository to do anything with,
+       other than retain and give back. -->
+
+  <!-- amdSec: techMD = optional. 
+       No obligation by receiving repository to do anything with,
+       other than retain and give back. -->
+
+  <!-- amdSec: rightsMD = optional. 
+       Must be in PREMIS rights format, receiving repository must
+       support to the extent it supports rights at all. Note: decision which
+       repositories to exchange with may hinge on the extent of their support
+       for rights. -->
+
+  <!-- amdSec: sourceMD = do not use. 
+       Use PREMIS source in preference. -->
+  
+  <!-- amdSec: digiProv = use if applicable. 
+       Use mdref to point to PREMIS object and/or event information
+       within PREMIS wrapper. -->
+
+  <!-- fileSec = required. 
+       Points to files. Use single fileGrp and flocats. -->
+  
+  <!-- structMap = required. 
+       Flat until further notice. -->
   <structMap>
     <div/>
   </structMap>
