@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mets xmlns="http://www.loc.gov/METS/">
-
+<mets xmlns="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
+      OBJID="E20081121_AAAAEW"
+      LABEL="FDA0666001">
+  
   <!-- based from: http://wiki.fcla.edu:8000/TIPR/7 -->
-
+  
   <!-- METS header = required. 
        Must contain OBJID with identifier assigned by submitting
        repository.  For Bill, this will be his AIP identifier.  CREATEDATE
        and agent with same conventions as for UberDescriptor. -->
-
+  <metsHdr CREATEDATE="2008-11-24T13:58:43-05:00">
+    <agent ROLE="DISSEMINATOR" TYPE="ORGANIZATION">
+      <name>FCLA</name>
+    </agent>
+  </metsHdr>
+  
   <!-- dmdSec = optional. 
        No obligation by receiving repository to do anything with,
        other than retain and give back. -->
+  <!-- nothing to see here ... move alone -->
 
   <!-- amdSec: techMD = optional. 
        No obligation by receiving repository to do anything with,
-       other than retain and give back. -->
+       other than retain and give back. -->  
+  <!-- nothing to see here ... move alone -->
 
   <!-- amdSec: rightsMD = optional. 
        Must be in PREMIS rights format, receiving repository must
        support to the extent it supports rights at all. Note: decision which
        repositories to exchange with may hinge on the extent of their support
        for rights. -->
+  <!-- nothing to see here ... move alone -->
 
   <!-- amdSec: sourceMD = do not use. 
        Use PREMIS source in preference. -->
@@ -28,13 +38,27 @@
   <!-- amdSec: digiProv = use if applicable. 
        Use mdref to point to PREMIS object and/or event information
        within PREMIS wrapper. -->
+  <!-- nothing to see here ... move alone -->
 
   <!-- fileSec = required. 
        Points to files. Use single fileGrp and flocats. -->
+  <fileSec>
+    <fileGrp>
+      <file ID="file-0" CHECKSUM="34bcb73f6ea7c852989b5dd108060c1bda989ddb" CHECKSUMTYPE="SHA-1">
+	<FLocat LOCTYPE="URL" xlink:href="FDA0666001/E20081121_AAAAEW/FDA0666001.xml"/>
+      </file>
+      <file ID="file-1" CHECKSUM="cd6244779b6f21b7000b55403d9451cf87f1bf1b" CHECKSUMTYPE="SHA-1">
+	<FLocat LOCTYPE="URL" xlink:href="FDA0666001/E20081121_AAAAEW/ateam.tiff"/>
+      </file>
+    </fileGrp>
+  </fileSec>
   
-  <!-- structMap = required. 
+  <!-- structMap = required.
        Flat until further notice. -->
   <structMap>
-    <div/>
+    <div>
+      <fptr FILEID="file-0"/>
+      <fptr FILEID="file-1"/>
+    </div>
   </structMap>
 </mets>
