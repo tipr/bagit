@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ -->
+<xsd:schema 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      	xmlns="http://www.fcla.edu/dls/md/daitss/"
+        targetNamespace="http://www.fcla.edu/dls/md/daitss/"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes.xsd"/>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata corresponding to format attributes recognized by DAITSS. 
+			Formats can have up to 64 attributes which are represented by a 64-bit binary string.
+			Each bit position corresponds to a format attribute. DataFiles store information about
+			the attributes they exhibit. If the attribute's bit is set in a DataFile's FORMAT_ATTRIBUTES
+			field, then that attribute is present in the DataFile. 
+			
+			The purpose of these metadata is to define which attributes correspond to which bits in 
+			a format attributes value.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="FORMAT_ATTRIBUTE" type="FormatAttributeType"/>
+	
+	<xsd:complexType name="FormatAttributeType">
+  		<xsd:sequence>
+  			<xsd:element name="NAME" type="FormatAttributeNameType"/>
+  			<xsd:element name="FORMAT" type="FormatCodeType"/>
+  			<xsd:element name="DESCRIPTION" type="VarChar255Type"/>
+		</xsd:sequence>
+	</xsd:complexType>			
+		
+	<xsd:simpleType name="FormatAttributeNameType">
+		<xsd:restriction base="VarChar64Type"/>
+	</xsd:simpleType>
+	
+</xsd:schema>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/daitss/" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes_LOC.xsd"></xsd:include>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata corresponding to Account information used for submission, etc. 
+			and agrgeements. Stores all account names and their associated contacts (admin + tech) 
+			and descriptions.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="ACCOUNT" type="AccountType"></xsd:element>
+		
+	<xsd:complexType name="AccountType">
+  		<xsd:sequence>
+  			<xsd:element name="CODE" type="AccountCodeType">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+						A unique code identifying an account (i.e.'UF').
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>
+  			
+  			<xsd:element name="NAME" type="VarChar255Type">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+						The full name of the organization or individual holding this account.
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>
+  			
+  			<xsd:element name="DESCRIPTION" type="VarChar255Type" minOccurs="0">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+						A description of the organization or individual holding this account.
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>
+  			
+  			<xsd:element name="ADMIN_CONTACT" type="ContactIdType">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+						Reference to the contact responsibile for administration and billing for this account.
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>
+  			
+  			<xsd:element name="TECH_CONTACT" type="ContactIdType">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+						Reference to the contact responsibile for technical issues for this account.
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>
+  		
+  			<xsd:element name="REPORT_EMAIL" type="VarChar255Type">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+						The email address to which all reports will be sent for items associated with this account.
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>  		
+  			
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:simpleType name="AccountCodeType">
+		<xsd:restriction base="VarChar16Type"></xsd:restriction>			
+	</xsd:simpleType>
+	
+</xsd:schema>
+

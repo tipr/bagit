@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/daitss/" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes_LOC.xsd"></xsd:include>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata elements corresponding to AVI files.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="AVI_FILE" type="AviFileType"></xsd:element>
+		
+	<xsd:complexType name="AviFileType">
+  		<xsd:sequence>
+  			<xsd:element name="DFID" type="DfidType"></xsd:element>
+  			<xsd:element name="MAX_DATA_RATE" type="Int10UnsignedType"></xsd:element>
+  			<xsd:element name="TOTAL_FRAMES" type="Int10UnsignedType"></xsd:element>
+  			<xsd:element name="NO_OF_STREAMS" type="Int10UnsignedType"></xsd:element>
+  			<xsd:element name="INTIAL_FRAMES" type="Int10UnsignedType"></xsd:element>
+  			<xsd:element name="DURATION" type="xsd:time"></xsd:element>
+  			<xsd:element name="HAS_INDEX" type="TrueFalseType"></xsd:element>
+  			<xsd:element name="MUST_USE_INDEX" type="TrueFalseType"></xsd:element>
+  			<xsd:element name="IS_INTERLEAVED" type="TrueFalseType"></xsd:element>
+  			<xsd:element name="WAS_CAPTURED" type="TrueFalseType"></xsd:element>
+  			<xsd:element name="COPYRIGHTED" type="TrueFalseType"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>
+

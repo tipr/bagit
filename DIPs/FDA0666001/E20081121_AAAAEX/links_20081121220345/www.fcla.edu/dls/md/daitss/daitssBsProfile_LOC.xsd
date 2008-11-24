@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/daitss/" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes_LOC.xsd"></xsd:include>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining information about recognized bitstream profiles.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="BS_PROFILE" type="BsProfileType"></xsd:element>
+	
+	<xsd:complexType name="BsProfileType">
+  		<xsd:sequence>
+  			<xsd:element name="NAME" type="BsProfileNameType"></xsd:element>
+  			<xsd:element name="DESCRIPTION" type="VarChar255Type"></xsd:element>
+  			<xsd:element name="SPECIFICATION" type="SpecificationIdType"></xsd:element>
+  			
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:simpleType name="BsProfileNameType">
+		<xsd:restriction base="VarChar255Type"></xsd:restriction>
+	</xsd:simpleType>
+		
+</xsd:schema>
+

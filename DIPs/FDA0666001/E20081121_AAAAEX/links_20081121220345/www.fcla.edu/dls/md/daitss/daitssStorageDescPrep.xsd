@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ -->
+<xsd:schema 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      	xmlns="http://www.fcla.edu/dls/md/daitss/"
+        targetNamespace="http://www.fcla.edu/dls/md/daitss/"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes.xsd"/>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining information about the processes applied to a data file 
+			in order to prepare the data file for storage. More than one preparation 
+			step may be applied to a data file and order is important, so the sequence
+			number (range of 1-255 inclusive) of the step must be recorded.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="STORAGE_DESC_PREP" type="StorageDescPrepType"/>
+	
+	<xsd:complexType name="StorageDescPrepType">
+  		<xsd:sequence>
+			<xsd:element name="ID" type="BigInt20Type"/>
+  			<xsd:element name="STORAGE_DESC" type="BigInt20Type"/>
+  			<xsd:element name="PROCESS" type="StoragePrepProcessType"/>
+  			<xsd:element name="SEQUENCE" type="TinyIntUnsignedType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+		
+</xsd:schema>
+
+
+
+
+
+
+
+
+

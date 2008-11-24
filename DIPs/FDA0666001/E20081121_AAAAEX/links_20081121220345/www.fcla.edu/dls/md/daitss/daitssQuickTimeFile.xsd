@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ -->
+<xsd:schema 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      	xmlns="http://www.fcla.edu/dls/md/daitss/"
+        targetNamespace="http://www.fcla.edu/dls/md/daitss/"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes.xsd"/>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata elements corresponding to QuickTime files.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="QUICKTIME_FILE" type="QuickTimeFileType"/>
+		
+	<xsd:complexType name="QuickTimeFileType">
+  		<xsd:sequence>
+  			<xsd:element name="DFID" type="DfidType"/>
+  			<xsd:element name="DURATION" type="xsd:time"/>
+  			<xsd:element name="HAS_DISPLAY_MATRIX" type="TrueFalseType"/>
+  			<xsd:element name="HAS_USER_DATA" type="TrueFalseType"/>
+  			<xsd:element name="HAS_COLORTABLE" type="TrueFalseType"/>
+  			<xsd:element name="HAS_COMPRESSED_RESOURCE" type="TrueFalseType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+</xsd:schema>
+
+
+
+
+

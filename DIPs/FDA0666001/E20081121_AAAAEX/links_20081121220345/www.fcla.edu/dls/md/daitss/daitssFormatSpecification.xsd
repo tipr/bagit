@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ -->
+<xsd:schema 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      	xmlns="http://www.fcla.edu/dls/md/daitss/"
+        targetNamespace="http://www.fcla.edu/dls/md/daitss/"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes.xsd"/>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata to link formats to their specification(s).
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="FORMAT_SPECIFICATION" type="FormatSpecificationType"/>
+	
+	<xsd:complexType name="FormatSpecificationType">
+  		<xsd:sequence>
+  			<xsd:element name="FORMAT" type="FormatCodeType"/>
+  			<xsd:element name="SPECIFICATION" type="SpecificationIdType"/>
+  			<xsd:element name="AUTHORITY_LEVEL" type="AuthorityLevelType">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">					
+    					An indicator of the authoritativeness of the specification with
+    					respect to the format it describes. Since some specifications may
+    					apply to more than one format, the authority level is variable
+    					depending on context.	
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>  			
+		</xsd:sequence>
+	</xsd:complexType>
+		
+	<xsd:simpleType name="AuthorityLevelType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="INFORMATIONAL"/>
+			<xsd:enumeration value="SUPPLEMENTAL"/>
+			<xsd:enumeration value="PRIMARY"/>
+		</xsd:restriction>
+	</xsd:simpleType>		
+		
+</xsd:schema>

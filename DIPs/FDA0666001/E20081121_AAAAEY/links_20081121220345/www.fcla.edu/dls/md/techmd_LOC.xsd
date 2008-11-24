@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--<!DOCTYPE xs:schema PUBLIC "-//W3C//DTD XMLSCHEMA 200102//EN" "XMLSchema.dtd">-->
+<!-- 
+	CHANGE HISTORY
+	CTV-12/30/02
+	Capitalized all attributes and values:
+		device->TYPE
+		scannerSettings->GAMMA		
+		scannerSettings->BRIGHTNESS
+		scannerSettings->CONTRAST
+		scannerSettings->SATURATION
+		scannerSettings->PERCENTAGE
+		creationMethod->SOFTWARE
+		creationMethod->VERSION
+		compression->NAME
+		compression->LEVEL
+		sourceInfo->REF
+		storage->SEGMENT
+			values: STRIP,TILE
+		storage->PLANARCONFIGURATION
+			values: PLANAR, CHUNKY, UNKNOWN		
+		samplingFrequency->PLANE
+			values: DIGITALCAMERA, OBJECT, SOURCEOBJECT
+		descreening->SOFTWARE
+		descreening->SETTINGS
+		(dimensionsGroup)->X
+		(dimensionsGroup)->Y
+		(dimensionsGroup)->UNIT
+			values: INCH, CENTIMETER, PIXEL, NONE
+	orientation changed to include a authority list (enumeration) for element content
+ --><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/techmd/" targetNamespace="http://www.fcla.edu/dls/md/techmd/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+
+  	<xs:annotation>
+    	<xs:documentation xml:lang="en">
+			Schema defining technical metadata elements relating to a collection of
+			or individual digital files. 
+			This schema has been designed as an extension schema 
+			to the METS format. Components defined and declared here may be used 
+			in a METS mdWrap/xmlData section. 
+			
+			Developer: Christopher Vicary fclctv@nersp.nerdc.ufl.edu
+			Creation Date: 12/17/2002
+			Last Modification Date: 12/17/2002
+	    </xs:documentation>
+  	</xs:annotation>
+
+  	<xs:element name="captureInfo" type="captureInfoType"></xs:element>
+  	<xs:element name="creationMethod" type="creationMethodType"></xs:element>
+  	<xs:element name="compression" type="compressionType"></xs:element>
+	<xs:element name="sourceInfo" type="sourceInfoType"></xs:element>
+  	<xs:element name="image" type="imageType"></xs:element>
+  	<xs:element name="creator" type="creatorType"></xs:element>
+
+	
+<!-- 
+	the group structure is borrowed from dc.xsd although I'm not sure
+	what the practical use is.
+	-->
+  	<xs:group name="elementsGroup">
+  		<xs:sequence>
+	    	<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="captureInfo" minOccurs="0"></xs:element>
+				<xs:element ref="creationMethod" minOccurs="0"></xs:element>
+				<xs:element ref="compression" minOccurs="0"></xs:element>
+				<xs:element ref="sourceInfo" minOccurs="0"></xs:element>		
+				<xs:element ref="image" minOccurs="0"></xs:element>
+				<xs:element ref="creator" minOccurs="0"></xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:group>
+	
+	<xs:complexType name="captureInfoType">
+		<xs:sequence>	
+			<xs:element name="capture" type="techmdElement" minOccurs="0"></xs:element>
+			<xs:element name="device" minOccurs="0">			
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="techmdElement">
+							<xs:attribute name="TYPE" type="xs:string"></xs:attribute>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>				
+			</xs:element>
+			<xs:element name="scannerSettings" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="GAMMA" type="xs:string"></xs:attribute>
+					<xs:attribute name="BRIGHTNESS" type="xs:string"></xs:attribute>
+					<xs:attribute name="CONTRAST" type="xs:string"></xs:attribute>
+					<xs:attribute name="SATURATION" type="xs:string"></xs:attribute>
+					<xs:attribute name="PERCENTAGE" type="xs:string"></xs:attribute>
+				</xs:complexType>
+			</xs:element>			
+			<xs:element name="cameraSettings" type="techmdElement" minOccurs="0"></xs:element>
+			<xs:element name="light" type="techmdElement" minOccurs="0"></xs:element>
+			<xs:element name="trackingID" type="techmdElement" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="creationMethodType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="SOFTWARE" type="xs:string"></xs:attribute>
+				<xs:attribute name="VERSION" type="xs:string"></xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:complexType name="compressionType">
+		<xs:attribute name="NAME" type="xs:string"></xs:attribute>
+		<xs:attribute name="LEVEL" type="xs:string"></xs:attribute>
+	</xs:complexType>
+	
+	<xs:complexType name="sourceInfoType">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="source" type="techmdElement"></xs:element>
+			<xs:element name="dimensions">
+				<xs:complexType>
+					<xs:attributeGroup ref="dimensionsGroup"></xs:attributeGroup>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+		<xs:attribute name="REF" type="xs:string"></xs:attribute>
+	</xs:complexType>	
+	
+	<xs:complexType name="imageType">
+		<xs:sequence>	
+			<xs:element name="bitDepth" type="techmdElement" minOccurs="0"></xs:element>
+			<xs:element name="resolution" type="techmdElement" minOccurs="0"></xs:element>
+			<xs:element name="storage" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="SEGMENT" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:NMTOKEN">							
+								<xs:enumeration value="STRIP"></xs:enumeration>
+								<xs:enumeration value="TILE"></xs:enumeration>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="PLANARCONFIGURATION" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:NMTOKEN">							
+								<xs:enumeration value="CHUNKY"></xs:enumeration>
+								<xs:enumeration value="PLANAR"></xs:enumeration>
+								<xs:enumeration value="UNKNOWN"></xs:enumeration>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="samplingFrequency" minOccurs="0">
+				<xs:complexType>
+					<xs:attributeGroup ref="dimensionsGroup"></xs:attributeGroup>
+					<xs:attribute name="PLANE">
+						<xs:simpleType>
+							<xs:restriction base="xs:NMTOKEN">							
+								<xs:enumeration value="DIGITALCAMERA"></xs:enumeration>
+								<xs:enumeration value="OBJECT"></xs:enumeration>
+								<xs:enumeration value="SOURCEOBJECT"></xs:enumeration>								
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>					
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="colorSpace" type="techmdElement" minOccurs="0"></xs:element>			
+			
+<!-- check to see if we can turn this into an attribute and use dimensionsGroup -->
+			<xs:element name="dimensions" minOccurs="0">
+				<xs:complexType>
+					<xs:attributeGroup ref="dimensionsGroup"></xs:attributeGroup>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="colorManagement" type="techmdElement" minOccurs="0"></xs:element>			
+			<xs:element name="clut" type="techmdElement" minOccurs="0"></xs:element>			
+			<xs:element name="target" type="techmdElement" minOccurs="0" maxOccurs="unbounded"></xs:element>	
+			<xs:element name="descreening" type="descreeningType" minOccurs="0"></xs:element>			
+			<xs:element name="orientation" type="orientationType" minOccurs="0"></xs:element>			
+		</xs:sequence>
+	</xs:complexType>	
+	
+	<xs:complexType name="creatorType">
+		<xs:sequence>
+			<xs:element name="institution" type="techmdElement" minOccurs="0"></xs:element>
+			<xs:element name="individual" type="techmdElement" minOccurs="0"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="techmdElement">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"></xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>	
+	
+	<xs:simpleType name="orientationType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="portrait"></xs:enumeration>
+			<xs:enumeration value="landscape"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="descreeningType">
+		<xs:simpleContent>
+			<xs:extension base="techmdElement">
+				<xs:attribute name="SOFTWARE" type="xs:string"></xs:attribute>
+				<xs:attribute name="SETTINGS" type="xs:string"></xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>	
+
+	<xs:attributeGroup name="dimensionsGroup">	
+		<xs:attribute name="X" type="xs:int" use="required"></xs:attribute>
+		<xs:attribute name="Y" type="xs:int" use="required"></xs:attribute>
+		<xs:attribute name="UNIT" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:NMTOKEN">							
+					<xs:enumeration value="INCH"></xs:enumeration>
+					<xs:enumeration value="CENTIMETER"></xs:enumeration>
+					<xs:enumeration value="PIXEL"></xs:enumeration>
+					<xs:enumeration value="NONE"></xs:enumeration>								
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:attributeGroup>
+	
+</xs:schema>
+
