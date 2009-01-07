@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/daitss/" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+        
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining date formats as used by DAITSS
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	
+	<xsd:simpleType name="DateType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="\d{4}-[0-1][0-9]-[0-3][0-9]"></xsd:pattern>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="DateTimeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="\d{4}-[0-1][0-9]-[0-3][0-9]\s[0-2][0-9]:[0-5][0-9]:[0-5][0-9]"></xsd:pattern>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+</xsd:schema>
+

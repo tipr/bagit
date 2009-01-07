@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/daitss/" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+        
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining enumerated data types as used by DAITSS. Enumerated types
+			that are used by more than one table/element should be defined here. If the
+			enumeration is only used locally, it should be defined in the schema that
+			uses it.
+	    </xsd:documentation>
+  	</xsd:annotation>        
+  	  	
+	<xsd:simpleType name="LogicalPresLevelType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="BIT"></xsd:enumeration>
+			<xsd:enumeration value="FULL"></xsd:enumeration>
+			<xsd:enumeration value="NONE"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>  	
+  	
+	<xsd:simpleType name="PresLevelType">
+		<xsd:restriction base="LogicalPresLevelType">
+			<xsd:enumeration value="BIT"></xsd:enumeration>
+			<xsd:enumeration value="FULL"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="TrueFalseUnkType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="TRUE"></xsd:enumeration>
+			<xsd:enumeration value="FALSE"></xsd:enumeration>
+			<xsd:enumeration value="UNKNOWN"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>		
+	
+	<xsd:simpleType name="TrueFalseType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="TRUE"></xsd:enumeration>
+			<xsd:enumeration value="FALSE"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>		
+
+	<xsd:simpleType name="OriginType">
+	  	<xsd:annotation>
+	    	<xsd:documentation xml:lang="en">
+				Type for most origin attributes stored in the database. This DOES NOT apply 
+				to DATA_FILE.ORIGIN.
+		    </xsd:documentation>
+	  	</xsd:annotation>   	
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="ARCHIVE"></xsd:enumeration>
+			<xsd:enumeration value="DEPOSITOR"></xsd:enumeration>
+			<xsd:enumeration value="N/A"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>	
+	
+	<xsd:simpleType name="BitrateModeType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="CBR"></xsd:enumeration>
+			<xsd:enumeration value="VBR"></xsd:enumeration>
+			<xsd:enumeration value="UNKNOWN"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>	
+
+</xsd:schema>
+

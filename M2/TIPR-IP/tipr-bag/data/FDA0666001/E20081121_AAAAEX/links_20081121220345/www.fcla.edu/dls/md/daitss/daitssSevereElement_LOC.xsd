@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/daitss/" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes_LOC.xsd"></xsd:include>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining information about severe elements that may be present in 
+			data files. Severe elements may present problems during migration or 
+			normalization or, in the case of quirks, may be the result of migration 
+			or normalization.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="SEVERE_ELEMENT" type="SevereElementType"></xsd:element>
+	
+	<xsd:complexType name="SevereElementType">
+  		<xsd:sequence>
+  			<xsd:element name="CODE" type="SevereElementCodeType"></xsd:element>
+  			<xsd:element name="TYPE" type="SevereElementTypeType"></xsd:element>
+  			<xsd:element name="SEVERITY" type="VarChar32Type"></xsd:element>
+  			<xsd:element name="DESCRIPTION" type="VarChar255Type"></xsd:element>
+  			
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:simpleType name="SevereElementCodeType">
+		<xsd:restriction base="VarChar255Type"></xsd:restriction>
+	</xsd:simpleType>
+		
+	<xsd:simpleType name="SevereElementTypeType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="ANOMALY"></xsd:enumeration>
+			<xsd:enumeration value="INHIBITOR"></xsd:enumeration>
+			<xsd:enumeration value="METADATA_CONFLICT"></xsd:enumeration>
+			<xsd:enumeration value="QUIRK"></xsd:enumeration>
+			<xsd:enumeration value="LIMITATION"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>		
+		
+</xsd:schema>
+

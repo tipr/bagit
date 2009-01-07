@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ -->
+<xsd:schema 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      	xmlns="http://www.fcla.edu/dls/md/daitss/"
+        targetNamespace="http://www.fcla.edu/dls/md/daitss/"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes.xsd"/>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata elements corresponding to video bistreams.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="BS_VIDEO" type="BSVideoType"/>
+		
+	<xsd:complexType name="BSVideoType">
+  		<xsd:sequence>
+  			<xsd:element name="DFID" type="DfidType"/>
+  			<xsd:element name="BSID" type="BsidType"/>
+  			<xsd:element name="ENCODING" type="VarChar255Type"/>
+  			<xsd:element name="FRAME_RATE" type="xsd:float"/>
+  			<xsd:element name="BITS_PER_PIXEL" type="SmallInt5UnsignedType"/>
+  			<xsd:element name="FRAME_HEIGHT" type="Int10UnsignedType"/>
+  			<xsd:element name="FRAME_WIDTH" type="Int10UnsignedType"/>
+  			<xsd:element name="RES_UNIT" type="BSVideoResUnitType"/>
+  			<xsd:element name="RES_HORZ" type="xsd:float"/>
+   			<xsd:element name="RES_VERT" type="xsd:float"/>
+  			<xsd:element name="LENGTH" type="BigInt20Type"/>
+  			<xsd:element name="DATA_QUALITY" type="SmallInt5Type"/>
+  			<xsd:element name="DATA_RATE" type="xsd:float"/>
+  			<xsd:element name="BITRATE_MODE" type="BitrateModeType"/>
+  			<xsd:element name="ENABLED" type="TrueFalseType"/>
+  			<xsd:element name="BS_TABLE" type="BSTableNameType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:simpleType name="BSVideoResUnitType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="UNKNOWN"/>
+			<xsd:enumeration value="NONE"/>
+			<xsd:enumeration value="IN"/>
+			<xsd:enumeration value="CM"/>
+			<xsd:enumeration value="M"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
+
+
+
+
+

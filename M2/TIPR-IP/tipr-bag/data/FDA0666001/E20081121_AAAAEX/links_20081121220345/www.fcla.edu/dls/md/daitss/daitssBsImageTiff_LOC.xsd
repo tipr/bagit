@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/daitss/" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes_LOC.xsd"></xsd:include>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata corresponding to the tiff bitstream level of the 
+			DAITSS object hierarchy.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="BS_IMAGE_TIFF" type="BSImageTiffType"></xsd:element>
+	
+	<xsd:complexType name="BSImageTiffType">
+  		<xsd:sequence>
+  			<xsd:element name="DFID" type="DfidType"></xsd:element>
+  			<xsd:element name="BSID" type="BsidType"></xsd:element>
+  			<xsd:element name="HAS_CHROMATICITIES" type="TrueFalseUnkType"></xsd:element>
+  			<xsd:element name="NUM_STRIPS" type="Int10UnsignedType" minOccurs="0"></xsd:element>
+  			<xsd:element name="NUM_TILES" type="Int10UnsignedType" minOccurs="0"></xsd:element>
+  			<xsd:element name="PLANAR_CONFIG" type="TiffPlanarConfigType"></xsd:element>
+  			<xsd:element name="STORAGE_SEGMENT" type="TiffStorageSegmentType"></xsd:element>
+  			<xsd:element name="MAX_STRIP_BYTES" type="Int10UnsignedType" minOccurs="0"></xsd:element>
+  			<xsd:element name="ROWS_PER_STRIP" type="Int10UnsignedType" minOccurs="0"></xsd:element>
+  			<xsd:element name="MAX_TILE_BYTES" type="Int10UnsignedType" minOccurs="0"></xsd:element>
+  			<xsd:element name="TILE_LENGTH" type="Int10UnsignedType" minOccurs="0"></xsd:element>
+  			<xsd:element name="TILE_WIDTH" type="Int10UnsignedType" minOccurs="0"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:simpleType name="TiffPlanarConfigType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="UNKNOWN"></xsd:enumeration>
+			<xsd:enumeration value="PLANAR"></xsd:enumeration>
+			<xsd:enumeration value="CHUNKY"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>	
+
+	<xsd:simpleType name="TiffStorageSegmentType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="UNKNOWN"></xsd:enumeration>
+			<xsd:enumeration value="STRIP"></xsd:enumeration>
+			<xsd:enumeration value="TILE"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>	
+	
+</xsd:schema>
+

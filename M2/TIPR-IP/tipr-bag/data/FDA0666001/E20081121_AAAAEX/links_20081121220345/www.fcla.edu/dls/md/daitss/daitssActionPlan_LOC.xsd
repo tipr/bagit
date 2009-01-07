@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/daitss/" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes_LOC.xsd"></xsd:include>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata corresponding to action plans including their 
+			background documents and associates them with formats.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="ACTION_PLAN" type="ActionPlanType"></xsd:element>
+		
+	<xsd:complexType name="ActionPlanType">
+  		<xsd:sequence>
+  			<xsd:element name="ID" type="ActionPlanIdType">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+    					A unique id for the action plan.
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>  			  			
+  			
+  			<xsd:element name="LOCATION" type="DocumentLocationCodeType">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+    					The location of the action plan, whether it be physical or digital.
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>
+  			
+  			<xsd:element name="BACKGROUND_DOC" type="VarChar255Type">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+						The name/title of the document containing the background 					
+						information that was used in creating the action plan. The
+						background document is a summary of pertinent information
+						regarding the format for which the action plan was created. In
+						essence it is a literature survey created by the FDA Formats
+						Expert.    				
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>
+
+  			<xsd:element name="BACKGROUND_DOC_LOCATION" type="DocumentLocationCodeType">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+    					The location of the background document whether it be physical 
+    					or digital.
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>
+
+  			<xsd:element name="CREATE_DATE" type="DateType">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+    					The date that the action plan was finalized.
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>
+
+  			<xsd:element name="REVIEW_DATE" type="DateType">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+    					The future date when the action plan will be reviewed to determine 			
+    					if modification is necessary.
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>
+
+  			<xsd:element name="LAST_REVISION_DATE" type="DateType" minOccurs="0">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+    					The date that the action plan was last modified.
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>
+
+  			<xsd:element name="DESCRIPTION" type="VarChar255Type">
+  				<xsd:annotation>
+    				<xsd:documentation xml:lang="en">
+    					A short, general description of the action plan and the formats to
+    					which it applies
+	    			</xsd:documentation>
+  				</xsd:annotation>
+  			</xsd:element>
+
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:simpleType name="ActionPlanIdType">
+		<xsd:restriction base="Int10UnsignedType"></xsd:restriction>			
+	</xsd:simpleType>	
+	
+</xsd:schema>
+

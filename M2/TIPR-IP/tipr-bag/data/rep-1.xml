@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mets xmlns="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
+      OBJID="E20081121_AAAAEW"
+      LABEL="FDA0666001">
+  
+  <metsHdr CREATEDATE="2008-11-24T13:58:43-05:00">
+    <agent ROLE="DISSEMINATOR" TYPE="ORGANIZATION">
+      <name>FCLA</name>
+    </agent>
+  </metsHdr>
+  
+  <fileSec>
+    <fileGrp>
+      <file ID="file-0" CHECKSUM="34bcb73f6ea7c852989b5dd108060c1bda989ddb" CHECKSUMTYPE="SHA-1">
+	<FLocat LOCTYPE="URL" xlink:href="FDA0666001/E20081121_AAAAEW/FDA0666001.xml"/>
+      </file>
+      <file ID="file-1" CHECKSUM="cd6244779b6f21b7000b55403d9451cf87f1bf1b" CHECKSUMTYPE="SHA-1">
+	<FLocat LOCTYPE="URL" xlink:href="FDA0666001/E20081121_AAAAEW/ateam.tiff"/>
+      </file>
+    </fileGrp>
+  </fileSec>
+  
+  <structMap>
+    <div>
+      <fptr FILEID="file-0"/>
+      <fptr FILEID="file-1"/>
+    </div>
+  </structMap>
+
+</mets>

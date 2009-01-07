@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/daitss/" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes.xsd"/>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata elements corresponding to bistreams.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="BITSTREAM" type="BitstreamType"/>
+		
+	<xsd:complexType name="BitstreamType">
+  		<xsd:sequence>
+  			<xsd:element name="DFID" type="DfidType"/>
+  			<xsd:element name="BSID" type="BsidType"/>
+  			<xsd:element name="SEQUENCE" type="MediumInt7UnsignedType"/>
+  			<xsd:element name="LOCATION" type="VarChar255Type" minOccurs="0"/>
+  			<xsd:element name="LOCATION_TYPE" type="BitstreamLocationType"/>
+  			<xsd:element name="COMPRESSION" type="CompressionCodeType"/>
+  			<xsd:element name="BS_TABLE" type="BSTableNameType" minOccurs="0"/>
+  			<xsd:element name="ROLE" type="BitstreamRoleType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	<xsd:simpleType name="BsidType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="F\d{8}_[A-Z]{6}_\d{1,7}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="BitstreamLocationType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="FILE_BYTE_OFFSET"/>
+			<xsd:enumeration value="UNCOMPRESSED_HEADER_BYTE_OFFSET"/>
+			<xsd:enumeration value="N/A"/>
+			<xsd:enumeration value="UNKNOWN"/>
+		</xsd:restriction>
+	</xsd:simpleType>		
+	
+	<xsd:simpleType name="BitstreamRoleType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="AUDIO_MAIN"/>
+			<xsd:enumeration value="AUDIO_PREVIEW"/>
+			<xsd:enumeration value="AUDIO_MOVIE"/>
+			<xsd:enumeration value="AUDIO_POSTER"/>
+			<xsd:enumeration value="DOC_MAIN"/>
+			<xsd:enumeration value="IMG_LOW_RES"/>
+			<xsd:enumeration value="IMG_MAIN"/>
+			<xsd:enumeration value="IMG_PAGE"/>
+			<xsd:enumeration value="IMG_THUMBNAIL"/>
+			<xsd:enumeration value="IMG_TRANSPARENCY"/>
+			<xsd:enumeration value="TXT_METADATA"/>
+			<xsd:enumeration value="UNKNOWN"/>
+			<xsd:enumeration value="VIDEO_MAIN"/>
+			<xsd:enumeration value="VIDEO_PREVIEW"/>
+			<xsd:enumeration value="VIDEO_MOVIE"/>
+			<xsd:enumeration value="VIDEO_POSTER"/>
+		</xsd:restriction>
+	</xsd:simpleType>		
+
+</xsd:schema>

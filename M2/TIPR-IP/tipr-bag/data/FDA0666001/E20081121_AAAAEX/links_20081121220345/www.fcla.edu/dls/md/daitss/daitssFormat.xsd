@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ -->
+<xsd:schema 
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      	xmlns="http://www.fcla.edu/dls/md/daitss/"
+        targetNamespace="http://www.fcla.edu/dls/md/daitss/"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        xsi:schemaLocation="http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes.xsd"/>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata corresponding to format type recognized by DAITSS. 
+			Formats described here are eligible for full preservation if the value for
+			IS_SUPPORTED is TRUE.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="FORMAT" type="FormatType"/>
+	
+	<xsd:complexType name="FormatType">
+  		<xsd:sequence>
+  			<xsd:element name="CODE" type="FormatCodeType"/>
+  			<xsd:element name="MEDIA_TYPE" type="MediaType"/>
+  			<xsd:element name="MEDIA_TYPE_VERSION" type="VarChar32Type"/>
+  			<xsd:element name="VARIATION" type="VarChar20Type"/>
+  			<xsd:element name="IS_SUPPORTED" type="TrueFalseType"/>
+  			<xsd:element name="ACTION_PLAN" type="ActionPlanIdType"/>
+		</xsd:sequence>
+	</xsd:complexType>	
+	
+	<xsd:simpleType name="FormatCodeType">
+		<xsd:restriction base="VarChar255Type"/>
+	</xsd:simpleType>
+		
+</xsd:schema>
+
+
+
+
+
+
+
+
+

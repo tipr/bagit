@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2005, Florida Center for Library Automation -->
+<!-- Sept 1, 2005 -->
+<!-- Version 1.14 -->
+<!-- 
+	CHANGE HISTORY
+ --><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.fcla.edu/dls/md/daitss/" targetNamespace="http://www.fcla.edu/dls/md/daitss/" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema ../../../../www.w3.org/2001/XMLSchema_LOC.xsd">
+	
+	<xsd:include schemaLocation="daitssDataTypes_LOC.xsd"></xsd:include>
+	
+  	<xsd:annotation>
+    	<xsd:documentation xml:lang="en">
+			Schema defining metadata elements corresponding to image bistreams.
+	    </xsd:documentation>
+  	</xsd:annotation>
+
+	<xsd:element name="BS_IMAGE" type="BSImageType"></xsd:element>
+		
+	<xsd:complexType name="BSImageType">
+  		<xsd:sequence>
+  			<xsd:element name="DFID" type="DfidType"></xsd:element>
+  			<xsd:element name="BSID" type="BsidType"></xsd:element>
+  			<xsd:element name="BITS_PER_SAMPLE" type="VarChar255Type" minOccurs="0"></xsd:element>
+  			<xsd:element name="HAS_INTERNAL_CLUT" type="TrueFalseUnkType"></xsd:element>
+  			<xsd:element name="EXTRA_SAMPLES" type="VarChar255Type" minOccurs="0"></xsd:element>
+  			<xsd:element name="ORIENTATION" type="BSImageOrientationType"></xsd:element>
+  			<xsd:element name="COLOR_SPACE" type="VarChar64Type"></xsd:element>
+  			<xsd:element name="IMAGE_WIDTH" type="Int10UnsignedType"></xsd:element>
+  			<xsd:element name="IMAGE_LENGTH" type="Int10UnsignedType"></xsd:element>
+  			<xsd:element name="HAS_ICC_PROFILE" type="TrueFalseUnkType"></xsd:element>
+  			<xsd:element name="NUM_COMPONENTS" type="SmallInt5Type"></xsd:element>
+  			<xsd:element name="RES_UNIT" type="BSImageResUnitType"></xsd:element>
+  			<xsd:element name="RES_HORZ" type="xsd:float"></xsd:element>
+  			<xsd:element name="RES_VERT" type="xsd:float"></xsd:element>
+  			<xsd:element name="SAMPLING_HOR" type="VarChar32Type"></xsd:element>
+  			<xsd:element name="SAMPLING_VER" type="VarChar32Type"></xsd:element>
+  			<xsd:element name="BS_TABLE" type="BSTableNameType" minOccurs="0"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:simpleType name="BSImageOrientationType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="BL"></xsd:enumeration>
+			<xsd:enumeration value="BR"></xsd:enumeration>
+			<xsd:enumeration value="LB"></xsd:enumeration>
+			<xsd:enumeration value="LT"></xsd:enumeration>
+			<xsd:enumeration value="RB"></xsd:enumeration>
+			<xsd:enumeration value="RT"></xsd:enumeration>
+			<xsd:enumeration value="TL"></xsd:enumeration>
+			<xsd:enumeration value="TR"></xsd:enumeration>
+			<xsd:enumeration value="UNKNOWN"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="BSImageResUnitType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="UNKNOWN"></xsd:enumeration>
+			<xsd:enumeration value="NONE"></xsd:enumeration>
+			<xsd:enumeration value="IN"></xsd:enumeration>
+			<xsd:enumeration value="CM"></xsd:enumeration>
+			<xsd:enumeration value="M"></xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+</xsd:schema>
+
