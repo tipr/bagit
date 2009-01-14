@@ -1,41 +1,34 @@
 require 'libxml'
 
-DAITSS_NS = 'daitss:http://www.fcla.edu/dls/md/daitss/'
+NS_MAP = {
+  :mets => 'http://www.loc.gov/METS/',
+  :daitss => 'http://www.fcla.edu/dls/md/daitss/'
+}
 
 class DIP
-  
+
   def initialize(path)
     @path = path
   end
 
-  # Taken from findIEID
+  # Return the ieid of this DIP
   def ieid
-    descriptor = load_descriptor
-    
-    pathToData = 'mets:amdSec/mets:techMD/mets:mdWrap/mets:xmlData/' +
-      'daitss:daitss/daitss:INT_ENTITY'
-
-    nodes = descriptor.find(pathToData + '/daitss:IEID', DAITSS_NS)
-    puts nodes.length
-    raise "IEID does not exist, or too many IEIDs" unless nodes.length == 1
-    hdr = nodes.first
-    return hdr.content
-    nodes = nil
+    doc = LibXML::XML::Document.file descriptor_file
+    xpath = 'mets:amdSec/mets:techMD/mets:mdWrap/mets:xmlData/daitss:daitss/daitss:INT_ENTITY/daitss:IEID'
+    ieid_node = doc.find_first xpath, NS_MAP
+    raise "No IEID found at xpath: #{xpath}" unless ieid_node
+    ieid_node.content
   end
   
-  # Taken from findAip
-  def load_descriptor
-    pattern = File.join @path,"*","AIP_*_LOC.xml"
+  protected
+
+  # Return the path the the descriptor of this DIP
+  def descriptor_file
+    pattern = File.join @path, '*', 'AIP_*_LOC.xml'
     matches = Dir.glob pattern
-    raise "No matches, or too many matches" unless matches.size == 1
-    d = matches[0]
-    raise "Not a regular file" unless File.file? d
-
-    parser = LibXML::XML::Parser.new
-    parser.file = d
-    doc = parser.parse
-
-    return doc
+    raise 'No DIP descriptor found' if matches.size == 0
+    raise 'Multiple AIP descriptors' if matches.size > 1
+    matches[0]
   end
   
 end
