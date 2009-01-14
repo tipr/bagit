@@ -4,12 +4,19 @@ require 'dip'
 # constructing a TIPR package
 describe DIP do
   
-  it "should be initialized from a DAITSS DIP" do
-    path = File.join '..', '..', 'FDA0666001'
-    DIP.new path
+  before do
+    @path = File.join '..', 'DIPs', 'FDA0666001'
   end
   
-  it "should have an IEID"
+  it "should be initialized from a DAITSS DIP" do
+    DIP.new @path
+  end
+  
+  it "should have an IEID" do
+    dip = DIP.new @path
+    dip.ieid.should == 'E20081121_AAAAEW'
+  end
+  
   it "should have a package ID"
   it "should have a creation date"
   it "should have multiple representations"
