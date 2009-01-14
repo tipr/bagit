@@ -8,9 +8,10 @@ describe DIP do
   it "should have a package ID"
   it "should have a creation date"
   it "should have multiple representations"
-end
+  
+  describe Representation do
+    it "should be a set of files"
+    it "should have a sha-1 digest for each file"
+  end
 
-describe Representation do
-  it "should be a set of files"
-  it "should have a sha-1 digest for each file"
 end
