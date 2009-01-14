@@ -13,11 +13,6 @@
     <fileGrp>
 
       <!-- TODO replace this with a new AIP desc -->
-      <file ID="file-0" CHECKSUM="91b85ac5b0eb28c64b6d1971c120204ecea430db" CHECKSUMTYPE="SHA-1">
-	<FLocat LOCTYPE="URL" xlink:href="FDA0666001/E20081121_AAAAEW/AIP_20081121220757.xml"/>
-      </file>
-
-      <!-- TODO replace this with a new AIP desc -->
       <file ID="file-1" CHECKSUM="4baa12975f8c9c9efaaa50b35607691d5cd5d491" CHECKSUMTYPE="SHA-1">
 	<FLocat LOCTYPE="URL" xlink:href="FDA0666001/E20081121_AAAAEW/AIP_20081121220757_LOC.xml"/>
       </file>
