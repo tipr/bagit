@@ -11,7 +11,7 @@ describe DIP do
   end
   
   it "should be initialized from a DAITSS DIP" do
-    DIP.new @path
+    lambda { DIP.new @path }.should_not raise_error
   end
   
   it "should have an IEID" do
@@ -26,11 +26,13 @@ describe DIP do
     @dip.create_date.should == Time.parse('2008-11-21T22:07:57Z')
   end
   
-  it "should have multiple representations"
-  
-  describe Representation do
-    it "should be a set of files"
-    it "should have a sha-1 digest for each file"
+  it "should have an original representation" do
+    @dip.original_representation.should_not be_nil
   end
+  
+  it "should have a current representation" do
+    @dip.current_representation.should_not be_nil
+  end
+
 
 end
