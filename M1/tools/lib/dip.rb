@@ -1,56 +1,48 @@
 require 'time'
-require 'libxml'
+require 'nokogiri'
 
 
 class DIP
-    
-  INT_ENTITY_XPATH = 'mets:amdSec/mets:techMD/mets:mdWrap/mets:xmlData/daitss:daitss/daitss:INT_ENTITY'
   
-  def initialize(path)
-    @path = path
-    @descriptor_xml_doc = LibXML::XML::Document.file descriptor_file
-  end
-
-  # Return the ieid
-  def ieid
-    select_from_descriptor(INT_ENTITY_XPATH + '/daitss:IEID').content
-  end
-
-  # Return the package id
-  def package_id
-    select_from_descriptor(INT_ENTITY_XPATH + '/daitss:ENTITY_ID').content
-  end
-
-  # Return the creation date
-  def create_date
-    # '//mets:metsHdr/@CREATEDATE' produces a libxml [BUG] Bus Error
-    node = select_from_descriptor '//mets:metsHdr[@CREATEDATE]'
-    Time.parse node['CREATEDATE']
-  end
-  
-  protected
+  attr_reader :ieid, :package_id, :create_date
   
   NS = {
-    :mets => 'http://www.loc.gov/METS/',
-    :daitss => 'http://www.fcla.edu/dls/md/daitss/'
+    'mets' => 'http://www.loc.gov/METS/',
+    'daitss' => 'http://www.fcla.edu/dls/md/daitss/'
   }
 
-  # Return the first node that matches the xpath, raising an error if
-  # not found
-  def select_from_descriptor(xpath)
-    node = @descriptor_xml_doc.find_first xpath, NS
-    raise "No IEID found at xpath: #{xpath}" unless node
-    node
+  def initialize(path)
+    @path = path
+    
+    # parse the xml descriptor
+    doc = open(descriptor) do |io|
+      Nokogiri::XML io
+    end
+
+    # load the ieid
+    ieid_node = doc.xpath('//daitss:IEID', NS).first
+    raise "IEID not found" unless ieid_node
+    @ieid = ieid_node.content
+
+    # load the package id
+    package_id_node = doc.xpath('//daitss:ENTITY_ID', NS).first
+    raise "PACAKGE ID not found" unless package_id_node
+    @package_id = package_id_node.content
+
+    # load the create date
+    create_date_node = doc.xpath('//mets:metsHdr/@CREATEDATE', NS).first
+    raise "CREATE DATE not found" unless package_id_node
+    @create_date = Time.parse create_date_node.content
   end
 
   # Return the path the the descriptor, raising errors if not found or
   # multiple posibilities
-  def descriptor_file
+  def descriptor
     pattern = File.join @path, '*', 'AIP_*_LOC.xml'
     matches = Dir.glob pattern
-    raise 'No DIP descriptor found' if matches.size == 0
-    raise 'Multiple AIP descriptors' if matches.size > 1
-    matches[0]
+    raise 'No descriptor found' if matches.empty?
+    raise 'Multiple possible descriptors' if matches.size > 1
+    matches.first
   end
 
 end
