@@ -9,17 +9,17 @@ module TIPRMatchers
     def matches?(target)
       @target = target            # a node
       prefix = @target.namespace
-      @target_namespace = @target.namespaces[ prefix ? "xmlns:#{prefix}" : 'xmlns']
+      @target_namespace = @target.namespaces[ prefix ? "xmlns:#{prefix}" : 'xmlns' ]
       @target_namespace == @expected
     end
 
     def failure_message
-      "expected <#{@target_namespace}> to " +
+      "expected <#{@target_namespace}> to be" +
         "the same as <#{@expected}>"
     end
 
     def negative_failure_message
-      "expected <#{@target_namespace}> not to " +
+      "expected <#{@target_namespace}> not to be" +
         "the same as <#{@expected}>"
     end
 
@@ -30,3 +30,7 @@ module TIPRMatchers
   end
   
 end
+
+Spec::Runner.configure do |config|  
+  config.include(TIPRMatchers)
+end  

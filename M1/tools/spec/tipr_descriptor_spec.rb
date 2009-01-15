@@ -1,11 +1,7 @@
 require 'erb'
 require 'nokogiri'
 require 'dip'
-
-require 'helpers'
-Spec::Runner.configure do |config|  
-  config.include(TIPRMatchers)
-end  
+require 'spec_helper'
 
 describe "the tipr descriptor" do
   
