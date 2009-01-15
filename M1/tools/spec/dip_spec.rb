@@ -6,6 +6,7 @@ describe DIP do
   
   before do
     @path = File.join '..', 'DIPs', 'FDA0666001'
+    @dip = DIP.new @path
   end
   
   it "should be initialized from a DAITSS DIP" do
@@ -13,11 +14,13 @@ describe DIP do
   end
   
   it "should have an IEID" do
-    dip = DIP.new @path
-    dip.ieid.should == 'E20081121_AAAAEW'
+    @dip.ieid.should == 'E20081121_AAAAEW'
   end
   
-  it "should have a package ID"
+  it "should have a package ID" do
+    @dip.package_id.should == 'FDA0666001'
+  end
+  
   it "should have a creation date"
   it "should have multiple representations"
   
