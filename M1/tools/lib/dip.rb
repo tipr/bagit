@@ -13,44 +13,60 @@ class DIP
 
   def initialize(path)
     @path = path
-
-    # Find the descriptor
+    @doc = load_descriptor
+    @ieid = load_ieid
+    @package_id = load_package_id
+    @create_date = load_create_date
+    @original_representation = load_original_representation
+    @current_representation = load_current_representation
+  end
+  
+  protected
+  
+  def load_descriptor
     matches = Dir.glob "#{@path}/*/AIP_*_LOC.xml"
     raise 'No descriptor found' if matches.empty?
     raise 'Multiple possible descriptors' if matches.size > 1
     descriptor = matches.first
-    
-    # parse the xml descriptor
-    doc = open(descriptor) do |io|
-      Nokogiri::XML io
-    end
-    
-    # load the ieid
-    ieid_node = doc.xpath('//daitss:IEID', NS).first
+    open(descriptor) { |io| Nokogiri::XML io }
+  end
+
+  def load_ieid
+    ieid_node = @doc.xpath('//daitss:IEID', NS).first
     raise "IEID not found" unless ieid_node
-    @ieid = ieid_node.content
-
-    # load the package id
-    package_id_node = doc.xpath('//daitss:ENTITY_ID', NS).first
+    ieid_node.content
+  end
+  
+  def load_package_id
+    package_id_node = @doc.xpath('//daitss:ENTITY_ID', NS).first
     raise "PACAKGE ID not found" unless package_id_node
-    @package_id = package_id_node.content
+    package_id_node.content
+  end
 
-    # load the create date
-    create_date_node = doc.xpath('//mets:metsHdr/@CREATEDATE', NS).first
-    raise "CREATE DATE not found" unless package_id_node
-    @create_date = Time.parse create_date_node.content
-
-    # load the representations
-    @original_representation = doc.xpath('//mets:structMap[@ID="SMR0"]//mets:fptr/@FILEID', NS).map do |file_id_node|
+  def load_create_date
+    create_date_node = @doc.xpath('//mets:metsHdr/@CREATEDATE', NS).first
+    raise "CREATE DATE not found" unless create_date_node
+    Time.parse create_date_node.content
+  end
+  
+  def load_original_representation
+    
+    @doc.xpath('//mets:structMap[@ID="SMR0"]//mets:fptr/@FILEID', NS).map do |file_id_node|
       file_id = file_id_node.content
-      file_node = doc.xpath("//mets:file[@ID = '#{file_id}']", NS).first
+      file_node = @doc.xpath("//mets:file[@ID = '#{file_id}']", NS).first
+      
       {
         :sha_1 => file_node.attributes['CHECKSUM'],
         :path => file_node.xpath('mets:FLocat/@xlink:href', NS).first.content
       }
+      
     end
     
-    @current_representation = doc.xpath('//mets:file', NS).map do |file_node|
+  end
+
+  def load_current_representation
+    
+    @doc.xpath('//mets:file', NS).map do |file_node|
       {
         :sha_1 => file_node.attributes['CHECKSUM'],
         :path => file_node.xpath('mets:FLocat/@xlink:href', NS).first.content
@@ -58,5 +74,5 @@ class DIP
     end
     
   end
-
+  
 end
