@@ -1,3 +1,6 @@
+# This file contains functionality to extract information from a
+# DAITSS DIP for use in constructing a TIPR DIP
+
 require 'nokogiri'
 require 'time'
 
@@ -54,12 +57,10 @@ class DIP
     @doc.xpath('//mets:structMap[@ID="SMR0"]//mets:fptr/@FILEID', NS).map do |file_id_node|
       file_id = file_id_node.content
       file_node = @doc.xpath("//mets:file[@ID = '#{file_id}']", NS).first
-      
       {
         :sha_1 => file_node.attributes['CHECKSUM'],
         :path => file_node.xpath('mets:FLocat/@xlink:href', NS).first.content
       }
-      
     end
     
   end
