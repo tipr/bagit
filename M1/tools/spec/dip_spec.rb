@@ -1,3 +1,4 @@
+require 'time'
 require 'dip'
 
 # A model for a DAITSS AIP that provides functionality for
@@ -21,7 +22,10 @@ describe DIP do
     @dip.package_id.should == 'FDA0666001'
   end
   
-  it "should have a creation date"
+  it "should have a creation date" do
+    @dip.create_date.should == Time.parse('2008-11-21T22:07:57Z')
+  end
+  
   it "should have multiple representations"
   
   describe Representation do
