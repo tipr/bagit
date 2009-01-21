@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mets xmlns="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
       OBJID="<%= @dip.ieid %>"
-      LABEL="FDA0666001">
+      LABEL="<%= @dip.package_id %>">
 
-  <metsHdr CREATEDATE="2008-11-24T13:58:43-05:00">
+  <metsHdr CREATEDATE="<%= @dip.create_date.xmlschema %>">
     <agent ROLE="DISSEMINATOR" TYPE="ORGANIZATION">
       <name>FCLA</name>
     </agent>
@@ -17,7 +17,6 @@
       <mdRef LOCTYPE="URL" MDTYPE="PREMIS" xlink:href="digiprov.xml"/>
     </digiprovMD>
   </amdSec>
-  
   <fileSec>
     <fileGrp>
       <file ID="file-0" CHECKSUM="a4eb21805624aede12084b5c9b0a00babb7db137" CHECKSUMTYPE="SHA-1">
