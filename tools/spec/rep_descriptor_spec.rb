@@ -27,6 +27,7 @@ share_examples_for "all representations" do
     @divs = @doc.root.xpath('//xmlns:structMap/xmlns:div', @xmlns)
     @files = @doc.root.xpath('//xmlns:fileSec//xmlns:file', @xmlns)
   end
+
   it_should_behave_like AllTiprFiles
   
   it "should have a fileSec that points to representation descriptors" do
@@ -50,22 +51,19 @@ end
 
 describe "the original representation" do
   before(:each) do
-
     # this is the original representation
     @type = 'ORIG'
   end
 
-  it_should_behave_like "all representations"
-  
+  it_should_behave_like "all representations"  
 end
 
 
 describe "the active representation" do
   before(:each) do
-    # this is the original representation
+    # this is the active representation
     @type = 'ACTIVE'
   end
   
   it_should_behave_like "all representations"
-
 end
