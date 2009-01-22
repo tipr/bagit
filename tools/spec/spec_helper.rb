@@ -89,6 +89,10 @@ module TIPRMatchers
     ReferenceAFile.new()
   end
 
+  def reference_a_file()
+    ReferenceAFile.new(/.+/, 'UNRESTRICTED TYPE OF')
+  end
+
   def be_in_namespace(expected)
     BeInNamespace.new(expected)
   end
