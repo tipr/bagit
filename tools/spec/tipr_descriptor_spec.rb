@@ -33,11 +33,11 @@ describe "the tipr descriptor" do
   end
   
   it "should have an OBJID" do
-    @doc.root.attributes['OBJID'].should_not == nil
+    @doc.root['OBJID'].should_not be_nil
   end
 
   it "should have a LABEL" do
-    @doc.root.attributes['LABEL'].should_not == nil
+    @doc.root['LABEL'].should_not be_nil
   end
 
   it "should have a mets header" do
@@ -47,11 +47,11 @@ describe "the tipr descriptor" do
   describe "the header" do
     
     it "should have a create date" do
-      @rchildren.first['CREATEDATE'].should_not == nil
+      @rchildren.first['CREATEDATE'].should_not be_nil
     end
     
     it "should have an agent" do
-      @rchildren.first.xpath('./xmlns:agent', @xmlns).empty?.should == false
+      @rchildren.first.should have_xpath('./xmlns:agent', @xmlns)
     end
 
     describe "the agent" do
@@ -67,27 +67,26 @@ describe "the tipr descriptor" do
       
       it "should have name of the contributing repository" do
         @rchildren.first.xpath('./xmlns:agent/xmlns:name',
-				@xmlns).first.content.should_not == nil
+				@xmlns).first.content.should_not be_nil
       end    
     end
   end
 
   it "should not have a dmdSec" do
-    @doc.root.xpath('//xmlns:dmdSec', @xmlns).empty?.should == true
+    @doc.root.should_not have_xpath('//xmlns:dmdSec', @xmlns)
   end
+  
   it "should have an amdSec" do
-    @doc.root.xpath('//xmlns:amdSec', @xmlns).empty?.should == false
+    @doc.root.should have_xpath('//xmlns:amdSec', @xmlns)
   end
 
   describe "the amdSec" do
     it "should not have a techMD" do
-      @doc.root.xpath('//xmlns:amdSec/xmlns:techMD', @xmlns).empty?.should ==
-        true
+      @doc.root.should_not have_xpath('//xmlns:amdSec/xmlns:techMD', @xmlns)
     end
     
     it "should not have a sourceMD" do
-      @doc.root.xpath('//xmlns:amdSec/xmlns:sourceMD', @xmlns).empty?.should ==
-        true
+      @doc.root.should_not have_xpath('//xmlns:amdSec/xmlns:sourceMD', @xmlns)
     end
     
     it "should have a rightsMD that references an xml file" do
@@ -104,15 +103,15 @@ describe "the tipr descriptor" do
   it "should have a fileSec that points to representation descriptors" do
     # Validate each file representation descriptor.
     @files.each do |f|
-      f['ID'].should_not == nil
-      f['CHECKSUM'].should_not == nil
+      f['ID'].should_not be_nil
+      f['CHECKSUM'].should_not be_nil
       f['CHECKSUMTYPE'].should == 'SHA-1'
       f.xpath('./xmlns:FLocat', @xmlns).first.should reference_an_xml_file      
     end    
   end
 
   it "should have a struct map" do
-    @doc.root.xpath('//xmlns:structMap', @xmlns).empty?.should == false
+    @doc.root.should have_xpath('//xmlns:structMap', @xmlns)
   end
 
   describe "the struct map" do
@@ -121,9 +120,9 @@ describe "the tipr descriptor" do
     end
 
     it "should have all divs be ordered" do
-      orders = @divs.select { |div| div['ORDER'] != nil}     # Exclude unordered
-      o = orders.map { |d| Integer(d['ORDER']) }             # Map to ints
-      1.upto(@divs.size) { |i| o.include?(i).should == true }# Verify content
+      orders = @divs.select { |div| div['ORDER']}     # Exclude unordered
+      o = orders.map { |d| Integer(d['ORDER']) }      # Map to ints
+      1.upto(@divs.size) { |i| o.should include(i) }  # Verify content
     end
 
     it "should have exactly one div labeled active" do
@@ -133,7 +132,7 @@ describe "the tipr descriptor" do
 
     it "should have a file pointer for each file in the filesec" do
       fptrs = @divs.xpath('./xmlns:fptr', @xmlns).map { |fp| fp['FILEID'] }
-      @files.each { |f| fptrs.include?(f['ID']).should == true }   
+      @files.each { |f| fptrs.should include(f['ID']) }   
     end
   end
 
