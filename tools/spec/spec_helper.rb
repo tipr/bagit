@@ -57,6 +57,34 @@ module TIPRMatchers
 
   end
 
+  class HaveXPath
+
+    def initialize(xpath, ns)  
+      @xpath = xpath            # The XPath we would like to match.
+      @ns = ns			# The namespace to use
+    end
+
+    def matches?(target)
+      @target = target          # a node that should contain the xpath
+      not @target.xpath(@xpath, @ns).empty?
+    end
+
+    def failure_message
+      "expected xpath <#{@xpath}> to be in " +
+        "node <#{@target}>"
+    end
+
+    def negative_failure_message
+      "expected xpath <#{@xpath}> not to be " +
+        "in node <#{@target}>"
+    end
+
+  end
+  
+  def have_xpath(xpath, ns)
+    HaveXPath.new(xpath, ns)
+  end
+
   def reference_an_xml_file()
     ReferenceAFile.new()
   end
