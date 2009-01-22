@@ -28,7 +28,7 @@ describe "the tipr descriptor" do
     @files = @doc.root.xpath('//xmlns:fileSec//xmlns:file', @xmlns)
   end
   
-  # Check mets document, header, and fileSec requirements. 
+  # Check mets document and header requirements and for structMap existence 
   it_should_behave_like AllTiprFiles
   
   it "should not have a dmdSec" do
@@ -59,10 +59,17 @@ describe "the tipr descriptor" do
     end    
   end
 
-  it "should have a struct map" do
-    @doc.root.should have_xpath('//xmlns:structMap', @xmlns)
-  end
-
+  it "should have a fileSec that points to representation descriptors" do
+    # Validate each file representation descriptor.
+    @files.each do |f|
+      f['ID'].should_not be_nil
+      f['CHECKSUM'].should_not be_nil
+      f['CHECKSUMTYPE'].should == 'SHA-1'
+      f.xpath('./xmlns:FLocat', @xmlns).first.should reference_an_xml_file      
+    end    
+  end 
+  
+  # We checked for the struct map in AllTiprFiles
   describe "the struct map" do
     it "should have at least two divs" do
       @divs.size.should >= 2
