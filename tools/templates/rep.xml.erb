@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mets xmlns="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
+      OBJID="<%= @dip.ieid %>"
+      LABEL="<%= @dip.package_id %>">
+  
+  <metsHdr CREATEDATE="<%= @dip.create_date.xmlschema %>">
+    <agent ROLE="DISSEMINATOR" TYPE="ORGANIZATION">
+      <name>FCLA</name>
+    </agent>
+  </metsHdr>
+  
+  <fileSec>
+    <fileGrp>
+    <% myinfo = @type=='ORIG' ? @dip.original_representation : @dip.current_representation %>
+      <% myinfo.each_with_index do |e,i| %>
+      <file ID="file-<%= i %>" CHECKSUM="<%= e[:sha_1] %>" CHECKSUMTYPE="SHA-1">
+        <FLocat LOCTYPE="URL" xlink:href="<%= @dip.rel_path %>/<%= e[:path] %>"/>
+      </file>
+      <% end %>
+    </fileGrp>
+  </fileSec>
+  
+  <structMap>
+    <div>
+      <% myinfo.each_index do |i| %>
+      <fptr FILEID="file-<%= i %>"/>
+      <% end %>
+    </div>
+  </structMap>
+
+</mets>
