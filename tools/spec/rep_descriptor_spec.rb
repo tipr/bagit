@@ -24,13 +24,12 @@ share_examples_for "all representations" do
     # some additional instance variables to help clean up the code
     @xmlns = { 'xmlns' => 'http://www.loc.gov/METS/' }  
     @rchildren = @doc.root.children.select { |child| child.name != 'text'}
-    @divs = @doc.root.xpath('//xmlns:structMap/xmlns:div/xmlns:div', @xmlns)
+    @divs = @doc.root.xpath('//xmlns:structMap/xmlns:div', @xmlns)
     @files = @doc.root.xpath('//xmlns:fileSec//xmlns:file', @xmlns)
   end
   it_should_behave_like AllTiprFiles
   
   it "should have a fileSec that points to representation descriptors" do
-    puts @doc.to_xml
     # Validate each file representation descriptor.
     @files.each do |f|
       f['ID'].should_not be_nil
@@ -39,7 +38,15 @@ share_examples_for "all representations" do
       f.xpath('./xmlns:FLocat', @xmlns).first.should reference_a_file      
     end    
   end  
+  
+  describe "the struct map" do
+    it "should have a file pointer for each file in the filesec" do
+      fptrs = @divs.xpath('./xmlns:fptr', @xmlns).map { |fp| fp['FILEID'] }
+      @files.each { |f| fptrs.should include(f['ID']) }   
+    end
+  end
 end
+
 
 describe "the original representation" do
   before(:each) do
@@ -51,6 +58,7 @@ describe "the original representation" do
   it_should_behave_like "all representations"
   
 end
+
 
 describe "the active representation" do
   before(:each) do
