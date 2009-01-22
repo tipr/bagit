@@ -49,18 +49,12 @@ share_as :AllTiprFiles do
     end
   end
 
-  # We leave amdSec & dmdSec checks to individual file types
-    
-  it "should have a fileSec that points to representation descriptors" do
-    # Validate each file representation descriptor.
-    @files.each do |f|
-      f['ID'].should_not be_nil
-      f['CHECKSUM'].should_not be_nil
-      f['CHECKSUMTYPE'].should == 'SHA-1'
-      f.xpath('./xmlns:FLocat', @xmlns).first.should reference_an_xml_file      
-    end    
-  end 
-  
-  # We leave structMap checks to individual file types 
+  # Check for structMap, but don't formalize description
+  it "should have a struct map" do
+    @doc.root.should have_xpath('//xmlns:structMap', @xmlns)
+  end
+ 
+  # We leave amdSec, dmdSec, fileSec & structMap checks & descriptions
+  # to individual types
 
 end
