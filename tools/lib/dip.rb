@@ -6,7 +6,7 @@ require 'time'
 
 class DIP
   
-  attr_reader :ieid, :package_id, :create_date, :original_representation, :current_representation
+  attr_reader :rel_path, :ieid, :package_id, :create_date, :original_representation, :current_representation
   
   NS = {
     'mets' => 'http://www.loc.gov/METS/',
@@ -17,6 +17,7 @@ class DIP
   def initialize(path)
     @path = path
     @doc = load_descriptor
+    @rel_path = load_rel_path
     @ieid = load_ieid
     @package_id = load_package_id
     @create_date = load_create_date
@@ -32,6 +33,12 @@ class DIP
     raise 'Multiple possible descriptors' if matches.size > 1
     descriptor = matches.first
     open(descriptor) { |io| Nokogiri::XML io }
+  end
+  
+  def load_rel_path
+    matches = Dir.glob "#{@path}/*/AIP_*_LOC.xml"
+    dir = File.dirname(matches.first)
+    rp = dir.split("#{@path}/").last
   end
 
   def load_ieid
