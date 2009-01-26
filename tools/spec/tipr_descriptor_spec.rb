@@ -3,6 +3,7 @@ require 'nokogiri'
 require 'dip'
 require 'spec_helper'
 require 'all_tipr_files_spec'
+require 'tipr'
 
 describe "the tipr descriptor" do
   
@@ -11,14 +12,12 @@ describe "the tipr descriptor" do
     path = File.join '..', 'DIPs', 'FDA0666001'
     @dip = DIP.new path
 
+    # Generate sha-1 sums for our original and active representations:
+    @orig = TIPR.sha1_pair(TIPR.generate_xml('rep.xml.erb', @dip, 'ORIG'))
+    @active = TIPR.sha1_pair(TIPR.generate_xml('rep.xml.erb', @dip, 'ACTIVE'))
+
     # need the tipr.xml template
-    template = open File.join('templates', 'tipr.xml.erb') do |io|
-      string = io.read
-      ERB.new string
-    end
-    
-    # code to complete the template
-    raw_xml = template.result binding
+    raw_xml = TIPR.generate_xml('tipr.xml.erb', @dip, nil, @orig, @active)
     @doc = Nokogiri::XML raw_xml   
 
     # some additional instance variables to help clean up the code
@@ -88,7 +87,7 @@ describe "the tipr descriptor" do
 
     it "should have a file pointer for each file in the filesec" do
       fptrs = @divs.xpath('./xmlns:fptr', @xmlns).map { |fp| fp['FILEID'] }
-      @files.each { |f| fptrs.should include(f['ID']) }   
+      @files.each { |f| fptrs.should include(f['ID']) } 
     end
   end
 

@@ -1,24 +1,19 @@
 require 'erb'
 require 'nokogiri'
 require 'dip'
+require 'tipr'
 require 'spec_helper'
 require 'all_tipr_files_spec'
 
 share_examples_for "all representations" do
   before(:each) do
-    
+
     # need a daitss DIP
     path = File.join '..', 'DIPs', 'FDA0666001'
     @dip = DIP.new path
 
     # need the rep.xml template
-    template = open File.join('templates', 'rep.xml.erb') do |io|
-      string = io.read
-      ERB.new string
-    end
-    
-    # code to complete the template
-    raw_xml = template.result binding
+    raw_xml = TIPR.generate_xml('rep.xml.erb', @dip, @type)
     @doc = Nokogiri::XML raw_xml   
 
     # some additional instance variables to help clean up the code

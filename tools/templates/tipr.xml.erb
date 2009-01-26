@@ -19,10 +19,12 @@
   </amdSec>
   <fileSec>
     <fileGrp>
-      <file ID="file-0" CHECKSUM="a4eb21805624aede12084b5c9b0a00babb7db137" CHECKSUMTYPE="SHA-1">
+      <%# Note that this version of the xml template is not scalable. %>
+      <%# It will have to be amended to address more than two representations. %>
+      <file ID="file-0" CHECKSUM="<%= @orig[:sha_1] %>" CHECKSUMTYPE="SHA-1">
 	<FLocat LOCTYPE="URL" xlink:href="rep-1.xml"/>
       </file>
-      <file ID="file-1" CHECKSUM="1a262541d52d9a9569979b3d5fe6edaac7b08934" CHECKSUMTYPE="SHA-1">
+      <file ID="file-1" CHECKSUM="<%= @active[:sha_1] %>" CHECKSUMTYPE="SHA-1">
 	<FLocat LOCTYPE="URL" xlink:href="rep-2.xml"/>
       </file>
     </fileGrp>
