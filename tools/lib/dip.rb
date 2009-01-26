@@ -15,7 +15,7 @@ class DIP
   }
 
   def initialize(path)
-    @path = path
+    @path = path.chomp('/')  # Strip any trailing /es
     @doc = load_descriptor
     @rel_path = load_rel_path
     @ieid = load_ieid
@@ -35,10 +35,10 @@ class DIP
     open(descriptor) { |io| Nokogiri::XML io }
   end
   
-  def load_rel_path
+  def load_rel_path # includes package_id
     matches = Dir.glob "#{@path}/*/AIP_*_LOC.xml"
     dir = File.dirname(matches.first)
-    rp = dir.split("#{@path}/").last
+    dir.split("DIPs/").last
   end
 
   def load_ieid
