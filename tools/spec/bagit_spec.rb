@@ -3,17 +3,16 @@ require 'tempfile'
 
 # based on v0.95 http://www.cdlib.org/inside/diglib/bagit/bagitspec.html
 describe Bagit do
-  
-  it "should be a directory" do
 
+  before(:each) do
     # make some temp data to bag
     tf = Tempfile.open 'sandbox'
-    sandbox_path = tf.path
+    @sandbox_path = tf.path
     tf.close!
-    FileUtils::mkdir sandbox_path
+    FileUtils::mkdir @sandbox_path
     
     # make some source data
-    source_data_path = File.join sandbox_path, 'source_data'
+    source_data_path = File.join @sandbox_path, 'source_data'
     FileUtils::mkdir source_data_path
     
     open('/dev/random') do |rio|
@@ -31,18 +30,26 @@ describe Bagit do
     end
     
     # make the bag
-    bag_path = File.join sandbox_path, 'the_bag'
-    bag = Bagit.new source_data_path
-    bag.save bag_path
-    
-    # test it
-    File.directory?(bag_path).should be_true
-    
+    @bag_path = File.join @sandbox_path, 'the_bag'
+    @bag = Bagit.new source_data_path
+    @bag.save @bag_path
+  end
+
+  after(:each) do
     # cleanup
-    FileUtils::rm_rf sandbox_path
+    FileUtils::rm_rf @sandbox_path
   end
   
-  it "should have a sub-directory called data"
+  it "should be a directory" do
+    File.directory?(@bag_path).should be_true
+    
+  end
+  
+  it "should have a sub-directory called data" do
+    data_path = File.join @bag_path, 'data'
+    File.directory?(data_path).should be_true
+  end
+  
   it "should have at least one manifest-[algorithm].txt"
   it "should have a file bagit.txt"
   it "may have zero ormore additional files"

@@ -8,6 +8,9 @@ class Bagit
 
   def save(path)
     FileUtils::mkdir path
+
+    data_path = File.join path, 'data'
+    FileUtils::mkdir data_path
   end
   
 end
