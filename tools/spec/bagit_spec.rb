@@ -54,7 +54,10 @@ describe Bagit do
     Dir.glob(pattern).should_not be_empty
   end
 
-  it "should have a file bagit.txt"
+  it "should have a file bagit.txt" do
+    pattern = File.join @bag_path, 'bagit.txt'
+    Dir.glob(pattern).should_not be_empty
+  end
 
   describe "bagit.txt" do
     it "should have exaclty two lines"

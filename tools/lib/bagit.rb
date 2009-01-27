@@ -16,6 +16,10 @@ class Bagit
     # manifest file
     manifest_path = File.join path, 'manifest-sha1.txt'
     FileUtils.touch manifest_path
+
+    # bagit file
+    bagit_txt_path = File.join path, 'bagit.txt'
+    FileUtils.touch bagit_txt_path
   end
   
 end
