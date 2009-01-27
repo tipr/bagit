@@ -1,5 +1,6 @@
 require 'bagit'
 
+# based on v0.95 http://www.cdlib.org/inside/diglib/bagit/bagitspec.html
 describe Bagit do
   it "should be a directory"
   it "should have a sub-directory called data"
