@@ -55,12 +55,17 @@ describe Bagit do
   end
 
   it "should have a file bagit.txt" do
-    pattern = File.join @bag_path, 'bagit.txt'
-    Dir.glob(pattern).should_not be_empty
+    path = File.join @bag_path, 'bagit.txt'
+    File.file?(path).should be_true
   end
 
   describe "bagit.txt" do
-    it "should have exaclty two lines"
+    it "should have exaclty two lines" do
+      path = File.join @bag_path, 'bagit.txt'
+      lines = open(path) { |io| io.readlines }
+      lines.size.should == 2
+    end
+    
     it "should have a bagit version"
     it "should have a tag file encoding"
   end

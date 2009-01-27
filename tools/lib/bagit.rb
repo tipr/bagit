@@ -19,7 +19,11 @@ class Bagit
 
     # bagit file
     bagit_txt_path = File.join path, 'bagit.txt'
-    FileUtils.touch bagit_txt_path
+    open(bagit_txt_path, 'w') do |io|
+      io.puts 'line 1'
+      io.puts 'line 2'
+    end
+    
   end
   
 end
