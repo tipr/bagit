@@ -1,7 +1,9 @@
 require 'fileutils'
 
 class Bagit
-
+  
+  VERSION = '0.95'
+  
   def initialize(path)
     @source_path = path
   end
@@ -20,7 +22,7 @@ class Bagit
     # bagit file
     bagit_txt_path = File.join path, 'bagit.txt'
     open(bagit_txt_path, 'w') do |io|
-      io.puts 'line 1'
+      io.puts "BagIt-Version: #{VERSION}"
       io.puts 'line 2'
     end
     

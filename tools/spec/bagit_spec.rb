@@ -60,13 +60,22 @@ describe Bagit do
   end
 
   describe "bagit.txt" do
-    it "should have exaclty two lines" do
+    
+    before do
       path = File.join @bag_path, 'bagit.txt'
-      lines = open(path) { |io| io.readlines }
-      lines.size.should == 2
+      @lines = open(path) { |io| io.readlines }
     end
     
-    it "should have a bagit version"
+    it "should have exaclty two lines" do
+      @lines.size.should == 2
+    end
+    
+    it "should have a bagit version" do
+      # TODO this nees a better matcher
+      a = @lines.select { |line| line.chomp =~ /BagIt-Version:\s*\d+\.\d+/ }
+      a.should_not be_empty
+    end
+    
     it "should have a tag file encoding"
   end
 
