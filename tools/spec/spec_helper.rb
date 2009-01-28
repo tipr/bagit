@@ -30,7 +30,7 @@ module TIPRMatchers
     # Assume an XML file, unless otherwise specified.
     def initialize(pattern=/\.xml\Z/i, type='XML')  
       @pattern = pattern        # The REGEX we're searching for
-      @type = type		# A pretty name to describe the file type
+      @type = type              # A pretty name to describe the file type
     end
 
     def matches?(target)
@@ -61,7 +61,7 @@ module TIPRMatchers
 
     def initialize(xpath, ns)  
       @xpath = xpath            # The XPath we would like to match.
-      @ns = ns			# The namespace to use
+      @ns = ns                  # The namespace to use
     end
 
     def matches?(target)
