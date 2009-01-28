@@ -101,11 +101,27 @@ describe Bagit do
       end
       
     end
-    
-    it "should only contain lines of the format CHECKSUM FILENAME"
+
+    it "should only contain lines of the format CHECKSUM FILENAME" do
+      @manifest_files.each do |file|
+        lines = open(file) { |io| io.readlines }
+        lines.each do |line|
+          line.chomp!
+          line.should =~ /^[a-f0-9]+\s+[^\s]+$/
+        end
+      end
+    end
+
+    # not testable really
     it "should only use the slash character as a path separator in FILENAME"
+
+    # TODO already tested
     it "should only use hex-encoded checksums"
+
+    # not testable really
     it "should contain FILENAMEs that are relative paths from the base directory"
+
+    # TODO already tested
     it "should have one or more whitespace characters separating fields"
   end
 
