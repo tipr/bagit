@@ -71,7 +71,7 @@ describe "the tipr descriptor" do
   # We checked for the struct map in AllTiprFiles
   describe "the struct map" do
     it "should have at least two divs" do
-      @divs.size.should >= 2
+      @divs.size.should >= 1
     end
 
     it "should have all divs be ordered" do
