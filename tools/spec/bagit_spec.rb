@@ -77,16 +77,31 @@ describe Bagit do
     end
     
     it "should have a tag file encoding" do
+      # TODO this nees a better matcher
       a = @lines.select { |line| line.chomp =~ /Tag-File-Character-Encoding:\s*.+/ }
       a.should_not be_empty
     end
     
   end
 
-  it "may have zero ormore additional files"
+  it "may have zero or more additional files"
 
   describe "manifest-[algorithm].txt" do
-    it "should have valid algorithm in the name (at least md5 and sha1)"
+    
+    before do
+      pattern = File.join @bag_path, 'manifest-*.txt'
+      @manifest_files = Dir.glob pattern
+    end
+    
+    it "should have valid algorithm in the name (at least md5 or sha1)" do
+      
+      @manifest_files.each do |path|
+        path =~ /manifest-(.*).txt/
+        $1.should be_in('md5', 'sha1')
+      end
+      
+    end
+    
     it "should only contain lines of the format CHECKSUM FILENAME"
     it "should only use the slash character as a path separator in FILENAME"
     it "should only use hex-encoded checksums"

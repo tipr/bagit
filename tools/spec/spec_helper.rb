@@ -1,5 +1,5 @@
 module TIPRMatchers
-  
+
   class BeInNamespace
 
     def initialize(expected)
@@ -28,9 +28,9 @@ module TIPRMatchers
   class ReferenceAFile
 
     # Assume an XML file, unless otherwise specified.
-    def initialize(pattern=/\.xml\Z/i, type='XML')  
+    def initialize(pattern=/\.xml\Z/i, type='XML')
       @pattern = pattern        # The REGEX we're searching for
-      @type = type		# A pretty name to describe the file type
+      @type = type              # A pretty name to describe the file type
     end
 
     def matches?(target)
@@ -39,9 +39,9 @@ module TIPRMatchers
         return false
       end
       @ref = @target['href']
-      if @ref == nil 
+      if @ref == nil
         return false
-      end	
+      end
       @ref.match(@pattern) != nil
     end
 
@@ -64,9 +64,40 @@ module TIPRMatchers
   def be_in_namespace(expected)
     BeInNamespace.new(expected)
   end
-  
+
 end
 
-Spec::Runner.configure do |config|  
+
+module BagitMatchers
+
+  class BeIn
+
+    def initialize(*expected_collection)
+      @expected = expected_collection
+    end
+    
+    def matches?(target)
+      @target = target
+      @expected.include? @target
+    end
+
+    def failure_message
+      "expected <#{@target}> to be in collection <#{@expected}>"
+    end
+
+    def negative_failure_message
+      "expected <#{@target}> to not be in collection <#{@expected}>"
+    end
+
+  end
+
+  def be_in(*expected_collection)
+    BeIn.new(*expected_collection)
+  end
+
+end
+
+Spec::Runner.configure do |config|
   config.include(TIPRMatchers)
-end  
+  config.include(BagitMatchers)
+end
