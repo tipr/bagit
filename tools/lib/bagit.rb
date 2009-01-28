@@ -23,7 +23,8 @@ class Bagit
     bagit_txt_path = File.join path, 'bagit.txt'
     open(bagit_txt_path, 'w') do |io|
       io.puts "BagIt-Version: #{VERSION}"
-      io.puts 'line 2'
+      io.puts 'Tag-File-Character-Encoding: UTF-8'
+      # TODO make sure unicode is outputted
     end
     
   end

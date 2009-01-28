@@ -76,7 +76,11 @@ describe Bagit do
       a.should_not be_empty
     end
     
-    it "should have a tag file encoding"
+    it "should have a tag file encoding" do
+      a = @lines.select { |line| line.chomp =~ /Tag-File-Character-Encoding:\s*.+/ }
+      a.should_not be_empty
+    end
+    
   end
 
   it "may have zero ormore additional files"
