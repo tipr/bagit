@@ -9,7 +9,7 @@ share_examples_for "all representations" do
   before(:each) do
 
     # need a daitss DIP
-    path = File.join '..', 'DIPs', 'FDA0666001'
+    path = File.join '..', 'DIPs', 'FDA0666002'
     @dip = DIP.new path
 
     # need the rep.xml template

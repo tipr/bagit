@@ -9,7 +9,7 @@ describe "the tipr descriptor" do
   
   before(:each) do
     # need a daitss DIP
-    path = File.join '..', 'DIPs', 'FDA0666001'
+    path = File.join '..', 'DIPs', 'FDA0666002'
     @dip = DIP.new path
 
     # Generate sha-1 sums for our original and active representations:
