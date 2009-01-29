@@ -63,7 +63,7 @@ describe "the tipr descriptor" do
     @files.each do |f|
       f['ID'].should_not be_nil
       f['CHECKSUM'].should_not be_nil
-      f['CHECKSUMTYPE'].should == 'SHA-1'
+      f['CHECKSUMTYPE'].should eql('SHA-1')
       f.xpath('./xmlns:FLocat', @xmlns).first.should reference_an_xml_file      
     end    
   end 
