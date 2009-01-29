@@ -20,9 +20,16 @@ class Bagit
       io.puts "BagIt-Version: #{VERSION}"
       io.puts 'Tag-File-Character-Encoding: UTF-8'
     end
-
+    
+    # write the package-info.txt
+    set_package_info 'Packing-Software', "Bagit ruby gem (http://github.com/flazz/tipr)"
+    
   end
 
+  def package_info_txt_file
+    File.join @path, 'package-info.txt'
+  end
+  
   def data_dir
     File.join @path, 'data'
   end
@@ -73,9 +80,10 @@ class Bagit
   # fet all remote files
   def fetch!
 
-    # too many nests, not enough whitespace, i know, but it would double
-    # this method and be less readable, maybe if ruby would support
-    # currying or something it would be nicer.
+    # too many nests, not enough whitespace, i know, but it would
+    # double the size of this block and be less readable, maybe if
+    # ruby would support currying or something it would be
+    # nicer. besides i'm used to reading lisp now.
     open(fetch_txt_file) do |io|
       io.readlines.each do |line|
         (url, length, path) = line.chomp.split(/\s+/, 3)
@@ -97,4 +105,34 @@ class Bagit
     FileUtils::mv fetch_txt_file, "#{fetch_txt_file}.0"
   end
 
+  def read_package_info
+    open(package_info_txt_file) do |io|
+      io.readlines.inject({}) do |hash, line|
+        name, value = line.chomp.split /\s*:\s*/
+        hash.merge({name => value})
+      end
+    end
+  end
+  
+  def save_package_info(info)
+    open(package_info_txt_file, 'w') do |io|
+      info.each do |name, value|
+        io.puts "#{name}: #{value}"
+      end
+    end
+  end
+  
+  def set_package_info(name, value)
+    name = name.split('-').map { |t| t. capitalize }.join '-'
+    
+    info = if File.exist? package_info_txt_file
+             read_package_info
+           else
+             {}
+           end
+    
+    info[name] = value
+    save_package_info(info)
+  end
+  
 end

@@ -14,7 +14,7 @@ describe Bagit do
     # make the bag
     @bag_path = File.join @sandbox_path, 'the_bag'
     @bag = Bagit.new @bag_path
-    
+
     # add some files
     rio = open('/dev/random')
     10.times do |n|
@@ -71,7 +71,7 @@ describe Bagit do
     end
 
   end
-  
+
   # super!
   it "may have zero or more additional files"
 
@@ -81,13 +81,13 @@ describe Bagit do
       pattern = File.join @bag_path, 'manifest-*.txt'
       @manifest_files = Dir.glob pattern
     end
-    
+
     it "should have at least one" do
       @manifest_files.should_not be_empty
     end
-    
+
     it "should have valid algorithm in the name (at least md5 or sha1)" do
-      
+
       @manifest_files.each do |path|
         path =~ /manifest-(.*).txt/
         $1.should be_in('md5', 'sha1')
@@ -114,15 +114,15 @@ describe Bagit do
 
     before(:each) do
       @bag.add_remote_file 'http://www.gnu.org/graphics/heckert_gnu.small.png', 'gnu.png'
-      
+
       path = File.join @bag_path, 'fetch.txt'
       @lines = open(path) { |io| io.readlines }
     end
 
     it "should not be empty" do
-      @lines.should_not be_empty      
+      @lines.should_not be_empty
     end
-    
+
     it "should only contain lines of the format URL LENGTH FILENAME" do
 
       @lines.each do |line|
@@ -136,32 +136,55 @@ describe Bagit do
       path = File.join @bag_path, 'fetch.txt'
       File.exist?(path).should_not be_true
     end
+    
   end
 
   describe "tagmanifest-[algorithm].txt" do
     it "should work just like a nomral manifest file, but only contain tag files"
   end
 
-  describe "a valid bag" do
-    it "should have every present payload file manifested at least once"
-    it "should have all manifested files present"
-    it "should have verified checksums of all manifested files"
-  end
+  describe "package-info.txt" do
+    
+    before(:each) do
+      path = File.join @bag_path, 'package-info.txt'
+      @lines = open(path) { |io| io.readlines }
+    end
+    
+    it "should not be empty" do
+      @lines.should_not be_empty
+    end
+    
+    it "should contain lines of the format LABEL: VALUE (like an email header)" do
+      @lines.each { |line| line.chomp.should =~ /^[^\s]+\s*:\s+.*$/ }
+    end
+    
+    it "should be case insensitive with respect to LABELs" do
+      path = File.join @bag_path, 'package-info.txt'
 
-  describe "bag-info.txt" do
-    it "should not be empty"
-    it "should contain lines of the format LABEL : VALUE"
-    it "should be case insensitive with respect to LABELs"
+      @bag.set_package_info 'Foo', 'bar'
+      pre = open(path) { |io| io.readlines }.size
+
+      @bag.set_package_info 'foo', 'bar'
+      post = open(path) { |io| io.readlines }.size
+      
+      post.should == pre
+    end
+
     it "may have folded VALUEs"
-  end
-
-  describe "serialization" do
-    it "should contain only bag"
-    it "should have the same basename as the bag's base dir"
-    it "should produce a single top level bad dir"
-    it "should preserve the validity of the bag"
   end
 
 end
 
+describe "a valid bag" do
+  it "should have every present payload file manifested at least once"
+  it "should have all manifested files present"
+  it "should have verified checksums of all manifested files"
+end
+
+describe "serialization" do
+  it "should contain only bag"
+  it "should have the same basename as the bag's base dir"
+  it "should produce a single top level bad dir"
+  it "should preserve the validity of the bag"
+end
 
