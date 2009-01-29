@@ -5,34 +5,22 @@ require 'tempfile'
 describe Bagit do
 
   before(:each) do
-    # make some temp data to bag
+    # make a sandbox to play in
     tf = Tempfile.open 'sandbox'
     @sandbox_path = tf.path
     tf.close!
     FileUtils::mkdir @sandbox_path
 
-    # make some source data
-    source_data_path = File.join @sandbox_path, 'source_data'
-    FileUtils::mkdir source_data_path
-
-    open('/dev/random') do |rio|
-
-      10.times do
-
-        Tempfile.open('content-file',  source_data_path) do |tio|
-          data = rio.read 16
-          tio.write data
-          tio.flush
-        end
-
-      end
-
-    end
-
     # make the bag
     @bag_path = File.join @sandbox_path, 'the_bag'
-    @bag = Bagit.new source_data_path
-    @bag.save @bag_path
+    @bag = Bagit.new @bag_path
+    
+    # add some files
+    rio = open('/dev/random')
+    10.times do |n|
+      @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
+    end
+    rio.close
   end
 
   after(:each) do
@@ -60,37 +48,42 @@ describe Bagit do
   end
 
   describe "bagit.txt" do
-    
+
     before do
       path = File.join @bag_path, 'bagit.txt'
       @lines = open(path) { |io| io.readlines }
     end
-    
+
     it "should have exaclty two lines" do
       @lines.size.should == 2
     end
-    
+
     it "should have a bagit version" do
-      # TODO this nees a better matcher
+      # TODO this needs a better matcher
       a = @lines.select { |line| line.chomp =~ /BagIt-Version:\s*\d+\.\d+/ }
       a.should_not be_empty
     end
-    
+
     it "should have a tag file encoding" do
-      # TODO this nees a better matcher
+      # TODO this needs a better matcher
       a = @lines.select { |line| line.chomp =~ /Tag-File-Character-Encoding:\s*.+/ }
       a.should_not be_empty
     end
-    
-  end
 
+  end
+  
+  # super!
   it "may have zero or more additional files"
 
   describe "manifest-[algorithm].txt" do
-    
+
     before do
       pattern = File.join @bag_path, 'manifest-*.txt'
       @manifest_files = Dir.glob pattern
+    end
+    
+    it "should have at least one" do
+      @manifest_files.should_not be_empty
     end
     
     it "should have valid algorithm in the name (at least md5 or sha1)" do
@@ -99,40 +92,50 @@ describe Bagit do
         path =~ /manifest-(.*).txt/
         $1.should be_in('md5', 'sha1')
       end
-      
+
     end
 
     it "should only contain lines of the format CHECKSUM FILENAME" do
       @manifest_files.each do |file|
         lines = open(file) { |io| io.readlines }
+        lines.should_not be_empty
+
         lines.each do |line|
-          line.chomp!
-          line.should =~ /^[a-f0-9]+\s+[^\s]+$/
+          line.chomp.should =~ /^[a-f0-9]+\s+[^\s]+$/
         end
+
       end
+
     end
 
-    # not testable really
-    it "should only use the slash character as a path separator in FILENAME"
-
-    # TODO already tested
-    it "should only use hex-encoded checksums"
-
-    # not testable really
-    it "should contain FILENAMEs that are relative paths from the base directory"
-
-    # TODO already tested
-    it "should have one or more whitespace characters separating fields"
   end
 
   describe "fetch.txt" do
-    it "should only contain lines of the format URL LENGTH FILENAME"
-    it "should only have cannonical URLs"
-    it "should only have a positive integer or - (unspecified) for LENGTH"
-    it "should only use the slash character as a path separator in FILENAME"
-    it "should contain FILENAMEs that are relative paths from the base directory"
-    it "should have one or more whitespace characters separating fields"
-    it "should be renamed when receipt of a bag is complete"
+
+    before(:each) do
+      @bag.add_remote_file 'http://www.gnu.org/graphics/heckert_gnu.small.png', 'gnu.png'
+      
+      path = File.join @bag_path, 'fetch.txt'
+      @lines = open(path) { |io| io.readlines }
+    end
+
+    it "should not be empty" do
+      @lines.should_not be_empty      
+    end
+    
+    it "should only contain lines of the format URL LENGTH FILENAME" do
+
+      @lines.each do |line|
+        line.chomp.should =~ /^[^\s]+\s+(\d+|\-)\s+[^\s]+$/
+      end
+
+    end
+
+    it "should be gone when fetch is complete" do
+      @bag.fetch!
+      path = File.join @bag_path, 'fetch.txt'
+      File.exist?(path).should_not be_true
+    end
   end
 
   describe "tagmanifest-[algorithm].txt" do
