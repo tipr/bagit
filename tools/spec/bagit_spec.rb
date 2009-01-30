@@ -72,9 +72,6 @@ describe Bagit do
 
   end
 
-  # super!
-  it "may have zero or more additional files"
-
   describe "manifest-[algorithm].txt" do
 
     before do
@@ -162,15 +159,30 @@ describe Bagit do
       path = File.join @bag_path, 'package-info.txt'
 
       @bag.set_package_info 'Foo', 'bar'
-      pre = open(path) { |io| io.readlines }.size
+      pre = @bag.read_package_info.keys
 
       @bag.set_package_info 'foo', 'bar'
-      post = open(path) { |io| io.readlines }.size
+      post = @bag.read_package_info.keys
       
       post.should == pre
     end
 
-    it "may have folded VALUEs"
+    it "may have folded VALUEs" do
+
+      pre = @bag.read_package_info.keys.size
+      @bag.set_package_info 'Foo', <<LOREM
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enimad
+  minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+  aliquip ex ea commodo consequat. Duis aute irure dolor in
+  reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+  pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+  culpa qui officia deserunt mollit anim id est laborum.
+LOREM
+      post = @bag.read_package_info.keys.size
+      post.should == (pre + 1)
+    end
+    
   end
 
 end
@@ -187,4 +199,3 @@ describe "serialization" do
   it "should produce a single top level bad dir"
   it "should preserve the validity of the bag"
 end
-

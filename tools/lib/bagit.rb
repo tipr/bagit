@@ -2,6 +2,26 @@ require 'open-uri'
 require 'digest/sha1'
 require 'fileutils'
 
+class String
+  
+  def wrap(width)
+    s = gsub(/\s+/, ' ').strip
+    
+    if s.length > width
+      s[0...width] + '\n' + s[width..-1].wrap(width)
+    else
+      s
+    end
+    
+  end
+  
+  def indent(n)
+    indent = ' ' * n
+    gsub '\n', "\n#{indent}"
+  end
+  
+end
+
 class Bagit
 
   VERSION = '0.95'
@@ -23,7 +43,6 @@ class Bagit
     
     # write the package-info.txt
     set_package_info 'Packing-Software', "Bagit ruby gem (http://github.com/flazz/tipr)"
-    
   end
 
   def package_info_txt_file
@@ -104,10 +123,11 @@ class Bagit
     # move the current fetch_txt
     FileUtils::mv fetch_txt_file, "#{fetch_txt_file}.0"
   end
-
+  
   def read_package_info
     open(package_info_txt_file) do |io|
-      io.readlines.inject({}) do |hash, line|
+      entries = io.read.split /\n(?=[^\s])/
+      entries.inject({}) do |hash, line|
         name, value = line.chomp.split /\s*:\s*/
         hash.merge({name => value})
       end
@@ -117,14 +137,20 @@ class Bagit
   def save_package_info(info)
     open(package_info_txt_file, 'w') do |io|
       info.each do |name, value|
-        io.puts "#{name}: #{value}"
+        simple_entry = "#{name}: #{value.gsub /\s+/, ' '}"
+        entry = if simple_entry.length > 79
+                  simple_entry.wrap(77).indent(2)
+                else
+                  simple_entry
+                end
+        
+        io.puts entry
       end
     end
   end
   
   def set_package_info(name, value)
-    name = name.split('-').map { |t| t. capitalize }.join '-'
-    
+    name = name.split('-').map { |t| t.capitalize }.join '-'
     info = if File.exist? package_info_txt_file
              read_package_info
            else
