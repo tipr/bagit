@@ -8,12 +8,25 @@
       <name>FCLA</name>
     </agent>
   </metsHdr>
+  <% myinfo = @type=='ORIG'? @dip.original_representation : @dip.current_representation %>
+  <amdSec>
+    <digiprovMD ID="package-digiprov">
+      <mdRef LOCTYPE="URL" MDTYPE="OTHER" OTHERMDTYPE="DAITSS" 
+       xlink:href="package-digiprov.xml"/>
+    </digiprovMD>
+    <% myinfo.each_with_index do |e, i| %>
+    <digiprovMD ID="digiprov-metadata-<%= i %>">
+      <mdRef LOCTYPE="URL" MDTYPE="OTHER" OTHERMDTYPE="DAITSS"
+       xlink:href="digiprov-<%= e[:aip_id] %>.xml"/>
+    </digiprovMD>
+    <% end %>
+  </amdSec>
   
   <fileSec>
     <fileGrp>
-    <% myinfo = @type=='ORIG' ? @dip.original_representation : @dip.current_representation %>
       <% myinfo.each_with_index do |e,i| %>
-      <file ID="file-<%= i %>" CHECKSUM="<%= e[:sha_1] %>" CHECKSUMTYPE="SHA-1">
+      <file ID="file-<%= i %>" ADMID="digiprov-metadata-<%= i %>"
+       CHECKSUM="<%= e[:sha_1] %>" CHECKSUMTYPE="SHA-1">
         <FLocat LOCTYPE="URL" xlink:href="<%= @dip.rel_path %>/<%= e[:path] %>"/>
       </file>
       <% end %>
