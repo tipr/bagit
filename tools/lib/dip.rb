@@ -112,7 +112,8 @@ class DIP
     id_list.map do |file_node| 
       {
       	:sha_1 => file_node['CHECKSUM'],
-      	:path => file_node.xpath('mets:FLocat/@xlink:href', NS).first.content
+      	:path => file_node.xpath('mets:FLocat/@xlink:href', NS).first.content,
+      	:aip_id => file_node['ID']
       }
     end
 
@@ -130,7 +131,8 @@ class DIP
     id_list.map do |file_node| 
       {
         :sha_1 => file_node['CHECKSUM'],
-        :path => file_node.xpath('mets:FLocat/@xlink:href', NS).first.content
+        :path => file_node.xpath('mets:FLocat/@xlink:href', NS).first.content,
+        :aip_id => file_node['ID']
       }
     end
     
