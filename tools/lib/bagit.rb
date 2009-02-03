@@ -28,13 +28,13 @@ module Bagit
 
   class Bag
 
-    attr_reader :path
+    attr_reader :bag_path
 
     def initialize(path)
-      @path = path
+      @bag_path = path
 
       # make the dir structure if it doesn't exist
-      FileUtils::mkdir @path unless File.directory? @path
+      FileUtils::mkdir @bag_path unless File.directory? @bag_path
       FileUtils::mkdir_p data_dir unless File.directory? data_dir
 
       # write the bagit.txt
@@ -48,11 +48,11 @@ module Bagit
     end
 
     def package_info_txt_file
-      File.join @path, 'package-info.txt'
+      File.join @bag_path, 'package-info.txt'
     end
 
     def data_dir
-      File.join @path, 'data'
+      File.join @bag_path, 'data'
     end
 
     def data_files
@@ -61,36 +61,28 @@ module Bagit
     end
 
     def bagit_txt_file
-      File.join @path, 'bagit.txt'
+      File.join @bag_path, 'bagit.txt'
     end
 
     def manifest_files
-      pattern = File.join @path, "manifest-*.txt"
+      pattern = File.join @bag_path, "manifest-*.txt"
       Dir[pattern]
     end
 
     def manifest_file(algorithm='sha1')
-      File.join @path, "manifest-#{algorithm}.txt"
+      File.join @bag_path, "manifest-#{algorithm}.txt"
     end
 
     def add_file(base_path)
-      p = File.join(data_dir, base_path)
-
-      # write the data file
-      open(p, 'w') do |io|
-        yield io
-      end
-
-      # add an entry to the manifest file
-      open(manifest_file, 'a') do |mio|
-        digest = open(p) { |fio| Digest::SHA1.hexdigest fio.read }
-        mio.puts "#{digest} #{p}"
-      end
-
+      path = File.join(data_dir, base_path)
+      raise "Bag file exists #{base_path}" if File.exist? path
+      open(path, 'w') { |io| yield io }
+      digest = open(path) { |io| Digest::SHA1.hexdigest io.read }
+      open(manifest_file, 'a') { |io| io.puts "#{digest} #{path}" }
     end
 
     def fetch_txt_file
-      File.join @path, 'fetch.txt'
+      File.join @bag_path, 'fetch.txt'
     end
 
     def add_remote_file(url, path, size=nil)
@@ -204,7 +196,7 @@ module Bagit
                    else
                      :unknown
                    end
-          
+
           actual == value || actual == :unknown
         end
       end
@@ -224,7 +216,7 @@ module Bagit
         acc.merge({algorithm.intern => expected_digest})
       end
     end
-    
+
   end
 
 end

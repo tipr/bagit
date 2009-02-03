@@ -5,7 +5,7 @@ require 'tempfile'
 describe Bagit::Bag do
 
   before(:each) do
-    
+
     # make a sandbox to play in
     tf = Tempfile.open 'sandbox'
     @sandbox_path = tf.path
@@ -22,7 +22,7 @@ describe Bagit::Bag do
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
       end
     end
-    
+
   end
 
   after(:each) do
@@ -47,6 +47,12 @@ describe Bagit::Bag do
   it "should have a file bagit.txt" do
     path = File.join @bag_path, 'bagit.txt'
     File.file?(path).should be_true
+  end
+
+  it "should not allow overwriting of files" do
+    open('/dev/random') do |rio|
+      lambda { @bag.add_file("file-0") { |io| io.write rio.read(16) } }.should raise_error
+    end
   end
 
   describe "bagit.txt" do
@@ -190,10 +196,12 @@ LOREM
   end
 
   describe "an invalid bag" do
-    it "should not be valid if incomplete (some file is not manifested)" do
-      @bag.should be_complete
-      @bag.should be_valid
 
+    before(:each) do
+      @bag.should be_valid
+    end
+
+    it "should not be valid if incomplete (some file is not manifested)" do
       # add a file into the bag through the back door
       open(File.join(@bag.data_dir, 'not-manifested'), 'w') do |io|
         io.puts 'nothing to see here, move along'
@@ -204,9 +212,6 @@ LOREM
     end
 
     it "should not be valid if some manifested file is not present" do
-      @bag.should be_complete
-      @bag.should be_valid
-
       # remove a file through the back door
       FileUtils::rm @bag.data_files[0]
 
@@ -214,10 +219,7 @@ LOREM
       @bag.should_not be_valid
     end
 
-    it "should not be balid if some file is not fixed" do
-      @bag.should be_fixed
-      @bag.should be_valid
-
+    it "should not be valid if some file is not fixed" do
       # remove a file through the back door
       open(@bag.data_files[0], 'a') { |io| io.puts 'oops!' }
 
@@ -225,6 +227,7 @@ LOREM
       @bag.should_not be_valid
     end
 
+    it "needs a facility to report errors (Validatable)"
   end
 
 end
