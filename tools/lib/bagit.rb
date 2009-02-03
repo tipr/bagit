@@ -1,3 +1,4 @@
+require 'pathname'
 require 'open-uri'
 require 'digest/sha1'
 require 'fileutils'
@@ -28,13 +29,13 @@ module Bagit
 
   class Bag
 
-    attr_reader :bag_path
+    attr_reader :bag_dir
 
     def initialize(path)
-      @bag_path = path
+      @bag_dir = path
 
       # make the dir structure if it doesn't exist
-      FileUtils::mkdir @bag_path unless File.directory? @bag_path
+      FileUtils::mkdir @bag_dir unless File.directory? @bag_dir
       FileUtils::mkdir_p data_dir unless File.directory? data_dir
 
       # write the bagit.txt
@@ -48,41 +49,49 @@ module Bagit
     end
 
     def package_info_txt_file
-      File.join @bag_path, 'package-info.txt'
+      File.join @bag_dir, 'package-info.txt'
     end
 
     def data_dir
-      File.join @bag_path, 'data'
+      File.join @bag_dir, 'data'
     end
 
     def data_files
       pattern = File.join data_dir, '**'
-      Dir[pattern].select { |f| File.file? f }
+      absfiles = Dir[pattern].select { |f| File.file? f }
+      base = Pathname.new @bag_dir
+      absfiles.map { |af| Pathname.new(af).relative_path_from(base).to_s }
     end
 
     def bagit_txt_file
-      File.join @bag_path, 'bagit.txt'
+      File.join @bag_dir, 'bagit.txt'
     end
 
     def manifest_files
-      pattern = File.join @bag_path, "manifest-*.txt"
+      pattern = File.join @bag_dir, "manifest-*.txt"
+      Dir[pattern]
+    end
+
+    def tag_manifest_files
+      pattern = File.join @bag_dir, "tagmanifest-*.txt"
       Dir[pattern]
     end
 
     def manifest_file(algorithm='sha1')
-      File.join @bag_path, "manifest-#{algorithm}.txt"
+      File.join @bag_dir, "manifest-#{algorithm}.txt"
     end
 
     def add_file(base_path)
       path = File.join(data_dir, base_path)
       raise "Bag file exists #{base_path}" if File.exist? path
+      FileUtils::mkdir_p File.dirname(path)
       open(path, 'w') { |io| yield io }
       digest = open(path) { |io| Digest::SHA1.hexdigest io.read }
-      open(manifest_file, 'a') { |io| io.puts "#{digest} #{path}" }
+      open(manifest_file, 'a') { |io| io.puts "#{digest} #{File.join 'data', base_path}" }
     end
 
     def fetch_txt_file
-      File.join @bag_path, 'fetch.txt'
+      File.join @bag_dir, 'fetch.txt'
     end
 
     def add_remote_file(url, path, size=nil)
@@ -185,23 +194,33 @@ module Bagit
     # Returns true if all present manifested files' message digests
     # match the actual message digest
     def fixed?
-      data_files.all? do |f|
-        data = open(f) { |io| io.read }
-        manifested_digests(f).all? do |algorithm, value|
-          actual = case algorithm
-                   when :sha1
-                     Digest::SHA1.hexdigest data
-                   when :md5
-                     Digest::MD5.hexdigest data
-                   else
-                     :unknown
-                   end
+      (manifest_files + tag_manifest_files).all? do |mf|
+        # extract the algorithm
+        mf =~ /manifest-(.+).txt$/
+        algo = case $1
+               when /sha1/i
+                 Digest::SHA1
+               when /md5/i
+                 Digest::MD5
+               else
+                 :unknown
+               end
 
-          actual == value || actual == :unknown
+        # check it
+        unless algo == :unknown
+          lines = open(mf) { |io| io.readlines }
+          lines.all? do |line|
+            manifested_digest, path = line.chomp.split /\s+/, 2
+            actual_digest = open(File.join(@bag_dir, path)) { |io| algo.hexdigest io.read }
+            actual_digest == manifested_digest
+          end
+        else
+          true
         end
+        
       end
-    end
 
+    end
 
     protected
 

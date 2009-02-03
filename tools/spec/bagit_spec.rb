@@ -49,10 +49,12 @@ describe Bagit::Bag do
     File.file?(path).should be_true
   end
 
+  it "should allow addition of files with deep paths" do
+    lambda { @bag.add_file("/deep/dir/structure/file") { |io| io.puts 'all alone' } }.should_not raise_error
+  end
+  
   it "should not allow overwriting of files" do
-    open('/dev/random') do |rio|
-      lambda { @bag.add_file("file-0") { |io| io.write rio.read(16) } }.should raise_error
-    end
+    lambda { @bag.add_file("file-0") { |io| io.puts 'overwrite!' } }.should raise_error
   end
 
   describe "bagit.txt" do
@@ -106,7 +108,7 @@ describe Bagit::Bag do
         lines.should_not be_empty
 
         lines.each do |line|
-          line.chomp.should =~ /^[a-f0-9]+\s+[^\s]+$/
+          line.chomp.should =~ /^[a-f0-9]+\s+data\/[^\s]+$/
         end
 
       end
@@ -147,7 +149,9 @@ describe Bagit::Bag do
   end
 
   describe "tagmanifest-[algorithm].txt" do
-    it "should work just like a nomral manifest file, but only contain tag files"
+    it "should work just like a nomral manifest file, but only contain tag files" do
+      
+    end
   end
 
   describe "package-info.txt" do
@@ -211,22 +215,23 @@ LOREM
       @bag.should_not be_valid
     end
 
-    it "should not be valid if some manifested file is not present" do
-      # remove a file through the back door
-      FileUtils::rm @bag.data_files[0]
-
-      @bag.should_not be_complete
-      @bag.should_not be_valid
-    end
-
     it "should not be valid if some file is not fixed" do
-      # remove a file through the back door
-      open(@bag.data_files[0], 'a') { |io| io.puts 'oops!' }
+      # tweak a file through the back door
+      open(File.join(@bag.bag_dir, @bag.data_files[0]), 'a') { |io| io.puts 'oops!' }
 
       @bag.should_not be_fixed
       @bag.should_not be_valid
     end
 
+    it "should not be valid if some manifested file is not present" do
+      # add a file and then remove it through the back door
+      @bag.add_file("file-k") { |io| io.puts 'time to go' }
+      FileUtils::rm File.join(@bag.bag_dir, 'data', 'file-k')
+
+      @bag.should_not be_complete
+      @bag.should_not be_valid
+    end
+    
     it "needs a facility to report errors (Validatable)"
   end
 
