@@ -2,9 +2,10 @@ require 'bagit'
 require 'tempfile'
 
 # based on v0.95 http://www.cdlib.org/inside/diglib/bagit/bagitspec.html
-describe Bagit do
+describe Bagit::Bag do
 
   before(:each) do
+    
     # make a sandbox to play in
     tf = Tempfile.open 'sandbox'
     @sandbox_path = tf.path
@@ -13,14 +14,15 @@ describe Bagit do
 
     # make the bag
     @bag_path = File.join @sandbox_path, 'the_bag'
-    @bag = Bagit.new @bag_path
+    @bag = Bagit::Bag.new @bag_path
 
     # add some files
-    rio = open('/dev/random')
-    10.times do |n|
-      @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
+    open('/dev/random') do |rio|
+      10.times do |n|
+        @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
+      end
     end
-    rio.close
+    
   end
 
   after(:each) do
@@ -133,7 +135,9 @@ describe Bagit do
       path = File.join @bag_path, 'fetch.txt'
       File.exist?(path).should_not be_true
     end
-    
+
+    it "should be a subset of files in the manifests"
+
   end
 
   describe "tagmanifest-[algorithm].txt" do
@@ -141,20 +145,20 @@ describe Bagit do
   end
 
   describe "package-info.txt" do
-    
+
     before(:each) do
       path = File.join @bag_path, 'package-info.txt'
       @lines = open(path) { |io| io.readlines }
     end
-    
+
     it "should not be empty" do
       @lines.should_not be_empty
     end
-    
+
     it "should contain lines of the format LABEL: VALUE (like an email header)" do
       @lines.each { |line| line.chomp.should =~ /^[^\s]+\s*:\s+.*$/ }
     end
-    
+
     it "should be case insensitive with respect to LABELs" do
       path = File.join @bag_path, 'package-info.txt'
 
@@ -163,7 +167,7 @@ describe Bagit do
 
       @bag.set_package_info 'foo', 'bar'
       post = @bag.read_package_info.keys
-      
+
       post.should == pre
     end
 
@@ -182,16 +186,49 @@ LOREM
       post = @bag.read_package_info.keys.size
       post.should == (pre + 1)
     end
-    
+
+  end
+
+  describe "an invalid bag" do
+    it "should not be valid if incomplete (some file is not manifested)" do
+      @bag.should be_complete
+      @bag.should be_valid
+
+      # add a file into the bag through the back door
+      open(File.join(@bag.data_dir, 'not-manifested'), 'w') do |io|
+        io.puts 'nothing to see here, move along'
+      end
+
+      @bag.should_not be_complete
+      @bag.should_not be_valid
+    end
+
+    it "should not be valid if some manifested file is not present" do
+      @bag.should be_complete
+      @bag.should be_valid
+
+      # remove a file through the back door
+      FileUtils::rm @bag.data_files[0]
+
+      @bag.should_not be_complete
+      @bag.should_not be_valid
+    end
+
+    it "should not be balid if some file is not fixed" do
+      @bag.should be_fixed
+      @bag.should be_valid
+
+      # remove a file through the back door
+      open(@bag.data_files[0], 'a') { |io| io.puts 'oops!' }
+
+      @bag.should_not be_fixed
+      @bag.should_not be_valid
+    end
+
   end
 
 end
 
-describe "a valid bag" do
-  it "should have every present payload file manifested at least once"
-  it "should have all manifested files present"
-  it "should have verified checksums of all manifested files"
-end
 
 describe "serialization" do
   it "should contain only bag"
