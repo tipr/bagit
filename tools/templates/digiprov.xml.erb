@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<premis xmlns="http://www.loc.gov/standards/premis/v1">
+
+<% require 'nokogiri'                                            %>
+<%# hash of DAITSS event_codes and English translations:         %>
+<%  daitss_events = {                                            %>
+<%              :CPD => "Decrease preservation level",           %>
+<%              :CPU => "Increase preservation level",           %>
+<%              :CV  => "Virus check",                           %>
+<%              :D   => "Disseminate",                           %>
+<%              :DEL => "Deleted a previously ingested file",    %>
+<%              :DLK => "Downloaded link",                       %>
+<%              :FC  => "Fixity Check",                          %>
+<%              :I   => "Ingest",                                %>
+<%              :L   => "Localized",                             %>
+<%              :M   => "Migrated",                              %>
+<%              :N   => "Normalized",                            %>
+<%              :RM  => "Refreshed media",                       %>
+<%              :UNKNOWN => "Unknown event type",                %>
+<%              :VC  => "Verify checksum",                       %>
+<%              :WA  => "Withdraw by affiliate",                 %>
+<%              :WO  => "Withdraw by operator"                   %>
+<%                  }                                            %>
+<%                                                               %>
+<%# Our namespaces to retrieve information from our dip          %>
+<%  xmlns = { "daitss" => "http://www.fcla.edu/dls/md/daitss/" } %>
+    <!-- DAITSS events:  
+<% daitss_events.each_pair do |code, english| %>
+           <%= "#{code}:" + " #{english}" %>
+<% end %>
+     -->
+
+<%# Print out each event        %>
+<% @events.each do |e|           %>
+  <event>
+  
+    <!-- Converted from DAITSS schema -->
+    <eventIdentifier>
+      <eventIdentifierType>URI</eventIdentifierType>
+      <eventIdentifierValue>
+        <!--daitss:EVENT ID -->
+        <%= e.xpath('./daitss:ID', xmlns).first.content %>
+      </eventIdentifierValue>
+    </eventIdentifier>
+ 
+    <eventType>
+      <!-- Nice description of DAITSS:EVENT_TYPE. See codes above. -->
+      <%= daitss_events[:"#{e.xpath('./daitss:EVENT_TYPE', xmlns).first.content}"] %>
+    </eventType>
+ 
+    <eventDateTime>
+      <!-- daitss:DATE_TIME in 8601 -->
+      <%= Time.parse(e.xpath('./daitss:DATE_TIME', xmlns).first.content).xmlschema %>
+    </eventDateTime>
+ 
+    <eventDetail>
+      <!-- daitss:EVENT_PROCEDURE -->
+      <%= e.xpath('./daitss:EVENT_PROCEDURE', xmlns).first.content %>
+    </eventDetail>
+ 
+    <eventOutcomeInformation>
+      <eventOutcome>
+        <!-- daitss:OUTCOME -->
+        <%= e.xpath('./daitss:OUTCOME', xmlns).first.content %>
+      </eventOutcome>
+      <eventOutcomeDetail>
+        <!-- daitss:NOTE -->
+        <%= e.xpath('./daitss:NOTE', xmlns).first.content %>
+      </eventOutcomeDetail>
+    </eventOutcomeInformation>
+
+  </event>
+<% end %> 
+<!-- TODO tackle REL_OID next -->
+
+</premis>
