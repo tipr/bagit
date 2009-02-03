@@ -86,8 +86,12 @@ module Bagit
       raise "Bag file exists #{base_path}" if File.exist? path
       FileUtils::mkdir_p File.dirname(path)
       open(path, 'w') { |io| yield io }
-      digest = open(path) { |io| Digest::SHA1.hexdigest io.read }
-      open(manifest_file, 'a') { |io| io.puts "#{digest} #{File.join 'data', base_path}" }
+
+      sha1 = open(path) { |io| Digest::SHA1.hexdigest io.read }
+      open(manifest_file('sha1'), 'a') { |io| io.puts "#{sha1} #{File.join 'data', base_path}" }
+
+      md5 = open(path) { |io| Digest::MD5.hexdigest io.read }
+      open(manifest_file('md5'), 'a') { |io| io.puts "#{md5} #{File.join 'data', base_path}" }
     end
 
     def fetch_txt_file
