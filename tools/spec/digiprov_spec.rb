@@ -38,7 +38,7 @@ describe "the file digiprov descriptor" do
     @doc.root.xpath('./xmlns:event', @xmlns).should_not be_empty
   end
 
-  it "should have two events" do		# In our jpg case
+  it "should have three events" do		# In our jpg case
     @doc.root.xpath('./xmlns:event', @xmlns).length.should == 3
   end
   
