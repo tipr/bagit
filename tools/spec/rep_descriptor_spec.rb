@@ -33,13 +33,9 @@ share_examples_for "all representations" do
   
   describe "the amdSec" do
 
-    it "should have at least as many digiprovs as files in the fileSec" do
-      @digiprov.length.should >= @files.length
-    end
-
     it "should have one digiprov pertaining to the entire package" do
-      @doc.root.should 
-        have_xpath("//xmlns:amdSec/xmlns:digiprovMD[@ID='package-digiprov']", @xmlns)
+      @doc.root.should have_xpath("//xmlns:amdSec/xmlns:digiprovMD[@ID='package-digiprov']",
+        @xmlns)
     end
     
     describe "each digiprov" do
@@ -49,10 +45,9 @@ share_examples_for "all representations" do
         end
       end
       
-      it "should have an MDTYPE of DAITSS" do   # For now...
+      it "should have an MDTYPE of PREMIS" do
         @digiprov.each do |dp|
-          dp.xpath('./xmlns:mdRef', @xmlns).first['MDTYPE'].should eql('OTHER')
-          dp.xpath('./xmlns:mdRef', @xmlns).first['OTHERMDTYPE'].should eql('DAITSS')
+          dp.xpath('./xmlns:mdRef', @xmlns).first['MDTYPE'].should eql('PREMIS')
         end
       end
       
@@ -76,17 +71,33 @@ share_examples_for "all representations" do
       end    
     end
 
-    it "should have an ADMID pointing to a digiprov for each file in the filesec" do
-      admids = @digiprov.map { |f| f['ID'] }
-      @files.each { |f| admids.should include(f['ADMID']) }
-    end    
+    it "should reference digiprovs for files in the fileSec with digiprov information" do
+          
+      # First grab the representation we want to compare.
+      rep = @type.eql?('ORIG') ? @dip.original_representation : @dip.current_representation
+      
+      # Our indices should be the same as in the xml
+      rep.each_with_index do |r, i|
+        
+        # If there are dip events, there should be an ADMID for this entry and
+        # a related digiprov
+        if not @dip.events(r[:aip_id]).empty?
+          @doc.xpath("//xmlns:fileSec//xmlns:file[@ADMID = 'digiprov-metadata-#{i}']", 
+            @xmlns).should_not be_empty
+          @doc.xpath("//xmlns:amdSec/xmlns:digiprovMD[@ID = 'digiprov-metadata-#{i}']",
+            @xmlns).should_not be_empty
+        end
+      
+      end  
+          
+    end
 
   end
   
   describe "the struct map" do
     it "should have a file pointer for each file in the filesec" do
       fptrs = @divs.xpath('./xmlns:fptr', @xmlns).map { |fp| fp['FILEID'] }
-      @files.each { |f| fptrs.should include(f['ID']) }   
+      @files.each { |f| fptrs.should include(f['ID']) }
     end
   end
 end
