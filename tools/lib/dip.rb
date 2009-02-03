@@ -27,6 +27,13 @@ class DIP
     @current_representation = load_current_representation
   end
   
+  def events(fid)               # Given a file id, retrieve events
+    event_fid = @dfid_map.index(fid)
+    @doc.xpath('//daitss:EVENT', NS).select do |event|
+      event.xpath('./daitss:OID', NS).first.content == event_fid.to_s
+    end
+  end
+  
   protected
   
   def load_descriptor
@@ -61,7 +68,7 @@ class DIP
     Time.parse create_date_node.content
   end
   
-  def load_dfid_map             # Create a map between non-global DFIDs and FILEIDs
+  def load_dfid_map             # Create a map between DFIDs and structMap FILEIDs
     file_ids = @doc.xpath('//mets:structMap//mets:fptr/@FILEID', NS).map do |file_id_node| 
                  file_id_node.content
                end
