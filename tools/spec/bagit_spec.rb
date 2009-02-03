@@ -120,7 +120,9 @@ describe Bagit::Bag do
   describe "fetch.txt" do
 
     before(:each) do
-      @bag.add_remote_file 'http://www.gnu.org/graphics/heckert_gnu.small.png', 'gnu.png'
+      @bag.add_remote_file('http://www.gnu.org/graphics/heckert_gnu.small.png', 'gnu.png', 6322,
+                           '390c0a30976f899cbdf951eab5cce60fe9743ac9',
+                           'a3bd7ab2442028bb91b51d9f6722ec98')
 
       path = File.join @bag_path, 'fetch.txt'
       @lines = open(path) { |io| io.readlines }
@@ -138,17 +140,18 @@ describe Bagit::Bag do
 
     end
 
+    it "should contain manifested files" do
+      path = File.join @bag_path, 'manifest-sha1.txt'
+      data = open(path) { |io| io.read }
+      data.should include('gnu.png')
+    end
+    
     it "should be gone when fetch is complete" do
       @bag.fetch!
       path = File.join @bag_path, 'fetch.txt'
       File.exist?(path).should_not be_true
     end
-
-    it "should be a subset of files in the manifests" do
-      pending 'spec seems ambiguous'
-    end
-      
-
+    
   end
 
   describe "tagmanifest-[algorithm].txt" do

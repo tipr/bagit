@@ -98,10 +98,10 @@ module Bagit
       File.join @bag_dir, 'fetch.txt'
     end
 
-    def add_remote_file(url, path, size=nil)
-      open(fetch_txt_file, 'a') do |io|
-        io.puts "#{url} #{size || '-'} #{path}"
-      end
+    def add_remote_file(url, path, size, sha1, md5)
+      open(fetch_txt_file, 'a') { |io| io.puts "#{url} #{size || '-'} #{path}" }
+      open(manifest_file('sha1'), 'a') { |io| io.puts "#{sha1} #{File.join 'data', path}" }
+      open(manifest_file('md5'), 'a') { |io| io.puts "#{md5} #{File.join 'data', path}" }
     end
 
     # fet all remote files
