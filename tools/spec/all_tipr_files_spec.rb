@@ -34,13 +34,13 @@ share_as :AllTiprFiles do
 
     describe "the agent" do
       it "should have a role of DISSEMINATOR" do
-        @rchildren.first.xpath('./xmlns:agent', @xmlns).first['ROLE'].should 
-	    eql("DISSEMINATOR")
+        @rchildren.first.xpath('./xmlns:agent', 
+                @xmlns).first['ROLE'].should eql("DISSEMINATOR")
       end  
       
       it "should have a type of ORGANIZATION" do
-        @rchildren.first.xpath('./xmlns:agent', @xmlns).first['TYPE'].should
-	    eql("ORGANIZATION")
+        @rchildren.first.xpath('./xmlns:agent', 
+                @xmlns).first['TYPE'].should eql("ORGANIZATION")
       end
       
       it "should have name of the contributing repository" do
