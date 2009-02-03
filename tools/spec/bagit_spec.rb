@@ -244,11 +244,3 @@ LOREM
   end
 
 end
-
-
-describe "serialization" do
-  it "should contain only bag"
-  it "should have the same basename as the bag's base dir"
-  it "should produce a single top level bad dir"
-  it "should preserve the validity of the bag"
-end
