@@ -19,7 +19,7 @@ describe "the file digiprov descriptor" do
     @events = @dip.events('FID1')
 
     # generate our xml
-    t = open File.join('templates', 'file-digiprov.xml.erb') do |io|
+    t = open File.join('templates', 'digiprov.xml.erb') do |io|
       string = io.read
       ERB.new(string, nil, '<>')
     end
