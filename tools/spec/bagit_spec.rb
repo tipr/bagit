@@ -144,7 +144,10 @@ describe Bagit::Bag do
       File.exist?(path).should_not be_true
     end
 
-    it "should be a subset of files in the manifests"
+    it "should be a subset of files in the manifests" do
+      pending 'spec seems ambiguous'
+    end
+      
 
   end
 
@@ -232,7 +235,9 @@ LOREM
       @bag.should_not be_valid
     end
     
-    it "needs a facility to report errors (Validatable)"
+    it "needs a facility to report errors" do
+      pending 'looking into Validatable'
+    end
   end
 
 end
