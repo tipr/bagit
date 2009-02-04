@@ -17,7 +17,7 @@ module TIPR
     @dip = dip
     t = open File.join('templates', template) do |io|
       string = io.read
-      ERB.new string
+      ERB.new(string, nil, '<>')
     end
     t.result binding
   end

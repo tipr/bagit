@@ -4,8 +4,9 @@ require 'dip'
 require 'spec_helper'
 
 share_as :AllTiprFiles do
+
   it "should be a mets document" do
-    @doc.root.name.should == 'mets'
+    @doc.root.name.should eql('mets')
     @doc.root.should be_in_namespace('http://www.loc.gov/METS/')
   end
   
@@ -18,7 +19,7 @@ share_as :AllTiprFiles do
   end
 
   it "should have a mets header" do
-    @rchildren.first.name.should == 'metsHdr'
+    @rchildren.first.name.should eql('metsHdr')
   end
 
   describe "the header" do
@@ -33,13 +34,13 @@ share_as :AllTiprFiles do
 
     describe "the agent" do
       it "should have a role of DISSEMINATOR" do
-        @rchildren.first.xpath('./xmlns:agent', @xmlns).first['ROLE'].should ==
-	  "DISSEMINATOR"
+        @rchildren.first.xpath('./xmlns:agent', 
+                @xmlns).first['ROLE'].should eql("DISSEMINATOR")
       end  
       
       it "should have a type of ORGANIZATION" do
-        @rchildren.first.xpath('./xmlns:agent', @xmlns).first['TYPE'].should ==
-	  "ORGANIZATION"
+        @rchildren.first.xpath('./xmlns:agent', 
+                @xmlns).first['TYPE'].should eql("ORGANIZATION")
       end
       
       it "should have name of the contributing repository" do

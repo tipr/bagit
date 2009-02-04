@@ -14,12 +14,12 @@ module TIPRMatchers
     end
 
     def failure_message
-      "expected <#{@target_namespace}> to be" +
+      "expected <#{@target_namespace}> to be " +
         "the same as <#{@expected}>"
     end
 
     def negative_failure_message
-      "expected <#{@target_namespace}> not to be" +
+      "expected <#{@target_namespace}> not to be " +
         "the same as <#{@expected}>"
     end
 
@@ -35,13 +35,11 @@ module TIPRMatchers
 
     def matches?(target)
       @target = target          # a node with an href
-      if @target == nil
-        return false
-      end
+      return false if not @target
+      
       @ref = @target['href']
-      if @ref == nil
-        return false
-      end
+      return false if not @ref
+
       @ref.match(@pattern) != nil
     end
 
@@ -61,7 +59,7 @@ module TIPRMatchers
 
     def initialize(xpath, ns)  
       @xpath = xpath            # The XPath we would like to match.
-      @ns = ns			# The namespace to use
+      @ns = ns                  # The namespace to use
     end
 
     def matches?(target)
@@ -79,6 +77,35 @@ module TIPRMatchers
         "in node <#{@target}>"
     end
 
+  end
+  
+  class HaveNodeContent
+
+    def initialize(content)  
+      @content = content        # Content: either an array or a single value
+    end
+
+    def matches?(target)
+      @target = target          # a NodeSet that should have matching content
+      node_content = @target.map { |n| n.content.strip }
+      return node_content == @content if @content.is_a?(Array)
+      node_content.uniq == [@content]
+    end
+
+    def failure_message
+      "expected NodeSet <#{@target}> to have content " +
+        "<#{@values}>"
+    end
+
+    def negative_failure_message
+      "expected NodeSet <#{@target}> not to have " +
+        "content <#{@values}>"
+    end
+
+  end
+  
+  def have_node_content(values)
+    HaveNodeContent.new(values)
   end
   
   def have_xpath(xpath, ns)

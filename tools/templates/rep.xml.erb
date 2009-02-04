@@ -8,23 +8,37 @@
       <name>FCLA</name>
     </agent>
   </metsHdr>
+  <% myinfo = @type=='ORIG'? @dip.original_representation : @dip.current_representation %>
+  <amdSec>
+    <digiprovMD ID="package-digiprov">
+      <mdRef LOCTYPE="URL" MDTYPE="PREMIS" xlink:href="package-digiprov.xml"/>
+    </digiprovMD>
+<% myinfo.each_with_index do |e, i| %>
+<%   if not @dip.events(e[:aip_id]).empty? %>
+    <digiprovMD ID="digiprov-metadata-<%= i %>">
+      <mdRef LOCTYPE="URL" MDTYPE="PREMIS" xlink:href="digiprov-<%= e[:aip_id] %>.xml"/>
+    </digiprovMD>
+<%   end %>
+<% end %>
+  </amdSec>
   
   <fileSec>
     <fileGrp>
-    <% myinfo = @type=='ORIG' ? @dip.original_representation : @dip.current_representation %>
-      <% myinfo.each_with_index do |e,i| %>
-      <file ID="file-<%= i %>" CHECKSUM="<%= e[:sha_1] %>" CHECKSUMTYPE="SHA-1">
-        <FLocat LOCTYPE="URL" xlink:href="<%= @dip.rel_path %>/<%= e[:path] %>"/>
+<% myinfo.each_with_index do |e,i| %>
+      <file ID="file-<%= i %>" 
+<% if not @dip.events(e[:aip_id]).empty? %> ADMID="digiprov-metadata-<%= i %>" <% end %>
+       CHECKSUM="<%= e[:sha_1] %>" CHECKSUMTYPE="SHA-1">
+        <FLocat LOCTYPE="URL" xlink:href="<%= File.join(@dip.rel_path, e[:path]) %>"/>
       </file>
-      <% end %>
+<% end %>
     </fileGrp>
   </fileSec>
   
   <structMap>
     <div>
-      <% myinfo.each_index do |i| %> 
-      <fptr FILEID="file-<%= i %>"/> 
-      <% end %>
+<% myinfo.each_index do |i| %>
+      <fptr FILEID="file-<%= i %>"/>
+<% end %>
     </div>
   </structMap>
 

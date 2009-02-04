@@ -6,7 +6,7 @@ require 'dip'
 describe DIP do
   
   before do
-    @path = File.join '..', 'DIPs', 'FDA0666001'
+    @path = File.join '..', 'DIPs', 'FDA0666002'
     @dip = DIP.new @path
   end
   
@@ -15,15 +15,15 @@ describe DIP do
   end
   
   it "should have an IEID" do
-    @dip.ieid.should == 'E20081121_AAAAEW'
+    @dip.ieid.should == 'E20090127_AAAAAA'
   end
   
   it "should have a package ID" do
-    @dip.package_id.should == 'FDA0666001'
+    @dip.package_id.should == 'FDA0666002'
   end
   
   it "should have a creation date" do
-    @dip.create_date.should == Time.parse('2008-11-21T22:07:57Z')
+    @dip.create_date.should == Time.parse('2009-01-27T14:32:55Z')
   end
   
   it "should have an original representation" do
@@ -34,5 +34,8 @@ describe DIP do
     @dip.current_representation.should_not be_nil
   end
 
+  it "should have a way of retrieving digiprovMD events" do
+    @dip.events('FID1').should_not be_nil
+  end
 
 end

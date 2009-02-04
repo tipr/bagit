@@ -6,10 +6,11 @@ require 'spec_helper'
 require 'all_tipr_files_spec'
 
 share_examples_for "all representations" do
+
   before(:each) do
 
     # need a daitss DIP
-    path = File.join '..', 'DIPs', 'FDA0666001'
+    path = File.join '..', 'DIPs', 'FDA0666002'
     @dip = DIP.new path
 
     # need the rep.xml template
@@ -21,24 +22,82 @@ share_examples_for "all representations" do
     @rchildren = @doc.root.children.select { |child| child.name != 'text'}
     @divs = @doc.root.xpath('//xmlns:structMap/xmlns:div', @xmlns)
     @files = @doc.root.xpath('//xmlns:fileSec//xmlns:file', @xmlns)
+    @digiprov = @doc.root.xpath('//xmlns:amdSec/xmlns:digiprovMD', @xmlns)
   end
 
   it_should_behave_like AllTiprFiles
   
-  it "should have a fileSec that points to representation descriptors" do
-    # Validate each file representation descriptor.
-    @files.each do |f|
-      f['ID'].should_not be_nil
-      f['CHECKSUM'].should_not be_nil
-      f['CHECKSUMTYPE'].should == 'SHA-1'
-      f.xpath('./xmlns:FLocat', @xmlns).first.should reference_a_file      
-    end    
-  end  
+  it "should have an amdSec" do
+    @doc.root.should have_xpath('//xmlns:amdSec', @xmlns)
+  end
+  
+  describe "the amdSec" do
+
+    it "should have one digiprov pertaining to the entire package" do
+      @doc.root.should have_xpath("//xmlns:amdSec/xmlns:digiprovMD[@ID='package-digiprov']",
+        @xmlns)
+    end
+    
+    describe "each digiprov" do
+      it "should reference an xml file" do
+        @digiprov.each do |dp|
+          dp.xpath('./xmlns:mdRef', @xmlns).first.should reference_an_xml_file
+        end
+      end
+      
+      it "should have an MDTYPE of PREMIS" do
+        @digiprov.each do |dp|
+          dp.xpath('./xmlns:mdRef', @xmlns).first['MDTYPE'].should eql('PREMIS')
+        end
+      end
+      
+    end
+
+  end
+
+  it "should have a fileSec" do
+    @doc.should have_xpath('//xmlns:fileSec', @xmlns)
+  end
+  
+  describe "the fileSec" do
+
+    it "should point to representation descriptors" do
+      # Validate each file representation descriptor.
+      @files.each do |f|
+        f['ID'].should_not be_nil
+        f['CHECKSUM'].should_not be_nil
+        f['CHECKSUMTYPE'].should eql('SHA-1')
+        f.xpath('./xmlns:FLocat', @xmlns).first.should reference_a_file      
+      end    
+    end
+
+    it "should reference digiprovs for files in the fileSec with digiprov information" do
+          
+      # First grab the representation we want to compare.
+      rep = @type.eql?('ORIG') ? @dip.original_representation : @dip.current_representation
+      
+      # Our indices should be the same as in the xml
+      rep.each_with_index do |r, i|
+        
+        # If there are dip events, there should be an ADMID for this entry and
+        # a related digiprov
+        if not @dip.events(r[:aip_id]).empty?
+          @doc.xpath("//xmlns:fileSec//xmlns:file[@ADMID = 'digiprov-metadata-#{i}']", 
+            @xmlns).should_not be_empty
+          @doc.xpath("//xmlns:amdSec/xmlns:digiprovMD[@ID = 'digiprov-metadata-#{i}']",
+            @xmlns).should_not be_empty
+        end
+      
+      end  
+          
+    end
+
+  end
   
   describe "the struct map" do
     it "should have a file pointer for each file in the filesec" do
       fptrs = @divs.xpath('./xmlns:fptr', @xmlns).map { |fp| fp['FILEID'] }
-      @files.each { |f| fptrs.should include(f['ID']) }   
+      @files.each { |f| fptrs.should include(f['ID']) }
     end
   end
 end

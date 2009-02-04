@@ -9,7 +9,7 @@ describe "the tipr descriptor" do
   
   before(:each) do
     # need a daitss DIP
-    path = File.join '..', 'DIPs', 'FDA0666001'
+    path = File.join '..', 'DIPs', 'FDA0666002'
     @dip = DIP.new path
 
     # Generate sha-1 sums for our original and active representations:
@@ -63,7 +63,7 @@ describe "the tipr descriptor" do
     @files.each do |f|
       f['ID'].should_not be_nil
       f['CHECKSUM'].should_not be_nil
-      f['CHECKSUMTYPE'].should == 'SHA-1'
+      f['CHECKSUMTYPE'].should eql('SHA-1')
       f.xpath('./xmlns:FLocat', @xmlns).first.should reference_an_xml_file      
     end    
   end 
@@ -71,7 +71,7 @@ describe "the tipr descriptor" do
   # We checked for the struct map in AllTiprFiles
   describe "the struct map" do
     it "should have at least two divs" do
-      @divs.size.should >= 2
+      @divs.size.should >= 1
     end
 
     it "should have all divs be ordered" do
