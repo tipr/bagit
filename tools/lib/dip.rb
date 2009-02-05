@@ -27,11 +27,14 @@ class DIP
     @current_representation = load_current_representation
   end
   
-  def events(fid)               # Given a file id, retrieve events
-    event_fid = @dfid_map.index(fid)
+  def events_by_oid(oid)        # Given an OID, retrieve events
     @doc.xpath('//daitss:EVENT', NS).select do |event|
-      event.xpath('./daitss:OID', NS).first.content == event_fid.to_s
+      event.xpath('./daitss:OID', NS).first.content == oid
     end
+  end
+  
+  def events(fid)               # Given a file id, retrieve events
+    events_by_oid(@dfid_map.index(fid).to_s)
   end
   
   protected
@@ -69,11 +72,11 @@ class DIP
   end
   
   def load_dfid_map             # Create a map between DFIDs and structMap FILEIDs
-    file_ids = @doc.xpath('//mets:structMap//mets:fptr/@FILEID', NS).map do |file_id_node| 
-                 file_id_node.content
-               end
+    file_ids = @doc.xpath('//mets:file/@ID', NS).map { |a| a.value }
+    
     dfid_map = Hash.new
-    file_ids.uniq.each do |fid|
+    
+    file_ids.compact.each do |fid|
       tmd = @doc.xpath("//mets:file[@ID = '#{fid}']", NS).first['ADMID']
       dfid = @doc.xpath("//mets:techMD[@ID = '#{tmd}']//daitss:DFID", NS).first.content
       dfid_map[:"#{dfid}"] = fid 
