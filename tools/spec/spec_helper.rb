@@ -88,6 +88,10 @@
    def have_xpath(xpath, ns=NS_MAP)
      HaveXPath.new(xpath, ns)
    end
+   
+   def have_xpath_with_content(xpath, value)
+     have_xpath("#{xpath}[ contains(text(), '#{value}')]")
+   end
 
    def reference_an_xml_file()
      ReferenceAFile.new()

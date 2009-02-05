@@ -17,37 +17,35 @@ share_examples_for "all representations" do
     raw_xml = TIPR.generate_xml('rep.xml.erb', @dip, @type)
     @doc = Nokogiri::XML raw_xml   
 
-    # some additional instance variables to help clean up the code
-    @xmlns = { 'xmlns' => 'http://www.loc.gov/METS/' }  
+    # some additional instance variables to help clean up the code 
     @rchildren = @doc.root.children.select { |child| child.name != 'text'}
-    @divs = @doc.root.xpath('//xmlns:structMap/xmlns:div', @xmlns)
-    @files = @doc.root.xpath('//xmlns:fileSec//xmlns:file', @xmlns)
-    @digiprov = @doc.root.xpath('//xmlns:amdSec/xmlns:digiprovMD', @xmlns)
+    @divs = @doc.root.xpath('//mets:structMap/mets:div', NS_MAP)
+    @files = @doc.root.xpath('//mets:fileSec//mets:file', NS_MAP)
+    @digiprov = @doc.root.xpath('//mets:amdSec/mets:digiprovMD', NS_MAP)
   end
 
   it_should_behave_like AllTiprFiles
   
   it "should have an amdSec" do
-    @doc.root.should have_xpath('//xmlns:amdSec', @xmlns)
+    @doc.root.should have_xpath('//mets:amdSec')
   end
   
   describe "the amdSec" do
 
     it "should have one digiprov pertaining to the entire package" do
-      @doc.root.should have_xpath("//xmlns:amdSec/xmlns:digiprovMD[@ID='package-digiprov']",
-        @xmlns)
+      @doc.root.should have_xpath("//mets:amdSec/mets:digiprovMD[@ID='package-digiprov']")
     end
     
     describe "each digiprov" do
       it "should reference an xml file" do
         @digiprov.each do |dp|
-          dp.xpath('./xmlns:mdRef', @xmlns).first.should reference_an_xml_file
+          dp.xpath('mets:mdRef', NS_MAP).first.should reference_an_xml_file
         end
       end
       
       it "should have an MDTYPE of PREMIS" do
         @digiprov.each do |dp|
-          dp.xpath('./xmlns:mdRef', @xmlns).first['MDTYPE'].should eql('PREMIS')
+          dp.should have_xpath("mets:mdRef[@MDTYPE='PREMIS']")
         end
       end
       
@@ -56,7 +54,7 @@ share_examples_for "all representations" do
   end
 
   it "should have a fileSec" do
-    @doc.should have_xpath('//xmlns:fileSec', @xmlns)
+    @doc.should have_xpath('//mets:fileSec')
   end
   
   describe "the fileSec" do
@@ -67,7 +65,7 @@ share_examples_for "all representations" do
         f['ID'].should_not be_nil
         f['CHECKSUM'].should_not be_nil
         f['CHECKSUMTYPE'].should eql('SHA-1')
-        f.xpath('./xmlns:FLocat', @xmlns).first.should reference_a_file      
+        f.xpath('./mets:FLocat', NS_MAP).first.should reference_a_file      
       end    
     end
 
@@ -82,10 +80,8 @@ share_examples_for "all representations" do
         # If there are dip events, there should be an ADMID for this entry and
         # a related digiprov
         if not @dip.events(r[:aip_id]).empty?
-          @doc.xpath("//xmlns:fileSec//xmlns:file[@ADMID = 'digiprov-metadata-#{i}']", 
-            @xmlns).should_not be_empty
-          @doc.xpath("//xmlns:amdSec/xmlns:digiprovMD[@ID = 'digiprov-metadata-#{i}']",
-            @xmlns).should_not be_empty
+          @doc.should have_xpath("//mets:fileSec//mets:file[@ADMID='digiprov-metadata-#{i}']")
+          @doc.should have_xpath("//mets:amdSec/mets:digiprovMD[@ID='digiprov-metadata-#{i}']")
         end
       
       end  
@@ -96,7 +92,7 @@ share_examples_for "all representations" do
   
   describe "the struct map" do
     it "should have a file pointer for each file in the filesec" do
-      fptrs = @divs.xpath('./xmlns:fptr', @xmlns).map { |fp| fp['FILEID'] }
+      fptrs = @divs.xpath('./mets:fptr', NS_MAP).map { |fp| fp['FILEID'] }
       @files.each { |f| fptrs.should include(f['ID']) }
     end
   end
