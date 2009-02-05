@@ -6,7 +6,7 @@ require 'time'
 
 class DIP
   
-  attr_reader :rel_path, :ieid, :package_id, :create_date, :original_representation, :current_representation, :migration_map
+  attr_reader :rel_path, :ieid, :package_id, :create_date, :original_representation, :current_representation, :migration_map, :dfid_map
   
   NS = {
     'mets' => 'http://www.loc.gov/METS/',
