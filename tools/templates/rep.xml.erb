@@ -25,9 +25,7 @@
   <fileSec>
     <fileGrp>
 <% myinfo.each_with_index do |e,i| %>
-      <file ID="file-<%= i %>" 
-<% if not @dip.events(e[:aip_id]).empty? %> ADMID="digiprov-metadata-<%= i %>" <% end %>
-       CHECKSUM="<%= e[:sha_1] %>" CHECKSUMTYPE="SHA-1">
+      <file ID="file-<%= i %>" <% if not @dip.events(e[:aip_id]).empty? %> ADMID="digiprov-metadata-<%= i %>" <% end %> CHECKSUM="<%= e[:sha_1] %>" CHECKSUMTYPE="SHA-1">
         <FLocat LOCTYPE="URL" xlink:href="<%= File.join(@dip.rel_path, e[:path]) %>"/>
       </file>
 <% end %>
