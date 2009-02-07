@@ -96,7 +96,7 @@ XML
 
     it "should have eventOutcomeInformation" do
       outcome = @event.xpath('premis:eventOutcomeInformation', NS_MAP).first
-      outcome.should have_xpath('premis:eventOutcome["SUCCESS"]')
+      outcome.should have_xpath('premis:eventOutcome["SUCCExSS"]')
       detail = outcome.xpath('premis:eventOutcomeDetail', NS_MAP).first
       detail.content.should be_empty
     end
