@@ -10,11 +10,12 @@ module TIPR
   # Template argument should be relative to our template directory
   # FIXME: This is a kludge
 
-  def self.generate_xml(template, dip, rep=nil, orig=nil, active=nil)
+  def self.generate_xml(template, dip, rep=nil, orig=nil, active=nil, events=nil)
     @type = rep if rep         # Used for typing our template
     @orig = orig if orig       # Used for the tipr envelope
     @active = active if active #  ""
     @dip = dip
+    @events = events
     t = open File.join('templates', template) do |io|
       string = io.read
       ERB.new(string, nil, '<>')

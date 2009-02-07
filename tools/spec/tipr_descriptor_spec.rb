@@ -20,41 +20,40 @@ describe "the tipr descriptor" do
     raw_xml = TIPR.generate_xml('tipr.xml.erb', @dip, nil, @orig, @active)
     @doc = Nokogiri::XML raw_xml   
 
-    # some additional instance variables to help clean up the code
-    @xmlns = { 'xmlns' => 'http://www.loc.gov/METS/' }  
+    # some additional instance variables to help clean up the code 
     @rchildren = @doc.root.children.select { |child| child.name != 'text'}
-    @divs = @doc.root.xpath('//xmlns:structMap/xmlns:div/xmlns:div', @xmlns)
-    @files = @doc.root.xpath('//xmlns:fileSec//xmlns:file', @xmlns)
+    @divs = @doc.root.xpath('//mets:structMap/mets:div/mets:div', NS_MAP)
+    @files = @doc.root.xpath('//mets:fileSec//mets:file', NS_MAP)
   end
   
   # Check mets document and header requirements and for structMap existence 
   it_should_behave_like AllTiprFiles
   
   it "should not have a dmdSec" do
-    @doc.root.should_not have_xpath('//xmlns:dmdSec', @xmlns)
+    @doc.root.should_not have_xpath('//mets:dmdSec')
   end
   
   it "should have an amdSec" do
-    @doc.root.should have_xpath('//xmlns:amdSec', @xmlns)
+    @doc.root.should have_xpath('//mets:amdSec')
   end
 
   describe "the amdSec" do
     it "should not have a techMD" do
-      @doc.root.should_not have_xpath('//xmlns:amdSec/xmlns:techMD', @xmlns)
+      @doc.root.should_not have_xpath('//mets:amdSec/mets:techMD')
     end
     
     it "should not have a sourceMD" do
-      @doc.root.should_not have_xpath('//xmlns:amdSec/xmlns:sourceMD', @xmlns)
+      @doc.root.should_not have_xpath('//mets:amdSec/mets:sourceMD')
     end
     
     it "should have a rightsMD that references an xml file" do
-      @doc.root.xpath('//xmlns:amdSec/xmlns:rightsMD/xmlns:mdRef', 
-      		@xmlns).first.should reference_an_xml_file
+      @doc.root.xpath('mets:amdSec/mets:rightsMD/mets:mdRef', 
+      		NS_MAP).first.should reference_an_xml_file
     end
     
     it "should have a digiprovMD that references an xml file" do
-      @doc.root.xpath('./xmlns:amdSec/xmlns:digiprovMD/xmlns:mdRef', 
-      		@xmlns).first.should reference_an_xml_file
+      @doc.root.xpath('mets:amdSec/mets:digiprovMD/mets:mdRef', 
+      		NS_MAP).first.should reference_an_xml_file
     end    
   end
 
@@ -64,7 +63,7 @@ describe "the tipr descriptor" do
       f['ID'].should_not be_nil
       f['CHECKSUM'].should_not be_nil
       f['CHECKSUMTYPE'].should eql('SHA-1')
-      f.xpath('./xmlns:FLocat', @xmlns).first.should reference_an_xml_file      
+      f.xpath('mets:FLocat', NS_MAP).first.should reference_an_xml_file      
     end    
   end 
   
@@ -86,7 +85,7 @@ describe "the tipr descriptor" do
     end
 
     it "should have a file pointer for each file in the filesec" do
-      fptrs = @divs.xpath('./xmlns:fptr', @xmlns).map { |fp| fp['FILEID'] }
+      fptrs = @divs.xpath('./mets:fptr', NS_MAP).map { |fp| fp['FILEID'] }
       @files.each { |f| fptrs.should include(f['ID']) } 
     end
   end

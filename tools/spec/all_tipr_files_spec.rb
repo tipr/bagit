@@ -29,30 +29,28 @@ share_as :AllTiprFiles do
     end
     
     it "should have an agent" do
-      @rchildren.first.should have_xpath('./xmlns:agent', @xmlns)
+      @rchildren.first.should have_xpath('mets:agent')
     end
 
     describe "the agent" do
       it "should have a role of DISSEMINATOR" do
-        @rchildren.first.xpath('./xmlns:agent', 
-                @xmlns).first['ROLE'].should eql("DISSEMINATOR")
+        @rchildren.first.should have_xpath('mets:agent[@ROLE="DISSEMINATOR"]') 
       end  
       
       it "should have a type of ORGANIZATION" do
-        @rchildren.first.xpath('./xmlns:agent', 
-                @xmlns).first['TYPE'].should eql("ORGANIZATION")
+        @rchildren.first.should have_xpath('mets:agent[@TYPE="ORGANIZATION"]') 
       end
       
       it "should have name of the contributing repository" do
-        @rchildren.first.xpath('./xmlns:agent/xmlns:name',
-				@xmlns).first.content.should_not be_nil
+        @rchildren.first.xpath('mets:agent/mets:name',
+				NS_MAP).first.content.should_not be_nil
       end    
     end
   end
 
   # Check for structMap, but don't formalize description
   it "should have a struct map" do
-    @doc.root.should have_xpath('//xmlns:structMap', @xmlns)
+    @doc.root.should have_xpath('//mets:structMap')
   end
  
   # We leave amdSec, dmdSec, fileSec & structMap checks & descriptions

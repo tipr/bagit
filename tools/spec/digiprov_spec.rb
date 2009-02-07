@@ -76,27 +76,26 @@ XML
     end
 
     it "should have an eventIdentifierValue which matches the daitss:event id" do
-      #@event.should have_xpath('premis:eventIdentifier/premis:eventIdentifierValue["488374"]')
+      @event.should have_xpath_with_content('premis:eventIdentifier/premis:eventIdentifierValue', "488374")
     end
 
     it "should have an eventType" do
-      @event.should have_xpath('premis:eventType["Virus check"]')
+      @event.should have_xpath_with_content("premis:eventType", "Virus check")
     end
 
     it "should have an eventDateTime" do
-      expected_time = Time.parse '2009-01-27 14:32:12'
-      actual_time = Time.parse @event.xpath("premis:eventDateTime", NS_MAP).first.content
-      actual_time.should == expected_time
-      # @event.should have_xpath("premis:eventDateTime[text()='#{ expected_time }']")
+      expected_time = Time.parse('2009-01-27 14:32:12').xmlschema
+      @event.should have_xpath_with_content("premis:eventDateTime", expected_time)
     end
 
     it "should have an eventDetail which matches the daitss:procedure" do
-      @event.should have_xpath("premis:eventDetail['Checked for virus during DataFile creation']")
+      @event.should have_xpath_with_content("premis:eventDetail",
+        'Checked for virus during DataFile creation')
     end
 
     it "should have eventOutcomeInformation" do
       outcome = @event.xpath('premis:eventOutcomeInformation', NS_MAP).first
-      outcome.should have_xpath('premis:eventOutcome["SUCCExSS"]')
+      outcome.should have_xpath_with_content('premis:eventOutcome', "SUCCESS")
       detail = outcome.xpath('premis:eventOutcomeDetail', NS_MAP).first
       detail.content.should be_empty
     end
