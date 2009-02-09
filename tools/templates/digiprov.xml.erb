@@ -22,23 +22,45 @@
 <%              :WO  => "Withdraw by operator"                   %>
 <%                  }                                            %>
 <%                                                               %>
+<%# hash of roles for linked events                              %>
+<%  daitss_roles = {                                             %>
+<%              :DLK => "Local copy of linked file",             %>
+<%              :L   => "Version of file with local links",      %>
+<%              :M   => "Migrated file"                          %>
+<%                  }                                            %>
+
 <%# Our namespaces to retrieve information from our dip          %>
 <%  xmlns = { "daitss" => "http://www.fcla.edu/dls/md/daitss/" } %>
     <!-- DAITSS events:  
-<% daitss_events.each_pair do |code, english| %>
-           <%= "#{code}:" + " #{english}" %>
+<% event_array = daitss_events.map { |k, v| ["#{k}", v] } %>
+<% event_array.sort.each do |a| %>
+           <%= "#{a[0]}:" + " #{a[1]}" %>
 <% end %>
      -->
-
+  <object>
+    <objectIdentifier>
+      <objectIdentifierType>DAITSS</objectIdentifierType>
+      <objectIdentifierValue>
+        <!-- daitss:OID -->
+<% if @events.empty? %>
+        <%= @oid %>
+<% else %>
+        <%= @events.first.xpath("//daitss:OID", xmlns).first.content  %>
+<% end %>
+      </objectIdentifierValue>
+    </objectIdentifier>
+    <objectCategory>file</objectCategory>
+  </object>
+  
 <%# Print out each event        %>
 <% @events.each do |e|           %>
   <event>
   
     <!-- Converted from DAITSS schema -->
     <eventIdentifier>
-      <eventIdentifierType>URI</eventIdentifierType>
+      <eventIdentifierType>DAITSS</eventIdentifierType>
       <eventIdentifierValue>
-        <!--daitss:EVENT ID -->
+        <!-- daitss:EVENT ID -->
         <%= e.xpath('./daitss:ID', xmlns).first.content %>
       </eventIdentifierValue>
     </eventIdentifier>
@@ -61,14 +83,31 @@
     <eventOutcomeInformation>
       <eventOutcome>
         <!-- daitss:OUTCOME -->
-        <%= e.xpath('./daitss:OUTCOME', xmlns).first.content %>
+        <%= e.xpath("./daitss:OUTCOME", xmlns).first.content %>
       </eventOutcome>
       <eventOutcomeDetail>
-        <!-- daitss:NOTE -->
-        <%= e.xpath('./daitss:NOTE', xmlns).first.content %>
+        <eventOutcomeDetailNote>
+          <!-- daitss:NOTE -->
+          <%= e.xpath("./daitss:NOTE", xmlns).first.content %>
+        </eventOutcomeDetailNote>  
       </eventOutcomeDetail>
     </eventOutcomeInformation>
 
+<% if not e.xpath("./daitss:REL_OID", xmlns).empty? %>
+  <linkingObjectIdentifier>
+    <linkingObjectIdentifierType>DAITSS</linkingObjectIdentifierType>
+    <linkingObjectIdentifierValue>
+      <!-- daitss:REL_OID -->
+      <%= e.xpath("./daitss:REL_OID", xmlns).first.content %>
+    </linkingObjectIdentifierValue>
+<%# Only for premis v2:    <linkingObjectIdentifierRole>     %>
+<%#                          <!-- A nice description of the related file's role %> 
+<%#                               FIXME: check to make sure we address all potential relationships %>
+<%#                          --> %>
+<%#                          <%= daitss_roles[:"#{e.xpath('./daitss:EVENT_TYPE', xmlns).first.content}"] %>
+<%#                        </linkingObjectIdentifierRole>   %>
+  </linkingObjectIdentifier>
+<% end %>  
   </event>
 <% end %> 
 <!-- TODO tackle REL_OID next -->
