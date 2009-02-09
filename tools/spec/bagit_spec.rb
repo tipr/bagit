@@ -2,7 +2,7 @@ require 'bagit'
 require 'tempfile'
 
 # based on v0.95 http://www.cdlib.org/inside/diglib/bagit/bagitspec.html
-describe Bagit::Bag do
+describe BagIt::Bag do
 
   before(:each) do
 
@@ -14,7 +14,7 @@ describe Bagit::Bag do
 
     # make the bag
     @bag_path = File.join @sandbox_path, 'the_bag'
-    @bag = Bagit::Bag.new @bag_path
+    @bag = BagIt::Bag.new @bag_path
 
     # add some files
     open('/dev/random') do |rio|
@@ -26,8 +26,7 @@ describe Bagit::Bag do
   end
 
   after(:each) do
-    # cleanup
-    FileUtils::rm_rf @sandbox_path
+    FileUtils::rm_rf @sandbox_path # cleanup
   end
 
   it "should be a directory" do
@@ -40,6 +39,7 @@ describe Bagit::Bag do
   end
 
   it "should have at least one manifest-[algorithm].txt" do
+    @bag.manifest!
     pattern = File.join @bag_path, 'manifest-*.txt'
     Dir.glob(pattern).should_not be_empty
   end
@@ -50,13 +50,26 @@ describe Bagit::Bag do
   end
 
   it "should allow addition of files with deep paths" do
-    lambda { @bag.add_file("/deep/dir/structure/file") { |io| io.puts 'all alone' } }.should_not raise_error
+    lambda { @bag.add_file("deep/dir/structure/file") { |io| io.puts 'all alone' } }.should_not raise_error
+  end
+  
+  it "should clean up empty directories" do
+    f = File.join "1", "2", "3", "file"
+    @bag.add_file(f) { |io| io.puts 'all alone' }
+    @bag.remove_file f
+    File.exist?(File.dirname(File.join(@bag_path, 'data', f))).should be_true
+    @bag.gc!
+    File.exist?(File.dirname(File.join(@bag_path, 'data', f))).should be_false
   end
   
   it "should not allow overwriting of files" do
     lambda { @bag.add_file("file-0") { |io| io.puts 'overwrite!' } }.should raise_error
   end
-
+  
+  it "should raise an error when deleing non existant files" do
+    lambda { @bag.remove_file("file-x") }.should raise_error
+  end
+  
   describe "bagit.txt" do
 
     before do
@@ -82,41 +95,80 @@ describe Bagit::Bag do
 
   end
 
-  describe "manifest-[algorithm].txt" do
+  describe "a manifest file", :shared => true do
 
     before do
-      pattern = File.join @bag_path, 'manifest-*.txt'
+      pattern = File.join @bag_path, '*manifest-*.txt'
       @manifest_files = Dir.glob pattern
     end
 
-    it "should have at least one" do
-      @manifest_files.should_not be_empty
-    end
-
     it "should have valid algorithm in the name (at least md5 or sha1)" do
-
-      @manifest_files.each do |path|
-        path =~ /manifest-(.*).txt/
-        $1.should be_in('md5', 'sha1')
-      end
-
+      algorithms = @manifest_files.map { |mf| mf =~ /manifest-(.*).txt$/; $1 }
+      algorithms.each { |a| a.should be_in('md5', 'sha1') }
     end
-
+    
+    it "should not be an empty file" do
+      @manifest_files.each { |mf| File.size(mf).should_not == 0 }
+    end
+    
     it "should only contain lines of the format CHECKSUM FILENAME" do
       @manifest_files.each do |file|
-        lines = open(file) { |io| io.readlines }
-        lines.should_not be_empty
-
-        lines.each do |line|
-          line.chomp.should =~ /^[a-f0-9]+\s+data\/[^\s]+$/
+        open(file) do |io|
+          io.each_line { |line| line.chomp.should =~ /^[a-fA-F0-9]+\s+[^\s].+$/ }
         end
-
       end
+    end
+    
+  end
 
+  describe "bag manifest files" do
+
+    before do
+      @bag.manifest!
+    end
+    
+    it_should_behave_like "a manifest file"
+
+    it "should have a manifest file" do
+      @bag.manifest_files.should_not be_empty
+    end
+
+    it "should only contain bag files" do
+      @bag.manifest_files.each do |mf|
+        open(mf) do |io|
+          io.each_line do |line|
+            line.chomp.should =~ /^[a-f0-9]+\s+data\/[^\s].+$/            
+          end
+        end
+      end
     end
 
   end
 
+  describe "tag manifest files" do
+    
+    before do
+      @bag.tagmanifest!
+    end
+
+    it_should_behave_like "a manifest file"
+    
+    it "should have a tag manifest file" do
+      @bag.tagmanifest_files.should_not be_empty
+    end
+    
+    it "should only contain tag files" do
+      @bag.tagmanifest_files.each do |mf|
+        open(mf) do |io|
+          io.each_line do |line|
+            line.chomp.should =~ /^[a-fA-F0-9]+\s+(?!data\/)[^\s].+$/
+          end
+        end
+      end
+    end
+    
+  end
+  
   describe "fetch.txt" do
 
     before(:each) do
@@ -133,11 +185,7 @@ describe Bagit::Bag do
     end
 
     it "should only contain lines of the format URL LENGTH FILENAME" do
-
-      @lines.each do |line|
-        line.chomp.should =~ /^[^\s]+\s+(\d+|\-)\s+[^\s]+$/
-      end
-
+      @lines.each { |line| line.chomp.should =~ /^[^\s]+\s+(\d+|\-)\s+[^\s]+$/ }
     end
 
     it "should contain manifested files" do
@@ -145,19 +193,12 @@ describe Bagit::Bag do
       data = open(path) { |io| io.read }
       data.should include('gnu.png')
     end
-    
+
     it "should be gone when fetch is complete" do
       @bag.fetch!
-      path = File.join @bag_path, 'fetch.txt'
-      File.exist?(path).should_not be_true
+      File.exist?(File.join(@bag_path, 'fetch.txt')).should_not be_true
     end
-    
-  end
 
-  describe "tagmanifest-[algorithm].txt" do
-    it "should work just like a nomral manifest file, but only contain tag files" do
-      
-    end
   end
 
   describe "package-info.txt" do
@@ -208,7 +249,9 @@ LOREM
   describe "an invalid bag" do
 
     before(:each) do
-      @bag.should be_valid
+      @bag.manifest!
+      @bag.should be_all_files_manifested
+      @bag.should be_all_manifestations_present
     end
 
     it "should not be valid if incomplete (some file is not manifested)" do
@@ -217,27 +260,26 @@ LOREM
         io.puts 'nothing to see here, move along'
       end
 
-      @bag.should_not be_complete
-      @bag.should_not be_valid
+      @bag.should_not be_all_files_manifested
     end
 
     it "should not be valid if some file is not fixed" do
       # tweak a file through the back door
-      open(File.join(@bag.bag_dir, @bag.data_files[0]), 'a') { |io| io.puts 'oops!' }
+      open(@bag.bag_files[0], 'a') { |io| io.puts 'oops!' }
 
       @bag.should_not be_fixed
-      @bag.should_not be_valid
     end
 
     it "should not be valid if some manifested file is not present" do
       # add a file and then remove it through the back door
       @bag.add_file("file-k") { |io| io.puts 'time to go' }
+      @bag.manifest!
+      
       FileUtils::rm File.join(@bag.bag_dir, 'data', 'file-k')
 
-      @bag.should_not be_complete
-      @bag.should_not be_valid
+      @bag.should_not be_all_manifestations_present
     end
-    
+
     it "needs a facility to report errors" do
       pending 'looking into Validatable'
     end
