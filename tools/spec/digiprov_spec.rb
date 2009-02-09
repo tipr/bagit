@@ -41,7 +41,8 @@ describe "the file digiprov descriptor" do
 XML
 
     @events = event_doc.xpath('//daitss:EVENT', 'daitss' => "http://www.fcla.edu/dls/md/daitss/").to_a
-
+    @premis_schema = "http://www.loc.gov/standards/premis/v1/PREMIS-v1-1.xsd"
+    
     # generate our xml
     t = open File.join('templates', 'digiprov.xml.erb') do |io|
       string = io.read
@@ -52,8 +53,9 @@ XML
     @doc = Nokogiri::XML raw_xml, nil, nil, Nokogiri::XML::PARSE_NOBLANKS
   end
 
-  it "should be a premis document" do
+  it "should be a valid premis document" do
     @doc.should have_xpath('premis:premis')
+    TIPR.validates?(@doc.to_xml, LibXML::XML::Schema.new(@premis_schema)).should be_true
   end
 
   it "should have three event" do
