@@ -36,15 +36,15 @@ module TIPR
   end
   
   # Validate an xml file against a schema. Schema must be a 
-  # LibXML::XML::Schema; xml_file is a path to a file
+  # LibXML::XML::Schema;
   
-  def self.validates?(xml_string, schema)
+  def self.validate(xml_string, schema)
 
     # parse xml to be validated
     instance = LibXML::XML::Document.string(xml_string)
 
     # validate
-    instance.validate_schema(schema)
+    instance.validate_schema(schema) { yield }
   end
 
 end

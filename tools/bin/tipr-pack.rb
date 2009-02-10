@@ -14,6 +14,7 @@ require 'dip'
 require 'tipr'
 require 'bagit'
 require 'set'
+require 'libxml'
 
 dpath = ARGV[0]
 tpath = ARGV[1]
@@ -23,7 +24,7 @@ raise "Usage: ./tipr-pack.rb <PATH/TO/DIP> <PATH/TO/TIPR>" if not (dpath && tpat
 raise "<PATH/TO/DIP> (#{ARGV[0]}) should exist" if not File.directory? dpath
 raise "<PATH/TO/TIPR> (#{ARGV[1]}) should exist" if not File.directory? tpath
 
-dip = DIP.new dpath	               # Our DIP
+dip = DIP.new dpath                # Our DIP
 
 orep = TIPR.sha1_pair(             # Original representation + sha-1
          TIPR.generate_xml( 'rep.xml.erb', dip, 'ORIG' ))
@@ -32,6 +33,10 @@ arep = TIPR.sha1_pair(             # Active representation + sha-1
          
 tipr = TIPR.generate_xml( 'tipr.xml.erb', dip, nil, orep, arep) # TIPR envelope
 
+# our schemas for validation
+mets = LibXML::XML::Schema.new("http://www.loc.gov/standards/mets/mets.xsd")
+premis_1 = LibXML::XML::Schema.new("http://www.loc.gov/standards/premis/v1/PREMIS-v1-1.xsd")
+premis = LibXML::XML::Schema.new("http://www.loc.gov/standards/premis/premis.xsd")
 # Create our bag
 bag_path = File.join(tpath, 'tipr_bag')
 tipr_bag = Bagit::Bag.new bag_path
@@ -54,6 +59,15 @@ Dir.glob("#{dpath}/**/*") do |f|
   end
 end
 
+# validate our TIPR envelope, and representations
+[orep[:xml], arep[:xml], tipr].each do |xml|
+  if TIPR.validate(xml, mets) { |message, flag| puts message }
+    puts "validated against mets"
+  else
+    puts "failed to validate against mets" 
+  end
+end
+
 # bag our TIPR files
 tipr_bag.add_file("rep-1.xml") { |file| file.puts orep[:xml] }
 tipr_bag.add_file("rep-2.xml") { |file| file.puts arep[:xml] } if orep != arep
@@ -70,13 +84,28 @@ files = fs.select { |f| not dip.events(f).empty? }
 
 # bag our digiprov files
 files.each do |f|
-  xml = TIPR.generate_xml('digiprov.xml.erb', nil, nil, nil, nil, dip.events(f))    
-  tipr_bag.add_file("digiprov-#{f}.xml") { |file| file.puts xml }  
+  xml = TIPR.generate_xml('digiprov.xml.erb', nil, nil, nil, nil, dip.events(f))
+  
+  # bag the file    
+  tipr_bag.add_file("digiprov-#{f}.xml") { |file| file.puts xml }
+  
+  # validate the xml
+  if TIPR.validate(xml, premis_1) { |message, flag| puts message }
+    puts "digiprov for #{f} validates"
+  else
+    puts "digiprov for #{f} did not validate" 
+  end
+   
 end
 
 # bag our package digiprov (even if empty)
 xml = TIPR.generate_xml('digiprov.xml.erb', nil, nil, nil, nil, dip.events_by_oid(dip.ieid))
 tipr_bag.add_file("package-digiprov.xml") { |file| file.puts xml } 
+if TIPR.validate(xml, premis_1) { |message, flag| puts message }
+  puts "package digiprov validates"
+else
+  puts "package digiprov did not validate"
+end
 
 
 
