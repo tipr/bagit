@@ -37,6 +37,7 @@
            <%= "#{a[0]}:" + " #{a[1]}" %>
 <% end %>
      -->
+
   <object>
     <objectIdentifier>
       <objectIdentifierType>DAITSS</objectIdentifierType>
@@ -45,7 +46,7 @@
 <% if @events.empty? %>
         <%= @oid %>
 <% else %>
-        <%= @events.first.xpath("//daitss:OID", xmlns).first.content  %>
+        <%= @events.first.xpath("daitss:OID", xmlns).first.content  %>
 <% end %>
       </objectIdentifierValue>
     </objectIdentifier>
