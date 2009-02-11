@@ -43,7 +43,7 @@ XML
     @events = event_doc.xpath('//daitss:EVENT', 'daitss' => "http://www.fcla.edu/dls/md/daitss/").to_a
     @premis_schema = "http://www.loc.gov/standards/premis/v1/PREMIS-v1-1.xsd"
     
-    raw_xml = TIPR.generate_digiprov("digiprov.xml.erb", @events)
+    raw_xml = TIPR.generate_digiprov("digiprov.xml.erb", @events, 'file')
     @doc = Nokogiri::XML raw_xml, nil, nil, Nokogiri::XML::PARSE_NOBLANKS
   end
 
@@ -81,7 +81,6 @@ XML
   end
   
   it "should have three events" do
-    puts @doc
     @doc.xpath('/premis:premis/premis:event', NS_MAP).size.should == 3
   end
 

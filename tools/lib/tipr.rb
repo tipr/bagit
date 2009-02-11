@@ -37,11 +37,16 @@ module TIPR
     gen_xml(template)
   end
 
-  # Generates digiprov xml for a list of events. The oid should
-  # be provided when generating digiprov for an entire package
-  # in case the set of events is empty
+  # Generates digiprov xml for a list of events
+  # 
+  # The oid should be provided when generating digiprov for an 
+  # entire package in case the set of events is empty. 
+  #
+  # object_category should be file, representation, or bitstream 
+  # to conform with premis.
     
-  def self.generate_digiprov(template, events, oid=nil)
+  def self.generate_digiprov(template, events, object_category, oid=nil)
+    @object_category = object_category
     @events = events
     @oid = oid if oid
     gen_xml(template)
