@@ -13,11 +13,11 @@ describe "the tipr descriptor" do
     @dip = DIP.new path
 
     # Generate sha-1 sums for our original and active representations:
-    @orig = TIPR.sha1_pair(TIPR.generate_xml('rep.xml.erb', @dip, 'ORIG'))
-    @active = TIPR.sha1_pair(TIPR.generate_xml('rep.xml.erb', @dip, 'ACTIVE'))
+    @orig = TIPR.sha1_pair(TIPR.generate_rep('rep.xml.erb', @dip, 'ORIG'))
+    @active = TIPR.sha1_pair(TIPR.generate_rep('rep.xml.erb', @dip, 'ACTIVE'))
 
     # need the tipr.xml template
-    raw_xml = TIPR.generate_xml('tipr.xml.erb', @dip, nil, @orig, @active)
+    raw_xml = TIPR.generate_tipr_envelope('tipr.xml.erb', @dip, @orig, @active)
     @doc = Nokogiri::XML raw_xml   
 
     # some additional instance variables to help clean up the code 
@@ -75,7 +75,7 @@ describe "the tipr descriptor" do
 
     it "should have all divs be ordered" do
       orders = @divs.select { |div| div['ORDER']}     # Exclude unordered
-      o = orders.map { |d| Integer(d['ORDER']) }      # Map to ints
+      o = orders.map { |d| d['ORDER'].to_i }          # Map to ints
       1.upto(@divs.size) { |i| o.should include(i) }  # Verify content
     end
 

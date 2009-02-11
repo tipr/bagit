@@ -26,17 +26,18 @@ raise "<PATH/TO/TIPR> (#{ARGV[1]}) should exist" if not File.directory? tpath
 
 dip = DIP.new dpath                # Our DIP
 
-orep = TIPR.sha1_pair(             # Original representation + sha-1
-         TIPR.generate_xml( 'rep.xml.erb', dip, 'ORIG' ))
-arep = TIPR.sha1_pair(             # Active representation + sha-1
-         TIPR.generate_xml( 'rep.xml.erb', dip, 'ACTIVE' ))
-         
-tipr = TIPR.generate_xml( 'tipr.xml.erb', dip, nil, orep, arep) # TIPR envelope
+# need original and active representations and their checksums
+orep = TIPR.sha1_pair(TIPR.generate_rep( 'rep.xml.erb', dip, 'ORIG' ))
+arep = TIPR.sha1_pair(TIPR.generate_rep( 'rep.xml.erb', dip, 'ACTIVE' ))
+
+# need tipr envelope
+tipr = TIPR.generate_tipr_envelope( 'tipr.xml.erb', dip, orep, arep)
 
 # our schemas for validation
 mets = LibXML::XML::Schema.new("http://www.loc.gov/standards/mets/mets.xsd")
 premis_1 = LibXML::XML::Schema.new("http://www.loc.gov/standards/premis/v1/PREMIS-v1-1.xsd")
-premis = LibXML::XML::Schema.new("http://www.loc.gov/standards/premis/premis.xsd")
+#premis = LibXML::XML::Schema.new("http://www.loc.gov/standards/premis/premis.xsd")
+
 # Create our bag
 bag_path = File.join(tpath, 'tipr_bag')
 tipr_bag = Bagit::Bag.new bag_path
@@ -84,7 +85,7 @@ files = fs.select { |f| not dip.events(f).empty? }
 
 # bag our digiprov files
 files.each do |f|
-  xml = TIPR.generate_xml('digiprov.xml.erb', nil, nil, nil, nil, dip.events(f))
+  xml = TIPR.generate_digiprov('digiprov.xml.erb',dip.events(f))
   
   # bag the file    
   tipr_bag.add_file("digiprov-#{f}.xml") { |file| file.puts xml }
@@ -99,7 +100,7 @@ files.each do |f|
 end
 
 # bag our package digiprov (even if empty)
-xml = TIPR.generate_xml('digiprov.xml.erb', nil, nil, nil, nil, dip.events_by_oid(dip.ieid))
+xml = TIPR.generate_digiprov('digiprov.xml.erb', dip.events_by_oid(dip.ieid), dip.ieid)
 tipr_bag.add_file("package-digiprov.xml") { |file| file.puts xml } 
 if TIPR.validate(xml, premis_1) { |message, flag| puts message }
   puts "package digiprov validates"

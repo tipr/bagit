@@ -14,7 +14,7 @@ share_examples_for "all representations" do
     @dip = DIP.new path
 
     # need the rep.xml template
-    raw_xml = TIPR.generate_xml('rep.xml.erb', @dip, @type)
+    raw_xml = TIPR.generate_rep('rep.xml.erb', @dip, @type)
     @doc = Nokogiri::XML raw_xml   
 
     # some additional instance variables to help clean up the code 
