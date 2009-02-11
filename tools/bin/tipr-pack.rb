@@ -85,7 +85,7 @@ files = fs.select { |f| not dip.events(f).empty? }
 
 # bag our digiprov files
 files.each do |f|
-  xml = TIPR.generate_digiprov('digiprov.xml.erb',dip.events(f))
+  xml = TIPR.generate_digiprov('digiprov.xml.erb',dip.events(f), 'file')
   
   # bag the file    
   tipr_bag.add_file("digiprov-#{f}.xml") { |file| file.puts xml }
@@ -100,7 +100,8 @@ files.each do |f|
 end
 
 # bag our package digiprov (even if empty)
-xml = TIPR.generate_digiprov('digiprov.xml.erb', dip.events_by_oid(dip.ieid), dip.ieid)
+xml = TIPR.generate_digiprov('digiprov.xml.erb', dip.events_by_oid(dip.ieid), 
+                             'representation', dip.ieid)
 tipr_bag.add_file("package-digiprov.xml") { |file| file.puts xml } 
 if TIPR.validate(xml, premis_1) { |message, flag| puts message }
   puts "package digiprov validates"
