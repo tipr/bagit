@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = "bagit"
-  spec.version = '0.0.0'
+  spec.version = '0.0.1'
   spec.summary = "BagIt package generation and validation"
   spec.email = "flazzarino@gmail.com"
   spec.authors = ["Francesco (franco) Lazzarino"]
