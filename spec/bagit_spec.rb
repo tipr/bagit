@@ -1,5 +1,6 @@
 require 'bagit'
 require 'tempfile'
+require 'spec_helper'
 
 # based on v0.95 http://www.cdlib.org/inside/diglib/bagit/bagitspec.html
 describe BagIt::Bag do
@@ -200,7 +201,8 @@ describe BagIt::Bag do
     end
 
   end
-
+  
+  # TODO rework this to be dubmer and simpler
   describe "package-info.txt" do
 
     before(:each) do
