@@ -216,23 +216,31 @@ describe BagIt::Bag do
     it "should contain lines of the format LABEL: VALUE (like an email header)" do
       @lines.each { |line| line.chomp.should =~ /^[^\s]+\s*:\s+.*$/ }
     end
-
+    
+    
     it "should be case insensitive with respect to LABELs" do
+      
+      # no nerfworld with unexpected results or a fragile exception
+      # bomb, this is a toolkit
+      pending "Validity should check these files not the construction"
+      
       path = File.join @bag_path, 'package-info.txt'
 
-      @bag.set_package_info 'Foo', 'bar'
-      pre = @bag.read_package_info.keys
+      @bag.write_package_info 'Foo' => 'bar'
+      pre = @bag.package_info.keys
 
-      @bag.set_package_info 'foo', 'bar'
-      post = @bag.read_package_info.keys
+      @bag.set_package_info 'foo' => 'bar'
+      post = @bag.package_info.keys
 
       post.should == pre
     end
 
     it "may have folded VALUEs" do
-
-      pre = @bag.read_package_info.keys.size
-      @bag.set_package_info 'Foo', <<LOREM
+      
+      pending "Validity should check these files not the construction"
+      
+      pre = @bag.package_info.keys.size
+      @bag.write_package_info 'Foo' => <<LOREM
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enimad
   minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -241,13 +249,13 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
   pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
   culpa qui officia deserunt mollit anim id est laborum.
 LOREM
-      post = @bag.read_package_info.keys.size
+      post = @bag.package_info.keys.size
       post.should == (pre + 1)
     end
 
   end
 
-  describe "an invalid bag" do
+  describe "a valid bag" do
 
     before(:each) do
       @bag.manifest!
@@ -255,7 +263,7 @@ LOREM
       @bag.should be_all_manifestations_present
     end
 
-    it "should not be valid if incomplete (some file is not manifested)" do
+    it "should not be incomplete (some file is not manifested)" do
       # add a file into the bag through the back door
       open(File.join(@bag.data_dir, 'not-manifested'), 'w') do |io|
         io.puts 'nothing to see here, move along'
@@ -264,14 +272,14 @@ LOREM
       @bag.should_not be_all_files_manifested
     end
 
-    it "should not be valid if some file is not fixed" do
+    it "should not have false manifests" do
       # tweak a file through the back door
       open(@bag.bag_files[0], 'a') { |io| io.puts 'oops!' }
 
       @bag.should_not be_fixed
     end
 
-    it "should not be valid if some manifested file is not present" do
+    it "should not be bloated (if some manifested file is not present)" do
       # add a file and then remove it through the back door
       @bag.add_file("file-k") { |io| io.puts 'time to go' }
       @bag.manifest!

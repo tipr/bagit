@@ -1,6 +1,6 @@
 require 'bagit/fetch'
 require 'bagit/manifest'
-require 'bagit/packageinfo'
+require 'bagit/info'
 require 'bagit/string'
 require 'bagit/file'
 
@@ -11,9 +11,9 @@ module BagIt
     
     attr_reader :bag_dir
     
-    include PackageInfo         # package info functionality
-    include Manifest            # manifest related functionality
-    include Fetch               # fetch related functionality
+    include Info         # package & bag info functionality
+    include Manifest     # manifest related functionality
+    include Fetch        # fetch related functionality
     
     # Make a new Bag based at path
     def initialize(path)
@@ -24,14 +24,12 @@ module BagIt
       FileUtils::mkdir data_dir unless File.directory? data_dir
 
       # write the bagit.txt
-      open(bagit_txt_file, 'w') do |io|
-        io.puts "BagIt-Version: #{VERSION}"
-        io.puts 'Tag-File-Character-Encoding: UTF-8'
-      end
+      write_bag_info "BagIt-Version" => SPEC_VERSION, "Tag-File-Character-Encoding" => "UTF-8"
+      
 
       # write the package-info.txt
       # TODO this can be simplified
-      set_package_info 'Packing-Software', "Ruby BagIt gem (http://bagit.rubyforge.org)"
+      write_package_info 'Packing-Software' => "Ruby BagIt gem (http://bagit.rubyforge.org)"
     end
     
     # Return the path to the data directory

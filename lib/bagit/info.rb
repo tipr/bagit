@@ -1,13 +1,36 @@
 module BagIt
 
-  module PackageInfo
+  module Info
 
     def package_info_txt_file
       File.join bag_dir, 'package-info.txt'
     end
 
-    def read_package_info
-      open(package_info_txt_file) do |io|
+    def package_info
+      read_info_file package_info_txt_file
+    end
+
+    def write_package_info(hash)
+      write_info_file package_info_txt_file, hash
+    end
+
+
+    def bagit_txt_file
+      File.join bag_dir, 'bagit.txt'
+    end
+
+    def bag_info
+      read_info_file bagit_txt_file
+    end
+    
+    def write_bag_info(hash)
+      write_info_file bagit_txt_file, hash
+    end
+
+    protected
+
+    def read_info_file(file)
+      open(file) do |io|
         entries = io.read.split /\n(?=[^\s])/
         entries.inject({}) do |hash, line|
           name, value = line.chomp.split /\s*:\s*/
@@ -16,37 +39,20 @@ module BagIt
       end
     end
 
-    def save_package_info(info)
-      open(package_info_txt_file, 'w') do |io|
-        info.each do |name, value|
+    def write_info_file(file, hash)
+      open(file, 'w') do |io|
+        hash.each do |name, value|
           simple_entry = "#{name}: #{value.gsub /\s+/, ' '}"
           entry = if simple_entry.length > 79
                     simple_entry.wrap(77).indent(2)
                   else
                     simple_entry
                   end
-
           io.puts entry
         end
       end
     end
 
-    def set_package_info(name, value)
-      name = name.split('-').map { |t| t.capitalize }.join '-'
-      info = if File.exist? package_info_txt_file
-               read_package_info
-             else
-               {}
-             end
-
-      info[name] = value
-      save_package_info(info)
-    end
-    
-    def bagit_txt_file
-      File.join bag_dir, 'bagit.txt'
-    end
-    
   end
 
 end
