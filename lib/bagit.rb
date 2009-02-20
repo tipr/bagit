@@ -1,3 +1,8 @@
+# == About bagit.rb
+# Author::    Francesco Lazzarino  (mailto:flazzarino@gmail.com)
+# Functionality conforms to the BagIt Spec v0.95:
+# http://www.cdlib.org/inside/diglib/bagit/bagitspec.html
+
 require 'digest/sha1'
 require 'digest/md5'
 require 'fileutils'
@@ -11,17 +16,20 @@ require 'bagit/string'
 require 'bagit/file'
 
 module BagIt
-
-  VERSION = '0.95'              # http://www.cdlib.org/inside/diglib/bagit/bagitspec.html
-
+  
+  # The version of the BagIt specification the code is conforming to.
+  SPEC_VERSION = '0.95'             
+  
+  # Represents the state of a bag on a filesystem
   class Bag
+    
+    attr_reader :bag_dir
     
     include PackageInfo         # package info functionality
     include Manifest            # manifest related functionality
     include Fetch               # fetch related functionality
     
-    attr_reader :bag_dir
-
+    # Make a new Bag based at path
     def initialize(path)
       @bag_dir = path 
       
@@ -37,7 +45,7 @@ module BagIt
 
       # write the package-info.txt
       # TODO this can be simplified
-      set_package_info 'Packing-Software', "Bagit ruby gem (http://github.com/flazz/tipr)"
+      set_package_info 'Packing-Software', "Ruby BagIt gem (http://bagit.rubyforge.org)"
     end
     
     # Return the path to the data directory

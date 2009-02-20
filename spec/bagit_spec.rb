@@ -202,7 +202,6 @@ describe BagIt::Bag do
 
   end
   
-  # TODO rework this to be dubmer and simpler
   describe "package-info.txt" do
 
     before(:each) do
