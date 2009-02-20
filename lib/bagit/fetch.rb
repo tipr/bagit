@@ -1,3 +1,5 @@
+require 'open-uri'
+
 module BagIt
   
   module Fetch
@@ -39,6 +41,7 @@ module BagIt
       # move the current fetch_txt
       FileUtils::mv fetch_txt_file, "#{fetch_txt_file}.0"
     end
-
+    
   end
+  
 end

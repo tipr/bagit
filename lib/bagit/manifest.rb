@@ -1,3 +1,7 @@
+require 'pathname'
+require 'digest/sha1'
+require 'digest/md5'
+
 module BagIt
 
   # Requires response to bag_dir, tag_files, bag_files
