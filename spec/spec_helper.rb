@@ -1,3 +1,22 @@
+class Sandbox
+  
+  def initialize
+    tf = Tempfile.open 'sandbox'
+    @path = tf.path
+    tf.close!
+    FileUtils::mkdir @path
+  end
+
+  def cleanup!
+    FileUtils::rm_rf @path
+  end
+
+  def to_s
+    @path
+  end
+  
+end
+
 module BagitMatchers
 
   class BeIn
@@ -25,6 +44,27 @@ module BagitMatchers
     BeIn.new(*expected_collection)
   end
 
+  class ExistOnFS
+
+    def matches?(target)
+      @target = target
+      File.exist? target
+    end
+
+    def failure_message
+      "expected <#{@target}> to exist, but it doesn't"
+    end
+
+    def negative_failure_message
+      "expected <#{@target}> to not exist but it does"
+    end
+
+  end  
+  
+  def exist_on_fs
+    ExistOnFS.new
+  end
+  
 end
 
 Spec::Runner.configure do |config|

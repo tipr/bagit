@@ -1,7 +1,13 @@
 require 'validatable'
 
 module BagIt
-
+  
+  class Bag
+    include Validatable
+    validates_true_for :consistency, :logic => lambda { complete? }
+    validates_true_for :completeness, :logic => lambda { consistent? }
+  end
+  
   module Validity
 
     # Return true if the manifest cover all files and all files are

@@ -13,10 +13,6 @@ module BagIt
     attr_reader :bag_dir
 
     include Validity            # Validity functionality
-    include Validatable
-    validates_true_for :consistency, :logic => lambda { complete? }
-    validates_true_for :completeness, :logic => lambda { consistent? }
-
     include Info                # package & bag info functionality
     include Manifest            # manifest related functionality
     include Fetch               # fetch related functionality
@@ -43,22 +39,28 @@ module BagIt
       File.join @bag_dir, 'data'
     end
 
-    # Return the set of paths to each bag file
+    # Return the paths to each bag file relative to bag_dir
     def bag_files
       Dir[File.join(data_dir, '**', '*')].select { |f| File.file? f }
     end
 
-    # Return a set of paths to each tag file
+    # Return the paths to each tag file relative to bag_dir
     def tag_files
       Dir[File.join(@bag_dir, '*')].select { |f| File.file? f }
     end
 
     # Add a bag file
-    def add_file(base_path)
+    def add_file(base_path, src_path=nil)
       path = File.join(data_dir, base_path)
       raise "Bag file exists: #{base_path}" if File.exist? path
       FileUtils::mkdir_p File.dirname(path)
-      open(path, 'w') { |io| yield io }
+
+      if src_path.nil?
+        open(path, 'w') { |io| yield io }
+      else
+        FileUtils::cp src_path, path
+      end
+      
     end
 
     # Remove a bag file
