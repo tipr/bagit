@@ -4,15 +4,10 @@ module BagIt
 
   module Validity
 
-    include Validatable
-
-    validates_true_for :consistency, :logic => lambda { complete? }
-    validates_true_for :completeness, :logic => lambda { consistent? }
-
     # Return true if the manifest cover all files and all files are
     # covered.
     def complete?
-      
+
       unmanifested_files.each do |file|
         errors.add :completeness, "#{file} is present but not manifested"
       end
@@ -21,12 +16,12 @@ module BagIt
         errors.add :completeness, "#{file} is manifested but not present"
       end
       
-      not errors.on(:completeness).any?
+      errors.on(:completeness).nil?
     end
 
     # Return true if all manifested files message digests match.
     def consistent?
-      
+
       manifest_files.each do |mf|
 
         # get the algorithm implementation
@@ -46,33 +41,36 @@ module BagIt
           io.each_line do |line|
             expected, path = line.chomp.split /\s+/, 2
             file = File.join(bag_dir, path)
-            actual = open(file) { |fio| algo.hexdigest(fio.read) }
             
-            if expected != actual
-              errors.add :consistency, "expected #{file} to have #{algo}: #{expected}, actual is #{actual}"
-            end
+            if File.exist? file
+              actual = open(file) { |fio| algo.hexdigest(fio.read) }
 
+              if expected != actual
+                errors.add :consistency, "expected #{file} to have #{algo}: #{expected}, actual is #{actual}"
+              end
+              
+            end
           end
 
         end
 
       end
-
-      not errors.on(:consistency).any?
+      
+      errors.on(:consistency).nil?
     end
 
     protected
 
     # Returns all files in the instance that are not manifested
     def unmanifested_files
-      mfs = manifested_files
+      mfs = manifested_files.map { |f| File.join bag_dir, f }
       bag_files.reject { |f| mfs.member? f }
     end
 
     # Returns a list of manifested files that are not present
     def empty_manifests
       bfs = bag_files
-      manifested_files.reject { |f| bfs.member? f }
+      manifested_files.reject { |f| bfs.member? File.join(bag_dir, f) }
     end
 
     # Returns a list of all files present in the manifest files

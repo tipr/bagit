@@ -256,18 +256,20 @@ LOREM
 
     before(:each) do
       @bag.manifest!
-      @bag.should be_all_files_manifested
-      @bag.should be_all_manifestations_present
     end
-
+    
+    it "should validate with no errors" do
+      @bag.should be_valid
+    end
+    
     it "should not be lewd (some file is not covered by the manifest)" do
       # add a file into the bag through the back door
       open(File.join(@bag.data_dir, 'not-manifested'), 'w') do |io|
         io.puts 'nothing to see here, move along'
       end
 
-      @bag.should_not be_complete
-      # @bag.should_not be_valid
+      # @bag.should_not be_complete
+      @bag.should_not be_valid
       @bag.errors.on(:completeness).should_not be_empty
     end
 
@@ -278,17 +280,17 @@ LOREM
 
       FileUtils::rm File.join(@bag.bag_dir, 'data', 'file-k')
 
-      @bag.should_not be_complete
-      # @bag.should_not be_valid
-      # @bag.errors.on(:completeness).should_not be_empty
+      # @bag.should_not be_complete
+      @bag.should_not be_valid
+      @bag.errors.on(:completeness).should_not be_empty
     end
 
     it "should be consistent (fixity)" do
       # tweak a file through the back door
       open(@bag.bag_files[0], 'a') { |io| io.puts 'oops!' }
 
-      @bag.should_not be_consistent
-      # @bag.should_not be_valid
+      # @bag.should_not be_consistent
+      @bag.should_not be_valid
       @bag.errors.on(:consistency).should_not be_empty
     end
 

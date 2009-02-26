@@ -102,38 +102,6 @@ module BagIt
       end
 
     end
-
-    # Returns true if all bag files are manifested somewhere
-    def all_files_manifested?
-      bag_files.all? do |f|
-        rel_path = Pathname.new(f).relative_path_from(Pathname.new(bag_dir)).to_s
-        
-        manifest_files.any? do |mf|
-          data = open(mf) { |io| io.read }
-          data.include? rel_path
-        end
-      end
-    end
-    
-    # Returns true if all manifestations are present in the bag somewhere
-    def all_manifestations_present?
-      manifestations = manifest_files.inject([]) do |acc, mf|
-        s = open(mf) do |io|
-          io.readlines.map do |line|
-            digest, path = line.split /\s+/, 2
-            path.chomp
-          end
-        end
-        acc + s
-      end
-
-      manifestations.all? do |m|
-        bag_files.any? do |f|
-          rel_path = Pathname.new(f).relative_path_from(Pathname.new(bag_dir)).to_s
-          rel_path == m
-        end
-      end
-    end
     
   end
 
