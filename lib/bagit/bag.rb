@@ -1,8 +1,9 @@
 require 'bagit/fetch'
-require 'bagit/manifest'
-require 'bagit/info'
-require 'bagit/string'
 require 'bagit/file'
+require 'bagit/info'
+require 'bagit/manifest'
+require 'bagit/string'
+require 'bagit/valid'
 
 module BagIt
     
@@ -10,10 +11,11 @@ module BagIt
   class Bag
     
     attr_reader :bag_dir
-    
-    include Info         # package & bag info functionality
-    include Manifest     # manifest related functionality
-    include Fetch        # fetch related functionality
+
+    include Validity            # Validity functionality
+    include Info                # package & bag info functionality
+    include Manifest            # manifest related functionality
+    include Fetch               # fetch related functionality
     
     # Make a new Bag based at path
     def initialize(path)

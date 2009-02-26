@@ -72,12 +72,12 @@ describe BagIt::Bag do
   end
 
   describe "bagit.txt" do
-    
+
     before do
       path = File.join @bag_path, 'bagit.txt'
       @lines = open(path) { |io| io.readlines }
     end
-    
+
     it "should have exaclty two lines" do
       @lines.size.should == 2
     end
@@ -260,35 +260,38 @@ LOREM
       @bag.should be_all_manifestations_present
     end
 
-    it "should not be incomplete (some file is not manifested)" do
+    it "should not be lewd (some file is not covered by the manifest)" do
       # add a file into the bag through the back door
       open(File.join(@bag.data_dir, 'not-manifested'), 'w') do |io|
         io.puts 'nothing to see here, move along'
       end
 
-      @bag.should_not be_all_files_manifested
+      @bag.should_not be_complete
+      # @bag.should_not be_valid
+      @bag.errors.on(:completeness).should_not be_empty
     end
 
-    it "should not have false manifests" do
-      # tweak a file through the back door
-      open(@bag.bag_files[0], 'a') { |io| io.puts 'oops!' }
-
-      @bag.should_not be_fixed
-    end
-
-    it "should not be bloated (if some manifested file is not present)" do
+    it "should not be prude (the manifest covers files that do not exist)" do
       # add a file and then remove it through the back door
       @bag.add_file("file-k") { |io| io.puts 'time to go' }
       @bag.manifest!
 
       FileUtils::rm File.join(@bag.bag_dir, 'data', 'file-k')
 
-      @bag.should_not be_all_manifestations_present
+      @bag.should_not be_complete
+      # @bag.should_not be_valid
+      # @bag.errors.on(:completeness).should_not be_empty
     end
 
-    it "needs a facility to report errors" do
-      pending 'looking into Validatable'
+    it "should be consistent (fixity)" do
+      # tweak a file through the back door
+      open(@bag.bag_files[0], 'a') { |io| io.puts 'oops!' }
+
+      @bag.should_not be_consistent
+      # @bag.should_not be_valid
+      @bag.errors.on(:consistency).should_not be_empty
     end
+
   end
 
 end

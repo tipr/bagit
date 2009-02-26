@@ -4,7 +4,7 @@ Gem::Specification.new do |spec|
   spec.summary = "BagIt package generation and validation"
   spec.email = "flazzarino@gmail.com"
   spec.hompage = 'http://bagit.rubyforge.org'
-  spec.authors = ["Francesco (franco) Lazzarino"]
+  spec.authors = ["Francesco Lazzarino"]
   spec.files = ["Rakefile", "bagit.gemspec",
                 "lib/bagit/fetch.rb",
                 "lib/bagit/file.rb",
