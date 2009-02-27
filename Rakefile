@@ -11,9 +11,4 @@ Spec::Rake::SpecTask.new('spec') do |t|
 #   t.rcov_opts += ["-x /Library", "-x spec"]
 end
 
-Rake::RDocTask.new do |rdoc|
-  rdoc.options << '--line-numbers'
-  rdoc.rdoc_files.add('lib/**/*.rb')
-end
-
 task :default => [:spec]

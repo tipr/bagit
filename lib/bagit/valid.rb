@@ -1,13 +1,13 @@
 require 'validatable'
 
 module BagIt
-  
+
   class Bag
     include Validatable
     validates_true_for :consistency, :logic => lambda { complete? }
     validates_true_for :completeness, :logic => lambda { consistent? }
   end
-  
+
   module Validity
 
     # Return true if the manifest cover all files and all files are
@@ -21,7 +21,7 @@ module BagIt
       empty_manifests.each do |file|
         errors.add :completeness, "#{file} is manifested but not present"
       end
-      
+
       errors.on(:completeness).nil?
     end
 
@@ -32,6 +32,7 @@ module BagIt
 
         # get the algorithm implementation
         File.basename(mf) =~ /^manifest-(.+).txt$/
+
         algo = case $1
                when /sha1/i
                  Digest::SHA1
@@ -47,21 +48,21 @@ module BagIt
           io.each_line do |line|
             expected, path = line.chomp.split /\s+/, 2
             file = File.join(bag_dir, path)
-            
+
             if File.exist? file
               actual = open(file) { |fio| algo.hexdigest(fio.read) }
 
               if expected != actual
                 errors.add :consistency, "expected #{file} to have #{algo}: #{expected}, actual is #{actual}"
               end
-              
+
             end
           end
 
         end
 
       end
-      
+
       errors.on(:consistency).nil?
     end
 
@@ -85,10 +86,12 @@ module BagIt
       manifest_files.inject([]) do |acc, mf|
 
         files = open(mf) do |io|
+
           io.readlines.map do |line|
             digest, path = line.chomp.split /\s+/, 2
             path
           end
+
         end
 
         (acc + files).uniq

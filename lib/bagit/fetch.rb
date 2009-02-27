@@ -14,28 +14,31 @@ module BagIt
       open(manifest_file('md5'), 'a') { |io| io.puts "#{md5} #{File.join 'data', path}" }
     end
 
-    # fet all remote files
+    # feth all remote files
     def fetch!
 
-      # too many nests, not enough whitespace, i know, but it would
-      # double the size of this block and be less readable, maybe if
-      # ruby would support currying or something it would be
-      # nicer. besides i'm used to reading lisp now.
       open(fetch_txt_file) do |io|
+        
         io.readlines.each do |line|
+          
           (url, length, path) = line.chomp.split(/\s+/, 3)
-          self.add_file(path) do |io|
+          
+          add_file(path) do |io|
             io.write open(url)
           end
+          
         end
+        
       end
 
-      # rename the old ones
+      # rename the old fetch.txt
       Dir["#{fetch_txt_file}.?*"].sort.reverse.each do |f|
+        
         if f =~ /fetch.txt.(\d+)$/
           new_f = File.join File.dirname(f), "fetch.txt.#{$1.to_i + 1}"
           FileUtils::mv f, new_f
         end
+        
       end
 
       # move the current fetch_txt

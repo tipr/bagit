@@ -15,9 +15,11 @@ describe BagIt::Bag do
 
     # add some files
     open('/dev/random') do |rio|
+      
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
       end
+      
     end
 
   end

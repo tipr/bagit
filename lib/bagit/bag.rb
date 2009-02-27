@@ -24,14 +24,16 @@ module BagIt
       # make the dir structure if it doesn't exist
       FileUtils::mkdir bag_dir unless File.directory? bag_dir
       FileUtils::mkdir data_dir unless File.directory? data_dir
+      
+      # write some tag info if its not there
+      unless File.exist? bagit_txt_file
+        write_bag_info("BagIt-Version" => SPEC_VERSION, "Tag-File-Character-Encoding" => "UTF-8")
+      end
 
-      # write the bagit.txt
-      write_bag_info "BagIt-Version" => SPEC_VERSION, "Tag-File-Character-Encoding" => "UTF-8"
-
-
-      # write the package-info.txt
-      # TODO this can be simplified
-      write_package_info 'Packing-Software' => "Ruby BagIt gem (http://bagit.rubyforge.org)"
+      unless File.exist? package_info_txt_file
+        write_package_info('Bag-Software-Agent' => "BagIt Ruby Gem (http://bagit.rubyforge.org)")
+      end
+      
     end
 
     # Return the path to the data directory
@@ -72,12 +74,16 @@ module BagIt
 
     # Remove all empty directory trees from the bag
     def gc!
+      
       Dir.entries(data_dir).each do |f|
+        
         unless %w{.. .}.include? f
           abs_path = File.join data_dir, f
           File.clean abs_path
         end
+        
       end
+      
     end
 
   end

@@ -78,6 +78,7 @@ module BagIt
       (manifest_files + tagmanifest_files).all? do |mf|
         # extract the algorithm
         mf =~ /manifest-(.+).txt$/
+        
         algo = case $1
                when /sha1/i
                  Digest::SHA1
@@ -90,11 +91,13 @@ module BagIt
         # check it, an unknown algorithm is always true
         unless algo == :unknown
           lines = open(mf) { |io| io.readlines }
+          
           lines.all? do |line|
             manifested_digest, path = line.chomp.split /\s+/, 2
             actual_digest = open(File.join(@bag_dir, path)) { |io| algo.hexdigest io.read }
             actual_digest == manifested_digest
           end
+          
         else
           true
         end
@@ -106,6 +109,3 @@ module BagIt
   end
 
 end
-
-# TODO make bag_files return a relative path and have bag_file be like
-# tag_file and make the ablsolute path
