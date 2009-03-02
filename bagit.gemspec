@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = "bagit"
-  spec.version = '0.0.1'
+  spec.version = '0.0.2'
   spec.summary = "BagIt package generation and validation"
   spec.email = "flazzarino@gmail.com"
   spec.homepage = 'http://bagit.rubyforge.org'
