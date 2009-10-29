@@ -11,6 +11,12 @@ Supported Features:
 * fetching remote files (fetch.txt)
 * bag validation
 
+Installation
+------------
+    % gem install schematron
+The rubyforge gem is deprecated. [Use gemcutter](http://gemcutter.org/gems/schematron).
+
+
 Example: making a bag
 ---------------------
     require 'bagit'
@@ -44,3 +50,10 @@ TODO
 * better error reporting.
 * poor mans' checksum
 
+---
+
+Copyright © 2009, [Francesco Lazzarino](mailto:flazzarino@gmail.com).
+
+Sponsored by [Florida Center for Library Automation](http://www.fcla.edu).
+
+See LICENSE.txt for terms.
