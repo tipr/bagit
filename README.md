@@ -1,17 +1,18 @@
-# BagIt (for ruby) #
+BagIt (for ruby)
+================
 
-Based on the <a
-href="http://www.cdlib.org/inside/diglib/bagit/bagitspec.html">BagIt
-spec v0.95</a>.
+Based on the [BagItspec v0.95](http://www.cdlib.org/inside/diglib/bagit/bagitspec.html).
 
-## Supported Features: ##
+Supported Features:
+-------------------
 * bag compiling
 * manifest & tagmanifest generation
 * generation of tag files package-info.txt and bagit.txt
 * fetching remote files (fetch.txt)
 * bag validation
 
-## Example: making a bag ##
+Example: making a bag
+---------------------
     require 'bagit'
 
     # make a new bag at base_path
@@ -25,7 +26,9 @@ spec v0.95</a>.
     # generate the manifest and tagmanifest files
     bag.manifest!
 
-## Example: validating an existing bag ##
+Example: validating an existing bag
+-----------------------------------
+
     bag = BagIt::Bag.new existing_base_path
 
     if bag.valid?
@@ -34,7 +37,10 @@ spec v0.95</a>.
       puts "#{existing_base_path} is not valid"
     end
 
-## TODO ##
-+ command line tools for common tasks
-+ better holy bag (fetch.txt) generation
-+ better error reporting
+TODO
+----
+* command line tools for common tasks
+* better holy bag (fetch.txt) generation
+* better error reporting.
+* poor mans' checksum
+

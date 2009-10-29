@@ -1,9 +1,10 @@
 Gem::Specification.new do |spec|
   spec.name = "bagit"
-  spec.version = '0.0.2'
+  spec.version = '0.0.3'
   spec.summary = "BagIt package generation and validation"
+  spec.description = "Ruby Library and Command Line tools for bagit"
   spec.email = "flazzarino@gmail.com"
-  spec.homepage = 'http://bagit.rubyforge.org'
+  spec.homepage = 'http://github.com/flazz/bagit'
   spec.authors = ["Francesco Lazzarino"]
   
   spec.files = ["Rakefile", "bagit.gemspec", "lib/bagit/bag.rb",
