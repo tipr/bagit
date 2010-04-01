@@ -1,7 +1,7 @@
 BagIt (for ruby)
 ================
 
-Based on the [BagItspec v0.95](http://www.cdlib.org/inside/diglib/bagit/bagitspec.html).
+Based on the [BagItspec v0.95](https://confluence.ucop.edu/display/Curation/BagIt).
 
 Supported Features:
 -------------------
