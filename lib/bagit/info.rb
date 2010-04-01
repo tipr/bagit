@@ -33,7 +33,7 @@ module BagIt
     end
     
     def write_bag_info(hash)
-      write_info_file bagit_txt_file, hash
+      write_info_file bag_info_txt_file, hash
     end
 
     protected
