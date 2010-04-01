@@ -19,9 +19,17 @@ module BagIt
     def bagit_txt_file
       File.join bag_dir, 'bagit.txt'
     end
+    
+    def bagit_info
+      read_info_file bagit_txt_file
+    end
+
+    def bag_info_txt_file
+      File.join bag_dir, 'bag-info.txt'
+    end
 
     def bag_info
-      read_info_file bagit_txt_file
+      read_info_file bag_info_txt_file
     end
     
     def write_bag_info(hash)
@@ -37,7 +45,7 @@ module BagIt
         entries = io.read.split /\n(?=[^\s])/
         
         entries.inject({}) do |hash, line|
-          name, value = line.chomp.split /\s*:\s*/
+          name, value = line.chomp.split /\s*:\s*/, 2
           hash.merge({name => value})
         end
         
