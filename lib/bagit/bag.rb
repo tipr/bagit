@@ -30,7 +30,7 @@ module BagIt
         write_bag_info("BagIt-Version" => SPEC_VERSION, "Tag-File-Character-Encoding" => "UTF-8")
       end
 
-      unless File.exist? package_info_txt_file
+      unless File.exist? bag_info_txt_file
         write_package_info('Bag-Software-Agent' => "BagIt Ruby Gem (http://bagit.rubyforge.org)")
       end
       
