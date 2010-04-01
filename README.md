@@ -13,8 +13,8 @@ Supported Features:
 
 Installation
 ------------
-    % gem install schematron
-The rubyforge gem is deprecated. [Use gemcutter](http://gemcutter.org/gems/schematron).
+    % gem install bagit
+The rubyforge gem is deprecated. [Use gemcutter](http://gemcutter.org/gems/bagit).
 
 
 Example: making a bag
@@ -22,13 +22,13 @@ Example: making a bag
     require 'bagit'
 
     # make a new bag at base_path
-    bag = BagIt::Bag.new base_path  
+    bag = BagIt::Bag.new base_path
 
-    # make a new file    
-    bag.add_file("samplefile") do |io| 
+    # make a new file
+    bag.add_file("samplefile") do |io|
       io.puts "Hello Bag!"
     end
-    
+
     # generate the manifest and tagmanifest files
     bag.manifest!
 
