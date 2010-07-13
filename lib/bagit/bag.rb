@@ -13,7 +13,7 @@ module BagIt
     attr_reader :bag_dir
 
     include Validity            # Validity functionality
-    include Info                # package & bag info functionality
+    include Info                # bagit & bag info functionality
     include Manifest            # manifest related functionality
     include Fetch               # fetch related functionality
 
@@ -27,11 +27,11 @@ module BagIt
       
       # write some tag info if its not there
       unless File.exist? bagit_txt_file
-        write_bag_info("BagIt-Version" => SPEC_VERSION, "Tag-File-Character-Encoding" => "UTF-8")
+        write_bagit("BagIt-Version" => SPEC_VERSION, "Tag-File-Character-Encoding" => "UTF-8")
       end
 
       unless File.exist? bag_info_txt_file
-        write_package_info('Bag-Software-Agent' => "BagIt Ruby Gem (http://bagit.rubyforge.org)")
+        write_bag_info('Bag-Software-Agent' => "BagIt Ruby Gem (http://bagit.rubyforge.org)")
       end
       
     end

@@ -4,26 +4,6 @@ module BagIt
 
   module Info
 
-    def package_info_txt_file
-      File.join bag_dir, 'package-info.txt'
-    end
-
-    def package_info
-      read_info_file package_info_txt_file
-    end
-
-    def write_package_info(hash)
-      write_info_file package_info_txt_file, hash
-    end
-
-    def bagit_txt_file
-      File.join bag_dir, 'bagit.txt'
-    end
-    
-    def bagit_info
-      read_info_file bagit_txt_file
-    end
-
     def bag_info_txt_file
       File.join bag_dir, 'bag-info.txt'
     end
@@ -31,9 +11,21 @@ module BagIt
     def bag_info
       read_info_file bag_info_txt_file
     end
-    
+
     def write_bag_info(hash)
       write_info_file bag_info_txt_file, hash
+    end
+
+    def bagit_txt_file
+      File.join bag_dir, 'bagit.txt'
+    end
+
+    def bagit
+      read_info_file bagit_txt_file
+    end
+    
+    def write_bagit(hash)
+      write_info_file bagit_txt_file, hash
     end
 
     protected

@@ -1,19 +1,19 @@
 BagIt (for ruby)
 ================
 
-Based on the [BagItspec v0.95](https://confluence.ucop.edu/display/Curation/BagIt).
+Based on the [BagItspec v0.96](https://confluence.ucop.edu/display/Curation/BagIt).
 
 Supported Features:
 -------------------
 * bag compiling
 * manifest & tagmanifest generation
-* generation of tag files package-info.txt and bagit.txt
+* generation of tag files bag-info.txt and bagit.txt
 * fetching remote files (fetch.txt)
 * bag validation
 
 Installation
 ------------
-    % gem install bagit
+    % gem install bagit validatable
 The rubyforge gem is deprecated. [Use gemcutter](http://gemcutter.org/gems/bagit).
 
 
