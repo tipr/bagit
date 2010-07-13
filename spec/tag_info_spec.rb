@@ -50,10 +50,10 @@ describe "Tag Info Files" do
 
   end
 
-  describe "package-info.txt" do
+  describe "bag-info.txt" do
 
     before(:each) do
-      path = File.join @bag_path, 'package-info.txt'
+      path = File.join @bag_path, 'bag-info.txt'
       @lines = open(path) { |io| io.readlines }
     end
 
@@ -66,13 +66,13 @@ describe "Tag Info Files" do
     end
 
     it "should be case insensitive with respect to LABELs" do
-      path = File.join @bag_path, 'package-info.txt'
-      lambda { @bag.write_package_info 'foo' => 'lowercase', 'Foo' => 'capital' }.should raise_error(/Multiple labels/)
+      path = File.join @bag_path, 'bag-info.txt'
+      lambda { @bag.write_bag_info 'foo' => 'lowercase', 'Foo' => 'capital' }.should raise_error(/Multiple labels/)
     end
 
     it "should fold long VALUEs" do
       
-      @bag.write_package_info 'Lorem' => <<LOREM
+      @bag.write_bag_info 'Lorem' => <<LOREM
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enimad
   minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -81,7 +81,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
   pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
   culpa qui officia deserunt mollit anim id est laborum.
 LOREM
-      @bag.package_info.keys.size.should == 1
+      @bag.bag_info.keys.size.should == 1
     end
 
   end

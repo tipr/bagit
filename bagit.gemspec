@@ -16,5 +16,5 @@ Gem::Specification.new do |spec|
                 "lib/bagit.rb" ]
 
   spec.has_rdoc = true
-  spec.add_dependency 'semver'
+  spec.add_dependency 'semver', '~> 0.1.0'
 end
