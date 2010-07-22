@@ -6,7 +6,7 @@ describe "BagIt Manifests" do
 
     # make the bag
     @bag_path = File.join @sandbox.to_s, 'the_bag'
-    @bag = BagIt::Bag.new @bag_path
+    @bag = BagIt::Bag.create! @bag_path
 
     # add some files
     open('/dev/random') do |rio|

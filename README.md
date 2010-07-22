@@ -21,8 +21,8 @@ Example: making a bag
 ---------------------
     require 'bagit'
 
-    # make a new bag at base_path
-    bag = BagIt::Bag.new base_path
+    # create a bag at base_path
+    bag = BagIt::Bag.create! base_path
 
     # make a new file
     bag.add_file("samplefile") do |io|
@@ -34,8 +34,9 @@ Example: making a bag
 
 Example: validating an existing bag
 -----------------------------------
-
-    bag = BagIt::Bag.new existing_base_path
+    require 'bagit'
+	
+    bag = BagIt::Bag.create existing_base_path
 
     if bag.valid?
       puts "#{existing_base_path} is valid"
@@ -45,6 +46,8 @@ Example: validating an existing bag
 
 TODO
 ----
+* Testcases for BagIt::Bag.create!
+* Check for bagit.txt/bag_info.txt/data_dir in BagIt::Bag.valid?
 * command line tools for common tasks
 * better holy bag (fetch.txt) generation
 * better error reporting.

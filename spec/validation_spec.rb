@@ -6,7 +6,7 @@ describe "a valid bag" do
 
     # make the bag
     @bag_path = File.join @sandbox.to_s, 'the_bag'
-    @bag = BagIt::Bag.new @bag_path
+    @bag = BagIt::Bag.create! @bag_path
 
     # add some files
     open('/dev/random') do |rio|
@@ -34,7 +34,7 @@ describe "a valid bag" do
       io.puts 'nothing to see here, move along'
     end
 
-    # @bag.should_not be_complete
+    @bag.should_not be_complete
     @bag.should_not be_valid
     @bag.errors.on(:completeness).should_not be_empty
   end
@@ -46,7 +46,7 @@ describe "a valid bag" do
 
     FileUtils::rm File.join(@bag.bag_dir, 'data', 'file-k')
 
-    # @bag.should_not be_complete
+    @bag.should_not be_complete
     @bag.should_not be_valid
     @bag.errors.on(:completeness).should_not be_empty
   end
@@ -55,9 +55,9 @@ describe "a valid bag" do
     # tweak a file through the back door
     open(@bag.bag_files[0], 'a') { |io| io.puts 'oops!' }
 
-    # @bag.should_not be_consistent
+    @bag.should be_complete
+    @bag.should_not be_consistent
     @bag.should_not be_valid
     @bag.errors.on(:consistency).should_not be_empty
   end
-
 end

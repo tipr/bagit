@@ -17,23 +17,33 @@ module BagIt
     include Manifest            # manifest related functionality
     include Fetch               # fetch related functionality
 
-    # Make a new Bag based at path
+    private_class_method :new
+
     def initialize(path)
       @bag_dir = path
+    end
 
-      # make the dir structure if it doesn't exist
-      FileUtils::mkdir bag_dir unless File.directory? bag_dir
-      FileUtils::mkdir data_dir unless File.directory? data_dir
-      
-      # write some tag info if its not there
-      unless File.exist? bagit_txt_file
-        write_bagit("BagIt-Version" => SPEC_VERSION, "Tag-File-Character-Encoding" => "UTF-8")
-      end
+    def self.create(path)
+      new path
+    end
 
-      unless File.exist? bag_info_txt_file
-        write_bag_info('Bag-Software-Agent' => "BagIt Ruby Gem (http://bagit.rubyforge.org)")
-      end
+    def self.create!(path)
+      bag = new path
+
+      # check to make sure that they don't exist already
+      raise "Unable to create Bag at: ", path, ", exists already: ", bag.bag_dir if File.exists? bag.bag_dir
+      raise "Unable to create Bag at: ", path, ", exists already: ", bag.data_dir if File.exists? bag.data_dir
+      raise "Unable to create Bag at: ", path, ", exists already: ", bag.bagit_txt_file if File.exists? bag.bagit_txt_file
+      raise "Unable to create Bag at: ", path, ", exists already: ", bag.bag_info_txt_file if File.exists? bag.bag_info_txt_file
+
+      # these don't exist. Create them.
+      FileUtils::mkdir bag.bag_dir 
+      FileUtils::mkdir bag.data_dir       
+      bag.write_new_bagit
+      bag.write_new_bag_info
       
+      #return the new bag
+      bag
     end
 
     # Return the path to the data directory
@@ -84,8 +94,7 @@ module BagIt
         
       end
       
-    end
-
-  end
-
 end
+end
+end
+

@@ -4,6 +4,14 @@ module BagIt
 
   module Info
 
+    def write_new_bagit
+      write_bagit("BagIt-Version" => SPEC_VERSION, "Tag-File-Character-Encoding" => "UTF-8")
+    end
+
+    def write_new_bag_info
+      write_bag_info('Bag-Software-Agent' => "BagIt Ruby Gem (http://bagit.rubyforge.org)")
+    end
+
     def bag_info_txt_file
       File.join bag_dir, 'bag-info.txt'
     end
