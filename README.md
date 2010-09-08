@@ -14,8 +14,8 @@ Supported Features:
 Installation
 ------------
     % gem install bagit validatable
-The rubyforge gem is deprecated. [Use gemcutter](http://gemcutter.org/gems/bagit).
 
+The rubyforge gem is deprecated.
 
 Example: making a bag
 ---------------------
