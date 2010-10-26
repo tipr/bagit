@@ -10,11 +10,11 @@ describe "Tag Info Files" do
 
     # add some files
     open('/dev/random') do |rio|
-      
+
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
       end
-      
+
     end
 
   end
@@ -71,7 +71,7 @@ describe "Tag Info Files" do
     end
 
     it "should fold long VALUEs" do
-      
+
       @bag.write_bag_info 'Lorem' => <<LOREM
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enimad

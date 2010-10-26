@@ -1,5 +1,5 @@
 class Sandbox
-  
+
   def initialize
     tf = Tempfile.open 'sandbox'
     @path = tf.path
@@ -14,7 +14,7 @@ class Sandbox
   def to_s
     @path
   end
-  
+
 end
 
 module BagitMatchers
@@ -59,14 +59,14 @@ module BagitMatchers
       "expected <#{@target}> to not exist but it does"
     end
 
-  end  
-  
+  end
+
   def exist_on_fs
     ExistOnFS.new
   end
-  
+
 end
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
   config.include(BagitMatchers)
 end

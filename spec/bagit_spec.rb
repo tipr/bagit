@@ -15,11 +15,11 @@ describe BagIt::Bag do
 
     # add some files
     open('/dev/random') do |rio|
-      
+
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
       end
-      
+
     end
 
   end
@@ -36,24 +36,24 @@ describe BagIt::Bag do
     data_path = File.join @bag_path, 'data'
     File.directory?(data_path).should be_true
   end
-  
+
   it "should allow addition of files via io" do
     @bag.add_file("foo") { |io| io.puts 'all alone' }
     File.join(@bag_path, "data", "foo").should exist_on_fs
   end
-  
+
   it "should allow addition of files via copy" do
     src_path = File.join @sandbox.to_s, 'somefile'
     open(src_path, 'w') { |io| io.puts "something" }
     @bag.add_file("foo", src_path) { |io| io.puts 'all alone' }
     File.join(@bag_path, "data", "foo").should exist_on_fs
   end
-  
+
   it "should allow addition of files with deep paths" do
     @bag.add_file("deep/dir/structure/file") { |io| io.puts 'all alone' }
     File.join(@bag_path, "data", "deep/dir/structure/file").should exist_on_fs
   end
-  
+
   it "should not allow overwriting of files" do
     lambda { @bag.add_file("file-0") { |io| io.puts 'overwrite!' } }.should raise_error
   end
@@ -61,7 +61,7 @@ describe BagIt::Bag do
   it "should raise an error when deleing non existant files" do
     lambda { @bag.remove_file("file-x") }.should raise_error
   end
-  
+
   it "should clean up empty directories" do
     f = File.join "1", "2", "3", "file"
     @bag.add_file(f) { |io| io.puts 'all alone' }
@@ -70,5 +70,5 @@ describe BagIt::Bag do
     @bag.gc!
     File.exist?(File.dirname(File.join(@bag_path, 'data', f))).should be_false
   end
-  
+
 end

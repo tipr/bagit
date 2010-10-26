@@ -10,11 +10,11 @@ describe "BagIt Manifests" do
 
     # add some files
     open('/dev/random') do |rio|
-      
+
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
       end
-      
+
     end
 
   end
@@ -23,7 +23,7 @@ describe "BagIt Manifests" do
     @sandbox.cleanup!
   end
 
-  describe "a manifest file", :shared => true do
+  shared_examples_for "a manifest file" do
 
     before do
       pattern = File.join @bag_path, '*manifest-*.txt'
@@ -55,7 +55,7 @@ describe "BagIt Manifests" do
       @bag.manifest!
     end
 
-    it_should_behave_like "a manifest file"
+    it_behaves_like "a manifest file"
 
     it "should have a manifest file" do
       @bag.manifest_files.should_not be_empty

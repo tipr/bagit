@@ -1,5 +1,5 @@
 describe "a valid bag" do
-  
+
   before(:each) do
 
     @sandbox = Sandbox.new
@@ -10,13 +10,13 @@ describe "a valid bag" do
 
     # add some files
     open('/dev/random') do |rio|
-      
+
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
       end
-      
+
     end
-    
+
     @bag.manifest!
   end
 
