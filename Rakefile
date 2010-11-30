@@ -1,14 +1,10 @@
 require 'rake'
 require 'rake/rdoctask'
-require 'spec/rake/spectask'
+require 'rspec/core/rake_task'
 
-Spec::Rake::SpecTask.new('spec') do |t|
-  t.libs << 'lib'
-  t.libs << 'spec'
-  t.spec_opts << "--color"
-#   t.warning = true
-#   t.rcov = true
-#   t.rcov_opts += ["-x /Library", "-x spec"]
+RSpec::Core::RakeTask.new do |t|
+  t.pattern = 'spec/**/*.rb'
+  t.rspec_opts = %w(-fs --color)
 end
 
 task :default => [:spec]
