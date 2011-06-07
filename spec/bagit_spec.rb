@@ -1,5 +1,3 @@
-require 'bagit'
-require 'tempfile'
 require 'spec_helper'
 
 # based on v0.96 http://www.cdlib.org/inside/diglib/bagit/bagitspec.html

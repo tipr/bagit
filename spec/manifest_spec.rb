@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "BagIt Manifests" do
 
   before(:each) do

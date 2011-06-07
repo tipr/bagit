@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "Tag Info Files" do
 
   before(:each) do
