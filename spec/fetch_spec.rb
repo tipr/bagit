@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "fetch.txt" do
 
   before(:each) do

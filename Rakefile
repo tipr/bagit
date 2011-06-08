@@ -1,14 +1,16 @@
-require 'rake'
-require 'rake/rdoctask'
-require 'spec/rake/spectask'
+require 'rubygems'
+require 'bundler/setup'
+Bundler.setup(:default, :development, :test)
 
-Spec::Rake::SpecTask.new('spec') do |t|
-  t.libs << 'lib'
-  t.libs << 'spec'
-  t.spec_opts << "--color"
-#   t.warning = true
-#   t.rcov = true
-#   t.rcov_opts += ["-x /Library", "-x spec"]
+require 'rake'
+require 'rdoc/task'
+require 'rspec/core/rake_task'
+
+Bundler::GemHelper.install_tasks
+
+RSpec::Core::RakeTask.new do |t|
+  t.pattern = 'spec/**/*_spec.rb'
+  t.rspec_opts = %w(-fs --color)
 end
 
 task :default => [:spec]

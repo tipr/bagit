@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "a valid bag" do
 
   before(:each) do
