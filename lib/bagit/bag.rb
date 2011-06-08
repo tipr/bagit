@@ -9,7 +9,6 @@ module BagIt
 
   # Represents the state of a bag on a filesystem
   class Bag
-
     attr_reader :bag_dir
 
     include Validity            # Validity functionality
@@ -33,7 +32,6 @@ module BagIt
       unless File.exist? bag_info_txt_file
         write_bag_info('Bag-Software-Agent' => "BagIt Ruby Gem (http://bagit.rubyforge.org)")
       end
-
     end
 
     # Return the path to the data directory
@@ -62,30 +60,40 @@ module BagIt
       else
         FileUtils::cp src_path, path
       end
-
     end
-
+    
     # Remove a bag file
     def remove_file(base_path)
       path = File.join(data_dir, base_path)
       raise "Bag file does not exist: #{base_path}" unless File.exist? path
       FileUtils::rm path
     end
-
+    
+    # Retrieve the IO handle for a file in the bag
+    def get(base_path)
+      path = File.join(data_dir, base_path)
+      return nil unless File.exist?(path)
+      File.open(path)
+    end
+    
+    # Test if this bag is empty (no files)
+    def empty?
+      self.bag_files.empty?
+    end
+    
+    # Get all bag file paths relative to the data dir
+    def paths
+      self.bag_files.collect { |f| f.sub(data_dir + '/', '') }
+    end
+    
     # Remove all empty directory trees from the bag
     def gc!
-
       Dir.entries(data_dir).each do |f|
-
         unless %w{.. .}.include? f
           abs_path = File.join data_dir, f
           File.clean abs_path
         end
-
       end
-
     end
-
   end
-
 end

@@ -4,3 +4,6 @@
 \#*#
 *.gem
 tags
+vendor
+Gemfile.lock
+.bundle
