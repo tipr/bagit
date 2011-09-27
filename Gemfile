@@ -2,6 +2,7 @@ source :gemcutter
 
 gem "rake"
 gem "validatable"
+gem "rdoc"
 
 group :development do
   gem "semver"

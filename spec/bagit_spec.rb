@@ -125,7 +125,7 @@ describe BagIt::Bag do
       end
       
       it "should return relative paths to all files in the data directory" do
-        @paths.should == (0..9).collect { |x| "file-#{x}" }
+        @paths.should =~ (0..9).collect { |x| "file-#{x}" }
       end
     end
     

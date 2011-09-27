@@ -15,7 +15,6 @@ describe "Tag Info Files" do
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
       end
-      puts "bye"
     end
 
   end
