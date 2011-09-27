@@ -36,7 +36,7 @@ describe "Tag Info Files" do
       File.join(@bag_path, 'bagit.txt').should exist_on_fs
     end
 
-    it "should have exaclty two lines" do
+    it "should have exactly two lines" do
       @lines.size.should == 2
     end
 
