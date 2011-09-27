@@ -11,7 +11,7 @@ describe "a valid bag" do
     @bag = BagIt::Bag.new @bag_path
 
     # add some files
-    open('/dev/random') do |rio|
+    open('/dev/urandom') do |rio|
 
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
