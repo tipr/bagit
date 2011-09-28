@@ -50,7 +50,7 @@ module BagIt
             file = File.join(bag_dir, path)
 
             if File.exist? file
-              actual = open(file) { |fio| algo.hexdigest(fio.read) }
+              actual = algo.file(file).hexdigest
 
               if expected != actual
                 errors.add :consistency, "expected #{file} to have #{algo}: #{expected}, actual is #{actual}"
