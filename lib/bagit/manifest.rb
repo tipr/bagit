@@ -26,14 +26,13 @@ module BagIt
       # manifest each tag file for each algorithm
       bag_files.each do |f|
         rel_path = Pathname.new(f).relative_path_from(Pathname.new(bag_dir)).to_s
-        data = open(f) { |io| io.read }
 
         # sha1
-        sha1 = Digest::SHA1.hexdigest data
+        sha1 = Digest::SHA1.file f
         open(manifest_file(:sha1), 'a') { |io| io.puts "#{sha1} #{rel_path}" }
 
         # md5
-        md5 = Digest::MD5.hexdigest data
+        md5 = Digest::MD5.file f
         open(manifest_file(:md5), 'a') { |io| io.puts "#{md5} #{rel_path}" }
       end
 
