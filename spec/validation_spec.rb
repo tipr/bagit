@@ -11,7 +11,7 @@ describe "a valid bag" do
     @bag = BagIt::Bag.new @bag_path
 
     # add some files
-    open('/dev/random') do |rio|
+    open('/dev/urandom') do |rio|
 
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
@@ -60,6 +60,25 @@ describe "a valid bag" do
     # @bag.should_not be_consistent
     @bag.should_not be_valid
     @bag.errors.on(:consistency).should_not be_empty
+  end
+
+  it "should calculate sha1 correctly for a big file" do
+    @bag.add_file 'big-data-file' do |fh| 
+      count = 0
+      while count < 1024 * 512 do
+        fh.write "1" * 1024 
+        count += 1
+      end
+    end
+    @bag.manifest!
+    sha1_manifest = File.join @bag_path, 'manifest-sha1.txt'
+    checksums = {}
+    open(sha1_manifest).each_line do |line|
+        fixity, path = line.split(' ')
+        checksums[path] = fixity
+    end
+    expected = checksums['data/big-data-file'] 
+    expected.should == '12be64c30968bb90136ee695dc58f4b2276968c6'
   end
 
 end

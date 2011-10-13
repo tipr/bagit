@@ -4,6 +4,7 @@
 # http://www.cdlib.org/inside/diglib/bagit/bagitspec.html
 
 require 'bagit/bag'
+require 'fileutils'
 
 module BagIt
   # The version of the BagIt specification the code is conforming to.

@@ -11,12 +11,10 @@ describe "Tag Info Files" do
     @bag = BagIt::Bag.new @bag_path
 
     # add some files
-    open('/dev/random') do |rio|
-
+    open('/dev/urandom') do |rio|
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
       end
-
     end
 
   end
@@ -36,7 +34,7 @@ describe "Tag Info Files" do
       File.join(@bag_path, 'bagit.txt').should exist_on_fs
     end
 
-    it "should have exaclty two lines" do
+    it "should have exactly two lines" do
       @lines.size.should == 2
     end
 

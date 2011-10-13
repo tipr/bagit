@@ -5,7 +5,6 @@ describe BagIt::Bag do
   describe 'empty bag' do
     before(:each) do
       @sandbox = Sandbox.new
-
       # make the bag
       @bag_path = File.join @sandbox.to_s, 'the_bag'
       @bag = BagIt::Bag.new @bag_path
@@ -30,7 +29,7 @@ describe BagIt::Bag do
       @bag = BagIt::Bag.new @bag_path
 
       # add some files
-      open('/dev/random') do |rio|
+      open('/dev/urandom') do |rio|
         10.times do |n|
           @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
         end
@@ -126,7 +125,7 @@ describe BagIt::Bag do
       end
       
       it "should return relative paths to all files in the data directory" do
-        @paths.should == (0..9).collect { |x| "file-#{x}" }
+        @paths.should =~ (0..9).collect { |x| "file-#{x}" }
       end
     end
     
