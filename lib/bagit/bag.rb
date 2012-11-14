@@ -46,7 +46,9 @@ module BagIt
 
     # Return the paths to each tag file relative to bag_dir
     def tag_files
-      Dir[File.join(@bag_dir, '*')].select { |f| File.file? f }
+      Dir[File.join(@bag_dir, '**', '*')].select { |f| 
+        File.file? f and File.dirname(f) != data_dir 
+      }
     end
 
     # Add a bag file
