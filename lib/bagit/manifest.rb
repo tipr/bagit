@@ -58,7 +58,7 @@ module BagIt
       # manifest each (non tagmanifest) tag file for each algorithm
       (tag_files - tagmanifest_files).each do |f|
         data = open(f) { |io| io.read }
-        rel_path = File.basename f
+        rel_path = Pathname.new(f).relative_path_from(Pathname.new(bag_dir)).to_s
 
         # sha1
         sha1 = Digest::SHA1.hexdigest data
