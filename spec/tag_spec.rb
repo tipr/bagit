@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "BagIt Manifests" do
+describe "Tag Specs" do
 
   before(:each) do
 
