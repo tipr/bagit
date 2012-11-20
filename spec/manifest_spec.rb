@@ -17,10 +17,9 @@ describe "BagIt Manifests" do
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
         @bag.add_tag_file("tag-#{n}") { |io| io.write rio.read(16) }
       end
+
     end
-    # Create a tag that should not be tracked.
-    src_path = File.join @sandbox.to_s, 'tag-notrack'
-    open(src_path, 'w') { |io| io.puts "something" }
+
   end
 
   after(:each) do
@@ -80,6 +79,7 @@ describe "BagIt Manifests" do
   describe "tag manifest files" do
 
     before do
+      @bag.add_tag_file("test-tag") { |f| f.puts "all alone" }
       @bag.tagmanifest!
     end
 

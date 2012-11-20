@@ -47,9 +47,12 @@ module BagIt
     # Return the paths to each tag file relative to bag_dir
     def tag_files
       files = []
-      File.open(tagmanifest_files.first) do |f|
-        f.each_line{|line| files << line.split(' ')[1]}
+      if tagmanifest_files != []
+        File.open(tagmanifest_files.first) do |f|
+          f.each_line{|line| files << File.join(@bag_dir, line.split(' ')[1])}
+        end
       end
+      files
     end
 
     # Add a bag file
