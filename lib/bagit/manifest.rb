@@ -40,7 +40,9 @@ module BagIt
 
     # All tag files that are bag manifest files (tagmanifest-[algorithm].txt)
     def tagmanifest_files
-      tag_files.select { |f| File.basename(f) =~ /^tagmanifest-.*.txt/ }
+      files = Dir[File.join(@bag_dir, '*')].select { |f|
+        File.file? f and File.basename(f) =~ /^tagmanifest-.*.txt/ 
+      }
     end
 
     # A path to a tagmanifest file of the specified algorithm
