@@ -33,6 +33,7 @@ module BagIt
     def write_bag_info(hash)
       hash[@@bag_info_headers[:agent]] = "BagIt Ruby Gem (http://bagit.rubyforge.org)" if hash[@@bag_info_headers[:agent]].nil?
       hash[@@bag_info_headers[:date]] = Date.today.strftime('%Y-%m-%d') if hash[@@bag_info_headers[:date]].nil?
+      hash[@@bag_info_headers[:oxum]] = payload_oxum
       write_info_file bag_info_txt_file, hash
     end
 
@@ -48,7 +49,7 @@ module BagIt
       write_info_file bagit_txt_file, hash
     end
 
-    def update_bagging_date 
+    def update_bag_info
       bag_info = bag_info
       hash["Bagging-Date"] = Date.today.strftime('%Y-%m-%d')
     end

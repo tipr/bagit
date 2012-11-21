@@ -81,7 +81,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
   culpa qui officia deserunt mollit anim id est laborum.
 LOREM
       @bag.write_bag_info 'Lorem' => longline
-      @bag.bag_info.keys.length.should == 3 # this isn't a great test. Changed it from 1 to 3 because unrelated changes caused failure.
+      @bag.bag_info.keys.length.should == 4 # this isn't a great test. Changed it from 1 to 4 because unrelated changes caused failure.
     end
 
     it "should specify a bag software agent" do
