@@ -15,6 +15,7 @@ describe "a valid bag" do
 
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
+        @bag.add_tag_file("tag-#{n}") { |io| io.write rio.read(16) }
       end
 
     end
@@ -80,5 +81,17 @@ describe "a valid bag" do
     expected = checksums['data/big-data-file'] 
     expected.should == '12be64c30968bb90136ee695dc58f4b2276968c6'
   end
-
+  describe "tag manifest validation" do
+    it "should be invalid if listed tag file does not exist" do
+      # add a file and then remove it through the back door
+      @bag.add_tag_file("tag-k") { |io| io.puts 'time to go' }
+      @bag.tagmanifest!
+  
+      FileUtils::rm File.join(@bag.bag_dir, 'tag-k')
+  
+      # @bag.should_not be_valid
+      @bag.should_not be_valid
+      @bag.errors.on(:completeness).should_not be_empty
+    end
+  end
 end
