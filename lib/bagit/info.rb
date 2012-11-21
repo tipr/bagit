@@ -4,6 +4,24 @@ module BagIt
 
   module Info
 
+    @@bag_info_headers = {  
+      :agent => 'Bag-Software-Agent',
+      :org => 'Source-Organization',
+      :org_addr => 'Organization-Address',
+      :contact_name => 'Contact-Name',
+      :contact_phone => 'Contact-Phone',
+      :contact_email => 'Contact-Email',
+      :ext_desc => 'External-Description',
+      :ext_id => 'External-Identifier',
+      :size => 'Bag-Size',
+      :group_id => 'Bag-Group-Identifier',
+      :group_count => 'Bag-Count',
+      :sender_id => 'Internal-Sender-Identifier',
+      :int_desc => 'Internal-Sender-Description',
+      :date => 'Bagging-Date',
+      :oxum => 'Payload-Oxum'
+    }
+
     def bag_info_txt_file
       File.join bag_dir, 'bag-info.txt'
     end
@@ -13,8 +31,8 @@ module BagIt
     end
 
     def write_bag_info(hash)
-      hash["Bag-Software-Agent"] = "BagIt Ruby Gem (http://bagit.rubyforge.org)" if hash["Bag-Software-Agent"].nil?
-      hash["Bagging-Date"] = Date.today.strftime('%Y-%m-%d') if hash["Bagging-Date"].nil?
+      hash[@@bag_info_headers[:agent]] = "BagIt Ruby Gem (http://bagit.rubyforge.org)" if hash[@@bag_info_headers[:agent]].nil?
+      hash[@@bag_info_headers[:date]] = Date.today.strftime('%Y-%m-%d') if hash[@@bag_info_headers[:date]].nil?
       write_info_file bag_info_txt_file, hash
     end
 
