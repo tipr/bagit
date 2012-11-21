@@ -30,7 +30,7 @@ module BagIt
       read_info_file bag_info_txt_file
     end
 
-    def write_bag_info(hash)
+    def write_bag_info(hash={})
       hash[@@bag_info_headers[:agent]] = "BagIt Ruby Gem (http://bagit.rubyforge.org)" if hash[@@bag_info_headers[:agent]].nil?
       hash[@@bag_info_headers[:date]] = Date.today.strftime('%Y-%m-%d') if hash[@@bag_info_headers[:date]].nil?
       hash[@@bag_info_headers[:oxum]] = payload_oxum
