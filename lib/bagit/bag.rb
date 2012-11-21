@@ -91,6 +91,16 @@ module BagIt
     def paths
       self.bag_files.collect { |f| f.sub(data_dir + '/', '') }
     end
+
+    # Get the Oxum for the payload files
+    def payload_oxum
+      bytes = 0
+      bag_files.each do |f|
+        #TODO: filesystem quirks? Are we getting the stream size or the size on disk?
+        bytes += File.new(f).size
+      end
+      return bytes.to_s + '.' + bag_files.count.to_s
+    end
     
     # Remove all empty directory trees from the bag
     def gc!
