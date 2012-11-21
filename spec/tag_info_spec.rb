@@ -93,6 +93,10 @@ LOREM
       @bag.bag_info["Bagging-Date"] =~ /^^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
     end
 
+    it "should contain a payload oxum" do
+      @bag.bag_info.keys.should include("Payload-Oxum")
+    end
+
     it "should contain values passed to bag" do
       hash = {"Bag-Software-Agent" => "rspec",
         "Bagging-Date" => "2012-11-21",

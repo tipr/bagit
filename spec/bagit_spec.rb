@@ -128,6 +128,17 @@ describe BagIt::Bag do
         @paths.should =~ (0..9).collect { |x| "file-#{x}" }
       end
     end
+
+    describe "#payload-oxum" do
+      it "should return a valid oxum" do
+        @bag.payload_oxum.should =~ /^[0-9]+\.[0-9]+$/
+      end
+      
+      it "should accurately specify the number of payload files" do
+        @bag.add_tag_file('non-payload') { |f| f.puts "I shouldn't count in the oxum" }
+        @bag.payload_oxum.split('.')[1] == @bag.bag_files.count
+      end
+    end
     
     describe "#gc!" do
       it "should clean up empty directories" do
