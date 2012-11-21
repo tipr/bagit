@@ -71,8 +71,7 @@ describe "Tag Info Files" do
     end
 
     it "should fold long VALUEs" do
-
-      @bag.write_bag_info 'Lorem' => <<LOREM
+      longline = <<LOREM
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enimad
   minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -81,7 +80,29 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
   pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
   culpa qui officia deserunt mollit anim id est laborum.
 LOREM
-      @bag.bag_info.keys.size.should == 1
+      @bag.write_bag_info 'Lorem' => longline
+      @bag.bag_info.keys.length.should == 3 # this isn't a great test. Changed it from 1 to 3 because unrelated changes caused failure.
+    end
+
+    it "should specify a bag software agent" do
+      @bag.bag_info.keys.should include("Bag-Software-Agent")
+    end
+    
+    it "should contain a valid bagging date" do
+      @bag.bag_info.keys.should include("Bagging-Date")
+      @bag.bag_info["Bagging-Date"] =~ /^^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
+    end
+
+    it "should contain values passed to bag" do
+      hash = {"Bag-Software-Agent" => "rspec",
+        "Bagging-Date" => "2012-11-21",
+        "Contact-Name" => "Willis Corto",
+        "Some-Tag" => "Some Value"
+      }
+      bag_with_info = BagIt::Bag.new(@bag_path + '2', hash)
+      hash.each do |key, value|
+        bag_with_info.bag_info[key].should == value
+      end
     end
 
   end

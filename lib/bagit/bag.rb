@@ -17,7 +17,7 @@ module BagIt
     include Fetch               # fetch related functionality
 
     # Make a new Bag based at path
-    def initialize(path)
+    def initialize(path, info={})
       @bag_dir = path
 
       # make the dir structure if it doesn't exist
@@ -30,7 +30,7 @@ module BagIt
       end
 
       unless File.exist? bag_info_txt_file
-        write_bag_info('Bag-Software-Agent' => "BagIt Ruby Gem (http://bagit.rubyforge.org)")
+        write_bag_info(info)
       end
     end
 

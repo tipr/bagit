@@ -13,6 +13,8 @@ module BagIt
     end
 
     def write_bag_info(hash)
+      hash["Bag-Software-Agent"] = "BagIt Ruby Gem (http://bagit.rubyforge.org)" if hash["Bag-Software-Agent"].nil?
+      hash["Bagging-Date"] = Date.today.strftime('%Y-%m-%d') if hash["Bagging-Date"].nil?
       write_info_file bag_info_txt_file, hash
     end
 
@@ -26,6 +28,11 @@ module BagIt
     
     def write_bagit(hash)
       write_info_file bagit_txt_file, hash
+    end
+
+    def update_bagging_date 
+      bag_info = bag_info
+      hash["Bagging-Date"] = Date.today.strftime('%Y-%m-%d')
     end
 
     protected
