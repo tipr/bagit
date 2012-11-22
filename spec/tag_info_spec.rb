@@ -98,12 +98,16 @@ LOREM
     end
     it "should not override any previous values" do
       path = File.join @bag_path, 'bag-info.txt'
+      @bag.write_bag_info 'Bag-Software-Agent' => 'Some Other Agent'
       @bag.write_bag_info 'Source-Organization' => 'Awesome Inc.'
+      @bag.write_bag_info 'Bagging-Date' => '1901-01-01'
       @bag.write_bag_info
       contents = File.open(path).read
+      contents.should include "Some Other Agent"
       contents.should include "Awesome Inc."
+      contents.should include "1901-01-01"
     end
-    it "should override previous tags" do
+    it "should override previous tags when they collide with new ones" do
       path = File.join @bag_path, 'bag-info.txt'
       @bag.write_bag_info 'Source-Organization' => 'Awesome Inc.'
       @bag.write_bag_info 'Source-Organization' => 'Awesome LLC.'
