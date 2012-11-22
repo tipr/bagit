@@ -96,7 +96,12 @@ LOREM
     it "should contain a payload oxum" do
       @bag.bag_info.keys.should include("Payload-Oxum")
     end
-
+    it "should not override any previous values" do
+      @bag.write_bag_info 'Source-Organization' => 'Awesome Inc.'
+      @bag.write_bag_info
+      contents = File.open(path).read
+      contents.should include "Awesome Inc."
+    end
     it "should contain values passed to bag" do
       hash = {"Bag-Software-Agent" => "rspec",
         "Bagging-Date" => "2012-11-21",
