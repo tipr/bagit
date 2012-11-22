@@ -102,6 +102,13 @@ LOREM
       contents = File.open(path).read
       contents.should include "Awesome Inc."
     end
+    it "should override previous tags" do
+      @bag.write_bag_info 'Source Organization' => 'Awesome Inc.'
+      @bag.write_bag_info 'Source-Organization' => 'Awesome LLC.'
+      contents = File.open(path).read
+      @contents.should include "Awesome LLC."
+      @contents.should_not include "Awesome Inc."
+    end
     it "should contain values passed to bag" do
       hash = {"Bag-Software-Agent" => "rspec",
         "Bagging-Date" => "2012-11-21",
