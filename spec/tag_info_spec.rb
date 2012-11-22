@@ -105,7 +105,7 @@ LOREM
     end
     it "should override previous tags" do
       path = File.join @bag_path, 'bag-info.txt'
-      @bag.write_bag_info 'Source Organization' => 'Awesome Inc.'
+      @bag.write_bag_info 'Source-Organization' => 'Awesome Inc.'
       @bag.write_bag_info 'Source-Organization' => 'Awesome LLC.'
       contents = File.open(path).read
       contents.should include "Awesome LLC."
