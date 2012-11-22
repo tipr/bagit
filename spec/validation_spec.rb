@@ -81,4 +81,20 @@ describe "a valid bag" do
     expected.should == '12be64c30968bb90136ee695dc58f4b2276968c6'
   end
 
+  it "should validate by oxum when needed" do
+    @bag.valid_oxum?.should == true
+  end
+
+  it "should validate false by oxum when file count is incorrect" do
+    # tweak oxum through backdoor
+    open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: " + @bag.bag_info["Payload-Oxum"].split('.')[0] + '.0' }
+    @bag.valid_oxum?.should == false
+  end
+
+  it "should validate false by oxum when octetstream size is incorrect" do
+    # tweak oxum through backdoor
+    open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: 1." + @bag.bag_info["Payload-Oxum"].split('.')[1] }
+    @bag.valid_oxum?.should == false
+  end
+
 end
