@@ -62,10 +62,12 @@ module BagIt
       FileUtils::mkdir_p File.dirname(path)
 
       if src_path.nil?
-        open(path, 'w') { |io| yield io }
+        f = open(path, 'w') { |io| yield io }
       else
-        FileUtils::cp src_path, path
+        f = FileUtils::cp src_path, path
       end
+      write_bag_info
+      return f
     end
     
     # Remove a bag file

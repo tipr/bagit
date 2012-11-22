@@ -52,6 +52,7 @@ module BagIt
     def update_bag_info
       bag_info = bag_info
       hash["Bagging-Date"] = Date.today.strftime('%Y-%m-%d')
+      write_bag_info(hash)
     end
 
     protected
