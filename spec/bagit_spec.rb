@@ -74,6 +74,12 @@ describe BagIt::Bag do
       it "should not allow overwriting of files" do
         lambda { @bag.add_file("file-0") { |io| io.puts 'overwrite!' } }.should raise_error
       end
+
+      it "should update payload oxum" do
+        oxum_count = @bag.bag_info["Payload-Oxum"].split('.')[1].to_i
+        @bag.add_file("foo") { |io| io.puts 'all alone' }
+        @bag.bag_info["Payload-Oxum"].split('.')[1].to_i.should == oxum_count + 1
+      end
     end
     
     describe "#remove_file" do
