@@ -97,17 +97,19 @@ LOREM
       @bag.bag_info.keys.should include("Payload-Oxum")
     end
     it "should not override any previous values" do
+      path = File.join @bag_path, 'bag-info.txt'
       @bag.write_bag_info 'Source-Organization' => 'Awesome Inc.'
       @bag.write_bag_info
       contents = File.open(path).read
       contents.should include "Awesome Inc."
     end
     it "should override previous tags" do
+      path = File.join @bag_path, 'bag-info.txt'
       @bag.write_bag_info 'Source Organization' => 'Awesome Inc.'
       @bag.write_bag_info 'Source-Organization' => 'Awesome LLC.'
       contents = File.open(path).read
-      @contents.should include "Awesome LLC."
-      @contents.should_not include "Awesome Inc."
+      contents.should include "Awesome LLC."
+      contents.should_not include "Awesome Inc."
     end
     it "should contain values passed to bag" do
       hash = {"Bag-Software-Agent" => "rspec",
