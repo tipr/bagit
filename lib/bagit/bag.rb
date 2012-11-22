@@ -66,7 +66,7 @@ module BagIt
       else
         f = FileUtils::cp src_path, path
       end
-      update_bag_info
+      write_bag_info
       return f
     end
     
