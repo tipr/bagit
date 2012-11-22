@@ -66,6 +66,11 @@ module BagIt
       errors.on(:consistency).nil?
     end
 
+    # Checks for validity against Payload-Oxum
+    def valid_oxum?
+      bag_info["Payload-Oxum"] == payload_oxum
+    end
+
     protected
 
     # Returns all files in the instance that are not manifested
