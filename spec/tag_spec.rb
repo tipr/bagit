@@ -34,6 +34,10 @@ describe "Tag Specs" do
       @bag.add_tag_file("fedora/foo") { |io| io.puts 'all alone' }
       File.join(@bag_path, "fedora","foo").should exist_on_fs
     end
+    it "should allow addition of deep tag files" do
+      @bag.add_tag_file("fedora/foo/newfoo/deep") {|io| io.puts "woah that's deep"}
+      File.join(@bag_path,"fedora","foo","newfoo","deep").should exist_on_fs
+    end
     it "should not allow overwriting of tag files" do
       lambda { @bag.add_tag_file("tag-0") { |io| io.puts 'overwrite!' } }.should raise_error
     end

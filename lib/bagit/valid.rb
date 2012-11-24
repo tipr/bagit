@@ -21,18 +21,18 @@ module BagIt
       empty_manifests.each do |file|
         errors.add :completeness, "#{file} is manifested but not present"
       end
-
+      tag_empty_manifests.each do |file|
+        errors.add :completeness, "#{file} is a manifested tag but not present"
+      end
+      
       errors.on(:completeness).nil?
     end
 
     # Return true if all manifested files message digests match.
     def consistent?
-
-      manifest_files.each do |mf|
-
+      (manifest_files|tagmanifest_files).each do |mf|
         # get the algorithm implementation
-        File.basename(mf) =~ /^manifest-(.+).txt$/
-
+        File.basename(mf) =~ /manifest-(.+).txt$/
         algo = case $1
                when /sha1/i
                  Digest::SHA1
@@ -41,27 +41,21 @@ module BagIt
                else
                  :unknown
                end
-
         # Check every file in the manifest
         open(mf) do |io|
-
           io.each_line do |line|
             expected, path = line.chomp.split /\s+/, 2
             file = File.join(bag_dir, path)
-
             if File.exist? file
               actual = algo.file(file).hexdigest
-
               if expected != actual
                 errors.add :consistency, "expected #{file} to have #{algo}: #{expected}, actual is #{actual}"
               end
-
             end
           end
-
         end
-
       end
+      
 
       errors.on(:consistency).nil?
     end
@@ -84,7 +78,16 @@ module BagIt
       bfs = bag_files
       manifested_files.reject { |f| bfs.member? File.join(bag_dir, f) }
     end
-
+    # Returns a list of tag manifested files that are not present
+    def tag_empty_manifests
+      empty = []
+      tag_manifested_files.each do |f|
+        if !File.exists?(File.join(bag_dir,f))
+          empty.push f
+        end
+      end
+      return empty
+    end
     # Returns a list of all files present in the manifest files
     def manifested_files
 
@@ -102,6 +105,18 @@ module BagIt
         (acc + files).uniq
       end
 
+    end
+    # Returns a list of all files in the tag manifest files
+    def tag_manifested_files
+      tagmanifest_files.inject([]) do |acc, mf|
+        files = open(mf) do |io|
+          io.readlines.map do |line|
+            digest, path = line.chomp.split /\s+/, 2
+            path
+          end
+        end
+        (acc+files).uniq
+      end
     end
 
   end
