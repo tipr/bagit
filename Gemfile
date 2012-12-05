@@ -3,10 +3,7 @@ source :gemcutter
 gem "rake"
 gem "validatable"
 gem "rdoc"
-
-group :development do
-  gem "semver"
-end
+gem "semver"
 
 group :test do
   gem "rspec", :require => "rspec/core"
