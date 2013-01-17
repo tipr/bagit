@@ -7,3 +7,4 @@ tags
 vendor
 Gemfile.lock
 .bundle
+.project

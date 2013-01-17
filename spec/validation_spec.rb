@@ -15,6 +15,7 @@ describe "a valid bag" do
 
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
+        @bag.add_tag_file("tag-#{n}") { |io| io.write rio.read(16) }
       end
 
     end
@@ -79,6 +80,36 @@ describe "a valid bag" do
     end
     expected = checksums['data/big-data-file'] 
     expected.should == '12be64c30968bb90136ee695dc58f4b2276968c6'
+  end
+
+  it "should validate by oxum when needed" do
+    @bag.valid_oxum?.should == true
+  end
+
+  it "should validate false by oxum when file count is incorrect" do
+    # tweak oxum through backdoor
+    open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: " + @bag.bag_info["Payload-Oxum"].split('.')[0] + '.0' }
+    @bag.valid_oxum?.should == false
+  end
+
+  it "should validate false by oxum when octetstream size is incorrect" do
+    # tweak oxum through backdoor
+    open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: 1." + @bag.bag_info["Payload-Oxum"].split('.')[1] }
+    @bag.valid_oxum?.should == false
+  end
+
+  describe "tag manifest validation" do
+    it "should be invalid if listed tag file does not exist" do
+      # add a file and then remove it through the back door
+      @bag.add_tag_file("tag-k") { |io| io.puts 'time to go' }
+      @bag.tagmanifest!
+  
+      FileUtils::rm File.join(@bag.bag_dir, 'tag-k')
+  
+      # @bag.should_not be_valid
+      @bag.should_not be_valid
+      @bag.errors.on(:completeness).should_not be_empty
+    end
   end
 
 end

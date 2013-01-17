@@ -17,7 +17,7 @@ module BagIt
     include Fetch               # fetch related functionality
 
     # Make a new Bag based at path
-    def initialize(path)
+    def initialize(path, info={})
       @bag_dir = path
 
       # make the dir structure if it doesn't exist
@@ -30,7 +30,7 @@ module BagIt
       end
 
       unless File.exist? bag_info_txt_file
-        write_bag_info('Bag-Software-Agent' => "BagIt Ruby Gem (http://bagit.rubyforge.org)")
+        write_bag_info(info)
       end
     end
 
@@ -46,7 +46,13 @@ module BagIt
 
     # Return the paths to each tag file relative to bag_dir
     def tag_files
-      Dir[File.join(@bag_dir, '*')].select { |f| File.file? f }
+      files = []
+      if tagmanifest_files != []
+        File.open(tagmanifest_files.first) do |f|
+          f.each_line{|line| files << File.join(@bag_dir, line.split(' ')[1])}
+        end
+      end
+      files
     end
 
     # Add a bag file
@@ -56,10 +62,12 @@ module BagIt
       FileUtils::mkdir_p File.dirname(path)
 
       if src_path.nil?
-        open(path, 'w') { |io| yield io }
+        f = open(path, 'w') { |io| yield io }
       else
-        FileUtils::cp src_path, path
+        f = FileUtils::cp src_path, path
       end
+      write_bag_info
+      return f
     end
     
     # Remove a bag file
@@ -84,6 +92,16 @@ module BagIt
     # Get all bag file paths relative to the data dir
     def paths
       self.bag_files.collect { |f| f.sub(data_dir + '/', '') }
+    end
+
+    # Get the Oxum for the payload files
+    def payload_oxum
+      bytes = 0
+      bag_files.each do |f|
+        #TODO: filesystem quirks? Are we getting the stream size or the size on disk?
+        bytes += File.new(f).size
+      end
+      return bytes.to_s + '.' + bag_files.count.to_s
     end
     
     # Remove all empty directory trees from the bag

@@ -74,6 +74,12 @@ describe BagIt::Bag do
       it "should not allow overwriting of files" do
         lambda { @bag.add_file("file-0") { |io| io.puts 'overwrite!' } }.should raise_error
       end
+
+      it "should update payload oxum" do
+        oxum_count = @bag.bag_info["Payload-Oxum"].split('.')[1].to_i
+        @bag.add_file("foo") { |io| io.puts 'all alone' }
+        @bag.bag_info["Payload-Oxum"].split('.')[1].to_i.should == oxum_count + 1
+      end
     end
     
     describe "#remove_file" do
@@ -126,6 +132,17 @@ describe BagIt::Bag do
       
       it "should return relative paths to all files in the data directory" do
         @paths.should =~ (0..9).collect { |x| "file-#{x}" }
+      end
+    end
+
+    describe "#payload-oxum" do
+      it "should return a valid oxum" do
+        @bag.payload_oxum.should =~ /^[0-9]+\.[0-9]+$/
+      end
+      
+      it "should accurately specify the number of payload files" do
+        @bag.add_tag_file('non-payload') { |f| f.puts "I shouldn't count in the oxum" }
+        @bag.payload_oxum.split('.')[1] == @bag.bag_files.count
       end
     end
     
