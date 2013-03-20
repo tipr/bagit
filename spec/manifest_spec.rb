@@ -15,6 +15,7 @@ describe "BagIt Manifests" do
 
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
+        @bag.add_tag_file("tag-#{n}") { |io| io.write rio.read(16) }
       end
 
     end
@@ -78,6 +79,7 @@ describe "BagIt Manifests" do
   describe "tag manifest files" do
 
     before do
+      @bag.add_tag_file("test-tag") { |f| f.puts "all alone" }
       @bag.tagmanifest!
     end
 
@@ -96,7 +98,33 @@ describe "BagIt Manifests" do
         end
       end
     end
-
+    it "should not contain the untracked tag file" do
+      @bag.tagmanifest_files.each do |mf|
+        open(mf) do |io|
+          io.read.should_not include "tag-notrack"
+        end
+      end
+    end
+    describe "removing tracked files" do
+      before(:each) do
+        @bag.remove_tag_file "tag-1"
+        @bag.delete_tag_file "tag-2"
+      end
+      it "should still have the untracked tag file on the file system" do
+        File.join(@bag_path, "tag-1").should exist_on_fs
+      end
+      it "should not have the deleted tag file on the file system" do
+        File.join(@bag_path, "tag-2").should_not exist_on_fs
+      end
+      it "should not have the removed or deleted tag files in the manifest" do
+        @bag.tagmanifest_files.each do |mf|
+          open(mf) do |io|
+            io.read.should_not include "tag-1"
+            io.read.should_not include "tag-2"
+          end
+        end
+      end
+    end
   end
 
 

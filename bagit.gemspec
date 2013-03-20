@@ -1,8 +1,7 @@
-require 'semver'
 
 BAGIT_SPEC = Gem::Specification.new do |spec|
   spec.name        = "bagit"
-  spec.version     = SemVer.find.format '%M.%m.%p'
+  spec.version     = '0.3.0'
   spec.summary     = "BagIt package generation and validation"
   spec.description = "Ruby Library and Command Line tools for bagit"
   spec.email       = "flazzarino@gmail.com"
