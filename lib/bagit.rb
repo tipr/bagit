@@ -8,5 +8,5 @@ require 'fileutils'
 
 module BagIt
   # The version of the BagIt specification the code is conforming to.
-  SPEC_VERSION = '0.96'
+  SPEC_VERSION = '0.97'
 end
