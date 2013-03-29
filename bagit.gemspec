@@ -4,7 +4,7 @@ BAGIT_SPEC = Gem::Specification.new do |spec|
   spec.version     = '0.3.0'
   spec.summary     = "BagIt package generation and validation"
   spec.description = "Ruby Library and Command Line tools for bagit"
-  spec.email       = "flazzarino@gmail.com"
+  spec.email       = "johnson.tom@gmail.com"
   spec.homepage    = 'http://github.com/tipr/bagit'
   spec.authors     = ["Tom Johnson, Francesco Lazzarino"]
 
