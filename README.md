@@ -48,7 +48,6 @@ TODO
 * command line tools for common tasks
 * better holy bag (fetch.txt) generation
 * better error reporting.
-* poor mans' checksum
 
 ---
 
