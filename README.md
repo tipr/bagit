@@ -1,6 +1,8 @@
 BagIt (for ruby)
 ================
 
+[![Build Status](https://secure.travis-ci.org/no-reply/bagit.png)](http://travis-ci.org/no-reply/bagit)
+
 Based on the [BagItspec v0.96](https://confluence.ucop.edu/display/Curation/BagIt).
 
 Supported Features:
