@@ -5,6 +5,7 @@
 
 require 'bagit/bag'
 require 'fileutils'
+require 'date'
 
 module BagIt
   # The version of the BagIt specification the code is conforming to.
