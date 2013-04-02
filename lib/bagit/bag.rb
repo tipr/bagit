@@ -99,7 +99,7 @@ module BagIt
       bytes = 0
       bag_files.each do |f|
         #TODO: filesystem quirks? Are we getting the stream size or the size on disk?
-        bytes += File.new(f).size
+        bytes += File.size(f)
       end
       return bytes.to_s + '.' + bag_files.count.to_s
     end
