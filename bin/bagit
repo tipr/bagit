@@ -18,12 +18,9 @@ Options:
 DOCOPT
 
 begin
-  opts = Docopt::docopt(doc)
-  if opts['--help']
-    puts Docopt::docopt(doc, version: '0.3.0').to_s
-  elsif opts['--version']
-    puts 'BagIt 0.3.0'
-  end
+  opts = Docopt::docopt(doc, version: '0.3.0')
+  puts opts['<dir>']
+
 rescue Docopt::Exit => e
   puts e.message
 end
