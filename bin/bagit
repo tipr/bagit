@@ -7,8 +7,9 @@ doc = <<DOCOPT
 BagIt.
 
 Usage: 
-  #{__FILE__} PATH [-f <file>...] [-t <tagfile>...]
+  #{__FILE__} bag PATH [-f <file>...] [-t <tagfile>...]
   #{__FILE__} validate [-o | --oxum] PATH 
+  #{__FILE__} list [--tags | --all] PATH 
   #{__FILE__} -h | --version
 
 Options:
@@ -17,6 +18,8 @@ Options:
   -f <file>      File to add to bag. Repeatable.
   -t <tag_file>  Tag (metadata) file to add to bag. Repeatable.
   -o --oxum      Validate against oxum only (quick validate).
+  --tags         List tag files.
+  --all          List all data and tag files.
 
 DOCOPT
 
@@ -25,22 +28,33 @@ begin
   
   bag = BagIt::Bag.new(opts['PATH'])
 
-  # validation commands MUST NOT change manifest or bag-info files
+
   if opts['validate']
     if opts['--oxum']
       puts bag.valid_oxum?.to_s
-      exit
     else
       puts bag.valid?.to_s
-      exit
     end
+    # validation commands MUST NOT change manifest or bag-info files
+    exit
+  end
+
+  if opts['list']
+    files = bag.bag_files
+    if opts['--tags']
+      files = bag.tag_files
+    elsif opts['--all']
+      files = bag.bag_files + bag.tag_files
+    end
+    files.each { |f| puts f }
+    # quit here, too
+    exit
   end
 
   unless opts['-f'].nil? 
     opts['-f'].each { |datafile|
-      puts datafile
-      #    bag.add_file(opts['-f'])
-    }
+      bag.add_file(File.basename(datafile), datafile) if File.exist?(datafile)
+    }  
   end
     
   unless opts['-t'].nil? 
