@@ -7,20 +7,33 @@ doc = <<DOCOPT
 BagIt.
 
 Usage: 
-  #{__FILE__} <dir>
+  #{__FILE__} PATH [-f <file>...] [-t <tagfile>...]
   #{__FILE__} [-h | --help]
-  #{__FILE__} [-v | --version]
+  #{__FILE__} [--version]
 
 Options:
   -h --help      Show this help screen.
-  -v --version   Show version.
+  --version      Show version.
+  -f <file>      Add file to bag.
+  -t <tag_file>  Add tag file to bag.
 
 DOCOPT
 
 begin
   opts = Docopt::docopt(doc, version: '0.3.0')
-  bag = BagIt::Bag.new(opts['<dir>'])
-  
+
+  bag = BagIt::Bag.new(opts['PATH'])
+
+  if opts.include?('<file>')
+    puts opts['<file>'] 
+  end
+
+  if opts.include?('<tag_file>')
+    puts opts['<tag_file>'] 
+#    bag.add_tag_file(opts['<tag_file>'])
+#    bag.tagmanifest!
+  end
+
   bag.manifest!
 
 rescue Docopt::Exit => e
