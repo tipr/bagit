@@ -12,8 +12,8 @@ Usage:
   #{__FILE__} [-v | --version]
 
 Options:
-  -h --help     Show this help screen.
-  -v --version     Show version.
+  -h --help      Show this help screen.
+  -v --version   Show version.
 
 DOCOPT
 
