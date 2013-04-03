@@ -15,8 +15,8 @@ Usage:
 Options:
   -h --help      Show this help screen.
   --version      Show version.
-  -f <file>      Add file to bag.
-  -t <tag_file>  Add tag file to bag.
+  -f <file>      File to add to bag. Repeatable.
+  -t <tag_file>  Tag (metadata) file to add to bag. Repeatable.
   -o --oxum      Validate against oxum only (quick validate).
 
 DOCOPT
@@ -26,6 +26,7 @@ begin
   
   bag = BagIt::Bag.new(opts['PATH'])
 
+  # validation commands MUST NOT change manifest or bag-info files
   if opts['validate']
     if opts['--oxum']
       puts bag.valid_oxum?.to_s
@@ -40,7 +41,6 @@ begin
     opts['-f'].each { |datafile|
       puts datafile
       #    bag.add_file(opts['-f'])
-      #    bag.tagmanifest!
     }
   end
     
