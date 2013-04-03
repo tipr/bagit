@@ -19,7 +19,9 @@ DOCOPT
 
 begin
   opts = Docopt::docopt(doc, version: '0.3.0')
-  puts opts['<dir>']
+  bag = BagIt::Bag.new(opts['<dir>'])
+  
+  bag.manifest!
 
 rescue Docopt::Exit => e
   puts e.message
