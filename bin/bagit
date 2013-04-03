@@ -1,5 +1,26 @@
 #!/usr/bin/env ruby
 
 require 'bagit'
+require 'docopt'
 
-puts 'test'
+doc = <<DOCOPT
+BagIt.
+
+Usage: 
+  #{__FILE__} <dir>
+  #{__FILE__} -h | --help
+  #{__FILE__} -v | --version
+
+Options:
+  -h --help     Show this help screen.
+  -v --version     Show version.
+
+DOCOPT
+
+begin
+  opts = Docopt::docopt(doc)
+  puts opts['--help']
+rescue Docopt::Exit => e
+  puts e.message
+end
+
