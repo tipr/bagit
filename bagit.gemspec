@@ -11,4 +11,5 @@ BAGIT_SPEC = Gem::Specification.new do |spec|
   spec.add_dependency 'validatable', '~> 1.6'
 
   spec.files = %w(Rakefile README.md LICENSE.txt bagit.gemspec) + Dir["lib/**/*.rb"]
+  spec.executables << 'bagit'
 end
