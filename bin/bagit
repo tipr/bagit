@@ -9,8 +9,7 @@ BagIt.
 Usage: 
   #{__FILE__} PATH [-f <file>...] [-t <tagfile>...]
   #{__FILE__} validate [-o | --oxum] PATH 
-  #{__FILE__} -h | --help
-  #{__FILE__} --version
+  #{__FILE__} -h | --version
 
 Options:
   -h --help      Show this help screen.
