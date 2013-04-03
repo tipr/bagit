@@ -8,30 +8,48 @@ BagIt.
 
 Usage: 
   #{__FILE__} PATH [-f <file>...] [-t <tagfile>...]
-  #{__FILE__} [-h | --help]
-  #{__FILE__} [--version]
+  #{__FILE__} validate [-o | --oxum] PATH 
+  #{__FILE__} -h | --help
+  #{__FILE__} --version
 
 Options:
   -h --help      Show this help screen.
   --version      Show version.
   -f <file>      Add file to bag.
   -t <tag_file>  Add tag file to bag.
+  -o --oxum      Validate against oxum only (quick validate).
 
 DOCOPT
 
 begin
-  opts = Docopt::docopt(doc, version: '0.3.0')
-
+  opts = Docopt::docopt(doc, version: 'BagIt 0.3.0')
+  
   bag = BagIt::Bag.new(opts['PATH'])
 
-  if opts.include?('<file>')
-    puts opts['<file>'] 
+  if opts['validate']
+    if opts['--oxum']
+      puts bag.valid_oxum?.to_s
+      exit
+    else
+      puts bag.valid?.to_s
+      exit
+    end
   end
 
-  if opts.include?('<tag_file>')
-    puts opts['<tag_file>'] 
-#    bag.add_tag_file(opts['<tag_file>'])
-#    bag.tagmanifest!
+  unless opts['-f'].nil? 
+    opts['-f'].each { |datafile|
+      puts datafile
+      #    bag.add_file(opts['-f'])
+      #    bag.tagmanifest!
+    }
+  end
+    
+  unless opts['-t'].nil? 
+    opts['-t'].each { |tagfile|
+      puts tagfile
+      #    bag.add_tag_file(opts['-t'])
+      #    bag.tagmanifest!
+    }
   end
 
   bag.manifest!
