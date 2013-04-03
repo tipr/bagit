@@ -8,8 +8,8 @@ BagIt.
 
 Usage: 
   #{__FILE__} <dir>
-  #{__FILE__} -h | --help
-  #{__FILE__} -v | --version
+  #{__FILE__} [-h | --help]
+  #{__FILE__} [-v | --version]
 
 Options:
   -h --help     Show this help screen.
@@ -19,7 +19,11 @@ DOCOPT
 
 begin
   opts = Docopt::docopt(doc)
-  puts opts['--help']
+  if opts['--help']
+    puts Docopt::docopt(doc, version: '0.3.0').to_s
+  elsif opts['--version']
+    puts 'BagIt 0.3.0'
+  end
 rescue Docopt::Exit => e
   puts e.message
 end
