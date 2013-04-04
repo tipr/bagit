@@ -31,7 +31,6 @@ begin
   
   bag = BagIt::Bag.new(opts['PATH'])
 
-
   if opts['--validate']
     if opts['--oxum']
       puts bag.valid_oxum?.to_s
@@ -56,15 +55,21 @@ begin
 
   unless opts['-f'].nil? 
     opts['-f'].each { |datafile|
-      bag.add_file(File.basename(datafile), datafile) if File.exist?(datafile)
+      begin
+        bag.add_file(File.basename(datafile), datafile)
+      rescue Exception => e
+        puts "Failed to add bag file: #{e.message}"
+      end
     }  
   end
     
   unless opts['-t'].nil? 
     opts['-t'].each { |tagfile|
-      puts tagfile
-      #    bag.add_tag_file(opts['-t'])
-      #    bag.tagmanifest!
+      begin
+        bag.add_tag_file(File.basename(tagfile), tagfile)
+      rescue Exception => e
+        puts "Failed to add tag file: #{e.message}"
+      end
     }
   end
 
