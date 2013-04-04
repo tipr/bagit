@@ -80,7 +80,6 @@ describe "BagIt Manifests" do
 
     before do
       @bag.add_tag_file("test-tag") { |f| f.puts "all alone" }
-      @bag.tagmanifest!
     end
 
     it_should_behave_like "a manifest file"
@@ -88,7 +87,6 @@ describe "BagIt Manifests" do
     it "should have a tag manifest file" do
       @bag.tagmanifest_files.should_not be_empty
     end
-
     it "should only contain tag files" do
       @bag.tagmanifest_files.each do |mf|
         open(mf) do |io|

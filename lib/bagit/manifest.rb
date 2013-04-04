@@ -76,6 +76,7 @@ module BagIt
       tags.each do |f|
         add_tag_file(Pathname.new(f).relative_path_from(Pathname.new(bag_dir)).to_s)
       end
+      tag_files
     end
 
     def add_tag_file(path, src_path=nil)
@@ -92,6 +93,10 @@ module BagIt
         else
           FileUtils::cp src_path, f
         end
+        # this adds the manifest and bag info files on initial creation
+        # it must only run when the manifest doesn't already exist or it will 
+        # infinitely recall add_tag_file. Better way of doing this?
+        tagmanifest! 
       elsif not src_path.nil? 
         raise "Tag file already exists, will not overwrite: #{path}\n Use add_tag_file(path) to add an existing tag file."
       end
