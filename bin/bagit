@@ -9,7 +9,7 @@ BagIt.
 Usage: 
   #{__FILE__} [-f <file>...] [-t <tagfile>...] PATH
   #{__FILE__} --validate [-o] PATH 
-  #{__FILE__} --manfiest [-T] PATH 
+  #{__FILE__} --manifest [-T] PATH 
   #{__FILE__} --list [--tags | --all] PATH 
   #{__FILE__} -h | --version
 
@@ -73,6 +73,7 @@ begin
     }
   end
 
+  bag.tagmanifest! if opts['-T'] or not opts['-t'].nil?
   bag.manifest!
 
 rescue Docopt::Exit => e
