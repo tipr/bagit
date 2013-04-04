@@ -68,6 +68,10 @@ module BagIt
         tags << manifest unless tags.include?(manifest)
       end
 
+      # ensure presence of bag info files
+      tags << bag_info_txt_file unless tags.include?(bag_info_txt_file)
+      tags << bagit_txt_file unless tags.include?(bagit_txt_file)
+
       # manifest each (non tagmanifest) tag file for each algorithm
       tags.each do |f|
         add_tag_file(Pathname.new(f).relative_path_from(Pathname.new(bag_dir)).to_s)

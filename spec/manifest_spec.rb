@@ -98,6 +98,15 @@ describe "BagIt Manifests" do
         end
       end
     end
+    it "should contain manifest and bag info files" do
+      @bag.tagmanifest_files.each do |mf|
+        open(mf).read.should include(File.basename(@bag.bag_info_txt_file))
+        open(mf).read.should include(File.basename(@bag.bagit_txt_file))
+        @bag.manifest_files.each do |man|
+          open(mf).read.should include(man)
+        end
+      end
+    end
     it "should not contain the untracked tag file" do
       @bag.tagmanifest_files.each do |mf|
         open(mf) do |io|
@@ -126,6 +135,6 @@ describe "BagIt Manifests" do
       end
     end
   end
-
-
+  
+  
 end
