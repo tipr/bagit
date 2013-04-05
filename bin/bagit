@@ -8,6 +8,8 @@ BagIt.
 
 Usage: 
   #{__FILE__} [-f <file>...] [-t <tagfile>...] PATH
+  #{__FILE__} --delete [-f <file>...] [-t <tagfile>...] PATH
+  #{__FILE__} --remove [-t <tagfile>...] PATH
   #{__FILE__} --validate [-o] PATH 
   #{__FILE__} --manifest [-T] PATH 
   #{__FILE__} --list [--tags | --all] PATH 
@@ -16,8 +18,8 @@ Usage:
 Options:
   -h --help      Show this help screen.
   --version      Show version.
-  -f <file>      File to add to bag. Repeatable.
-  -t <tag_file>  Tag (metadata) file to add to bag. Repeatable.
+  -f <file>      File to add to/delete from bag. Repeatable.
+  -t <tag_file>  Tag (metadata) file to add to/delete/remove from bag. Repeatable.
   --manifest     Force generation/update of manifest files.
   --T            Force regeneration of tag manifest files.
   -o --oxum      Validate against oxum only (quick validate).
@@ -52,6 +54,8 @@ begin
     # quit here, too
     exit
   end
+
+  #TODO: implement delete for data and tag files; remove for tag files.
 
   unless opts['-f'].nil? 
     opts['-f'].each { |datafile|
