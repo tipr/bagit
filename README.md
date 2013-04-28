@@ -45,9 +45,17 @@ Example: validating an existing bag
       puts "#{existing_base_path} is not valid"
     end
 
+Console Tool
+------------
+
+    bagit add -f file1 file2 -t tagfile1 tagfile2 ./path/to/bag
+    bagit validate ./path/to/bag
+    # for other commands
+    bagit --help
+
 TODO
 ----
-* command line tools for common tasks
+* deep directory add/delete for console tools
 * better holy bag (fetch.txt) generation
 * better error reporting.
 
