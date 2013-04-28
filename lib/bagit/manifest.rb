@@ -124,8 +124,7 @@ module BagIt
     def delete_tag_file(path)
       filepath = File.join(@bag_dir, path)
       raise "Tag file does not exist: #{path}" unless File.exist? filepath
-      #TODO: delete tags even when they are not in the manifest
-      remove_tag_file(path)
+      remove_tag_file(path) if tag_files.include?(path)
       FileUtils::rm filepath
     end
 
