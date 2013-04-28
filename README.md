@@ -63,8 +63,8 @@ TODO
 
 Copyright © 2009, [Francesco Lazzarino](mailto:flazzarino@gmail.com).
 
-Current Maintainer: [Tom Johnson](mailto:thomas.johnson@oregonstate.edu).
+Current maintainer: [Tom Johnson](mailto:thomas.johnson@oregonstate.edu).
 
-Sponsored by [Florida Center for Library Automation](http://www.fcla.edu).
+Initial development sponsored by [Florida Center for Library Automation](http://www.fcla.edu).
 
 See LICENSE.txt for terms.
