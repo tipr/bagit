@@ -1,7 +1,7 @@
 
 BAGIT_SPEC = Gem::Specification.new do |spec|
   spec.name        = "bagit"
-  spec.version     = '0.3.0.pre'
+  spec.version     = '0.3.0'
   spec.summary     = "BagIt package generation and validation"
   spec.description = "Ruby Library and Command Line tools for bagit"
   spec.email       = "johnson.tom@gmail.com"
