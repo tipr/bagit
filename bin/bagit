@@ -7,13 +7,13 @@ doc = <<DOCOPT
 BagIt.
 
 Usage: 
-  #{__FILE__} add [-f <file>...] [-t <tagfile>...] BAGPATH
-  #{__FILE__} delete [-f <file>...] [-t <tagfile>...] BAGPATH
-  #{__FILE__} remove [-t <tagfile>...] BAGPATH
-  #{__FILE__} validate [-o] BAGPATH 
-  #{__FILE__} manifest [-T] BAGPATH
-  #{__FILE__} list [--tags | --all] BAGPATH 
-  #{__FILE__} -h | --version
+  bagit add [-f <file>...] [-t <tagfile>...] BAGPATH
+  bagit delete [-f <file>...] [-t <tagfile>...] BAGPATH
+  bagit remove [-t <tagfile>...] BAGPATH
+  bagit validate [-o] BAGPATH 
+  bagit manifest [-T] BAGPATH
+  bagit list [--tags | --all] BAGPATH 
+  bagit -h | --version
 
 Options:
   -h --help      Show this help screen.
@@ -29,7 +29,7 @@ DOCOPT
 
   # Possible commands for bag-info write
   # 
-  # #{__FILE__} new [--source-organization <org>] [--organization-address <org-addr>] [--contact-name <contact>] 
+  # bagit new [--source-organization <org>] [--organization-address <org-addr>] [--contact-name <contact>] 
   #             [--contact-phone <phone>] [--contact-email <email>] [--external-description <ext-desc>] 
   #             [--external-identifier <ext-id>] [--group-identifier <group-id>] [--count <count>] 
   #             [--internal-sender-identifier <sender-id>] [--internal-sender-description <sender-desc>] 
