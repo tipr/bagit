@@ -47,15 +47,16 @@ Example: validating an existing bag
 
 Console Tool
 ------------
-
-    bagit add -f file1 file2 -t tagfile1 tagfile2 ./path/to/bag
+    # create a new bag/add files to existing bag
+    bagit add -f file1 file2 -t tagfile1 tagfile2 ./path/to/bag	
+    # validate
     bagit validate ./path/to/bag
     # for other commands
     bagit --help
 
 TODO
 ----
-* deep directory add/delete for console tools
+* deep directory add/delete for bag and tag files in console tools
 * better holy bag (fetch.txt) generation
 * better error reporting.
 
