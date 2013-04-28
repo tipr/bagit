@@ -36,7 +36,7 @@ DOCOPT
   #             [--bag-info-entry <label> <value>] [-f <file>...] [-t <tagfile>...] BAGPATH
 
 begin
-  opts = Docopt::docopt(doc, version: 'BagIt 0.3.0')
+  opts = Docopt::docopt(doc, version: 'BagIt 0.3.1')
   
   bag = BagIt::Bag.new(opts['BAGPATH'])
 
