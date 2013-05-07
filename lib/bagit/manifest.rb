@@ -38,7 +38,7 @@ module BagIt
         md5 = Digest::MD5.file f
         open(manifest_file(:md5), 'a') { |io| io.puts "#{md5} #{rel_path}" }
       end
-
+      tagmanifest!
     end
 
     # All tag files that are bag manifest files (tagmanifest-[algorithm].txt)

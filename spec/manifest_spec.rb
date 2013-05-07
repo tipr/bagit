@@ -50,6 +50,12 @@ describe "BagIt Manifests" do
       end
     end
 
+    it "should validate after adding a file and remanifesting" do
+      @bag.add_file('newfile.txt') { |io| io.puts("new file to remanifest") }
+      @bag.manifest!
+      @bag.should be_valid
+    end
+
   end
 
   describe "bag manifest files" do
