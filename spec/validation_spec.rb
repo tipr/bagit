@@ -37,9 +37,9 @@ describe "a valid bag" do
       io.puts 'nothing to see here, move along'
     end
 
-    # @bag.should_not be_complete
-    @bag.should_not be_valid
+    @bag.validate_only('true_for/completeness')
     @bag.errors.on(:completeness).should_not be_empty
+    @bag.should_not be_valid
   end
 
   it "should not be prude (the manifest covers files that do not exist)" do
@@ -49,18 +49,18 @@ describe "a valid bag" do
 
     FileUtils::rm File.join(@bag.bag_dir, 'data', 'file-k')
 
-    # @bag.should_not be_complete
-    @bag.should_not be_valid
+    @bag.validate_only('true_for/completeness')
     @bag.errors.on(:completeness).should_not be_empty
+    @bag.should_not be_valid
   end
 
   it "should be consistent (fixity)" do
     # tweak a file through the back door
     open(@bag.bag_files[0], 'a') { |io| io.puts 'oops!' }
 
-    # @bag.should_not be_consistent
-    @bag.should_not be_valid
+    @bag.validate_only('true_for/consistency')
     @bag.errors.on(:consistency).should_not be_empty
+    @bag.should_not be_valid
   end
 
   it "should calculate sha1 correctly for a big file" do
