@@ -4,8 +4,8 @@ module BagIt
 
   class Bag
     include Validatable
-    validates_true_for :consistency, :logic => Proc.new { complete? }
-    validates_true_for :completeness, :logic => Proc.new { consistent? }
+    validates_true_for :consistency, :logic => Proc.new { consistent? }
+    validates_true_for :completeness, :logic => Proc.new { complete? }
   end
 
   module Validity
