@@ -11,7 +11,7 @@ describe "Tag Specs" do
     @bag = BagIt::Bag.new @bag_path
 
     # add some files
-    open('/dev/urandom') do |rio|
+    File.open('/dev/urandom') do |rio|
 
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
@@ -43,7 +43,7 @@ describe "Tag Specs" do
     end
     it "should allow addition of tag files via copy" do
       src_path = File.join @sandbox.to_s, 'somefile'
-      open(src_path, 'w') { |io| io.puts "something" }
+      File.open(src_path, 'w') { |io| io.puts "something" }
       @bag.add_tag_file("foo", src_path) { |io| io.puts 'all alone' }
       File.join(@bag_path, "foo").should exist_on_fs
     end

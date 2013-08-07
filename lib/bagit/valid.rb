@@ -24,7 +24,7 @@ module BagIt
       tag_empty_manifests.each do |file|
         errors.add :completeness, "#{file} is a manifested tag but not present"
       end
-      
+
       errors.on(:completeness).nil?
     end
 
@@ -42,7 +42,7 @@ module BagIt
                  :unknown
                end
         # Check every file in the manifest
-        open(mf) do |io|
+        File.open(mf) do |io|
           io.each_line do |line|
             expected, path = line.chomp.split /\s+/, 2
             file = File.join(bag_dir, path)
@@ -55,7 +55,7 @@ module BagIt
           end
         end
       end
-      
+
 
       errors.on(:consistency).nil?
     end
@@ -93,7 +93,7 @@ module BagIt
 
       manifest_files.inject([]) do |acc, mf|
 
-        files = open(mf) do |io|
+        files = File.open(mf) do |io|
 
           io.readlines.map do |line|
             digest, path = line.chomp.split /\s+/, 2
@@ -109,7 +109,7 @@ module BagIt
     # Returns a list of all files in the tag manifest files
     def tag_manifested_files
       tagmanifest_files.inject([]) do |acc, mf|
-        files = open(mf) do |io|
+        files = File.open(mf) do |io|
           io.readlines.map do |line|
             digest, path = line.chomp.split /\s+/, 2
             path

@@ -11,7 +11,7 @@ describe "a valid bag" do
     @bag = BagIt::Bag.new @bag_path
 
     # add some files
-    open('/dev/urandom') do |rio|
+    File.open('/dev/urandom') do |rio|
 
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
@@ -33,7 +33,7 @@ describe "a valid bag" do
 
   it "should not be lewd (some file is not covered by the manifest)" do
     # add a file into the bag through the back door
-    open(File.join(@bag.data_dir, 'not-manifested'), 'w') do |io|
+    File.open(File.join(@bag.data_dir, 'not-manifested'), 'w') do |io|
       io.puts 'nothing to see here, move along'
     end
 
@@ -56,7 +56,7 @@ describe "a valid bag" do
 
   it "should be consistent (fixity)" do
     # tweak a file through the back door
-    open(@bag.bag_files[0], 'a') { |io| io.puts 'oops!' }
+    File.open(@bag.bag_files[0], 'a') { |io| io.puts 'oops!' }
 
     @bag.validate_only('true_for/consistency')
     @bag.errors.on(:consistency).should_not be_empty
@@ -64,21 +64,21 @@ describe "a valid bag" do
   end
 
   it "should calculate sha1 correctly for a big file" do
-    @bag.add_file 'big-data-file' do |fh| 
+    @bag.add_file 'big-data-file' do |fh|
       count = 0
       while count < 1024 * 512 do
-        fh.write "1" * 1024 
+        fh.write "1" * 1024
         count += 1
       end
     end
     @bag.manifest!
     sha1_manifest = File.join @bag_path, 'manifest-sha1.txt'
     checksums = {}
-    open(sha1_manifest).each_line do |line|
+    File.open(sha1_manifest).each_line do |line|
         fixity, path = line.split(' ')
         checksums[path] = fixity
     end
-    expected = checksums['data/big-data-file'] 
+    expected = checksums['data/big-data-file']
     expected.should == '12be64c30968bb90136ee695dc58f4b2276968c6'
   end
 
@@ -88,13 +88,13 @@ describe "a valid bag" do
 
   it "should validate false by oxum when file count is incorrect" do
     # tweak oxum through backdoor
-    open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: " + @bag.bag_info["Payload-Oxum"].split('.')[0] + '.0' }
+    File.open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: " + @bag.bag_info["Payload-Oxum"].split('.')[0] + '.0' }
     @bag.valid_oxum?.should == false
   end
 
   it "should validate false by oxum when octetstream size is incorrect" do
     # tweak oxum through backdoor
-    open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: 1." + @bag.bag_info["Payload-Oxum"].split('.')[1] }
+    File.open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: 1." + @bag.bag_info["Payload-Oxum"].split('.')[1] }
     @bag.valid_oxum?.should == false
   end
 
@@ -103,9 +103,9 @@ describe "a valid bag" do
       # add a file and then remove it through the back door
       @bag.add_tag_file("tag-k") { |io| io.puts 'time to go' }
       @bag.tagmanifest!
-  
+
       FileUtils::rm File.join(@bag.bag_dir, 'tag-k')
-  
+
       # @bag.should_not be_valid
       @bag.should_not be_valid
       @bag.errors.on(:completeness).should_not be_empty

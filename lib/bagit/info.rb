@@ -4,7 +4,7 @@ module BagIt
 
   module Info
 
-    @@bag_info_headers = {  
+    @@bag_info_headers = {
       :agent => 'Bag-Software-Agent',
       :org => 'Source-Organization',
       :org_addr => 'Organization-Address',
@@ -35,7 +35,7 @@ module BagIt
     end
 
     def write_bag_info(hash={})
-      hash = bag_info.merge(hash) 
+      hash = bag_info.merge(hash)
       hash[@@bag_info_headers[:agent]] = "BagIt Ruby Gem (http://bagit.rubyforge.org)" if hash[@@bag_info_headers[:agent]].nil?
       hash[@@bag_info_headers[:date]] = Date.today.strftime('%Y-%m-%d') if hash[@@bag_info_headers[:date]].nil?
       hash[@@bag_info_headers[:oxum]] = payload_oxum
@@ -49,7 +49,7 @@ module BagIt
     def bagit
       read_info_file bagit_txt_file
     end
-    
+
     def write_bagit(hash)
       write_info_file bagit_txt_file, hash
     end
@@ -62,18 +62,18 @@ module BagIt
     protected
 
     def read_info_file(file)
-      
-      open(file) do |io|
-        
+
+      File.open(file) do |io|
+
         entries = io.read.split /\n(?=[^\s])/
-        
+
         entries.inject({}) do |hash, line|
           name, value = line.chomp.split /\s*:\s*/, 2
           hash.merge({name => value})
         end
-        
+
       end
-      
+
     end
 
     def write_info_file(file, hash)
@@ -82,25 +82,25 @@ module BagIt
         a = hash.keys.grep(/#{key}/i)
         acc + (a.size > 1 ? a : [])
       end
-      
+
       raise "Multiple labels (#{dups.to_a.join ', '}) in #{file}" unless dups.empty?
-      
-      open(file, 'w') do |io|
-        
+
+      File.open(file, 'w') do |io|
+
         hash.each do |name, value|
           simple_entry = "#{name}: #{value.gsub /\s+/, ' '}"
-          
+
           entry = if simple_entry.length > 79
                     simple_entry.wrap(77).indent(2)
                   else
                     simple_entry
                   end
-          
+
           io.puts entry
         end
-        
+
       end
-      
+
     end
 
   end

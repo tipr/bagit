@@ -11,7 +11,7 @@ describe "BagIt Manifests" do
     @bag = BagIt::Bag.new @bag_path
 
     # add some files
-    open('/dev/urandom') do |rio|
+    File.open('/dev/urandom') do |rio|
 
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
@@ -44,7 +44,7 @@ describe "BagIt Manifests" do
 
     it "should only contain lines of the format CHECKSUM FILENAME" do
       @manifest_files.each do |file|
-        open(file) do |io|
+        File.open(file) do |io|
           io.each_line { |line| line.chomp.should =~ /^[a-fA-F0-9]+\s+[^\s].+$/ }
         end
       end
@@ -72,7 +72,7 @@ describe "BagIt Manifests" do
 
     it "should only contain bag files" do
       @bag.manifest_files.each do |mf|
-        open(mf) do |io|
+        File.open(mf) do |io|
           io.each_line do |line|
             line.chomp.should =~ /^[a-f0-9]+\s+data\/[^\s].+$/
           end
@@ -95,7 +95,7 @@ describe "BagIt Manifests" do
     end
     it "should only contain tag files" do
       @bag.tagmanifest_files.each do |mf|
-        open(mf) do |io|
+        File.open(mf) do |io|
           io.each_line do |line|
             line.chomp.should =~ /^[a-fA-F0-9]+\s+(?!data\/)[^\s].+$/
           end
@@ -104,16 +104,16 @@ describe "BagIt Manifests" do
     end
     it "should contain manifest and bag info files" do
       @bag.tagmanifest_files.each do |mf|
-        open(mf).read.should include(File.basename(@bag.bag_info_txt_file))
-        open(mf).read.should include(File.basename(@bag.bagit_txt_file))
+        File.open(mf).read.should include(File.basename(@bag.bag_info_txt_file))
+        File.open(mf).read.should include(File.basename(@bag.bagit_txt_file))
         @bag.manifest_files.each do |man|
-          open(mf).read.should include(man)
+          File.open(mf).read.should include(man)
         end
       end
     end
     it "should not contain the untracked tag file" do
       @bag.tagmanifest_files.each do |mf|
-        open(mf) do |io|
+        File.open(mf) do |io|
           io.read.should_not include "tag-notrack"
         end
       end
@@ -131,7 +131,7 @@ describe "BagIt Manifests" do
       end
       it "should not have the removed or deleted tag files in the manifest" do
         @bag.tagmanifest_files.each do |mf|
-          open(mf) do |io|
+          File.open(mf) do |io|
             io.read.should_not include "tag-1"
             io.read.should_not include "tag-2"
           end
@@ -139,6 +139,6 @@ describe "BagIt Manifests" do
       end
     end
   end
-  
-  
+
+
 end
