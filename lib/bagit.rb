@@ -4,6 +4,7 @@
 # http://www.cdlib.org/inside/diglib/bagit/bagitspec.html
 
 require 'bagit/bag'
+require 'bagit/version'
 require 'fileutils'
 require 'date'
 
