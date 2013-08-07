@@ -10,7 +10,7 @@ module BagIt
     # All tag files that are bag manifest files (manifest-[algorithm].txt)
     def manifest_files
       files = Dir[File.join(@bag_dir, '*')].select { |f|
-        File.file? f and File.basename(f) =~ /^manifest-.*.txt/ 
+        File.file? f and File.basename(f) =~ /^manifest-.*.txt/
       }
       files
     end
@@ -32,11 +32,11 @@ module BagIt
 
         # sha1
         sha1 = Digest::SHA1.file f
-        open(manifest_file(:sha1), 'a') { |io| io.puts "#{sha1} #{rel_path}" }
+        File.open(manifest_file(:sha1), 'a') { |io| io.puts "#{sha1} #{rel_path}" }
 
         # md5
         md5 = Digest::MD5.file f
-        open(manifest_file(:md5), 'a') { |io| io.puts "#{md5} #{rel_path}" }
+        File.open(manifest_file(:md5), 'a') { |io| io.puts "#{md5} #{rel_path}" }
       end
       tagmanifest!
     end
@@ -44,7 +44,7 @@ module BagIt
     # All tag files that are bag manifest files (tagmanifest-[algorithm].txt)
     def tagmanifest_files
       files = Dir[File.join(@bag_dir, '*')].select { |f|
-        File.file? f and File.basename(f) =~ /^tagmanifest-.*.txt/ 
+        File.file? f and File.basename(f) =~ /^tagmanifest-.*.txt/
       }
       files
     end
@@ -57,12 +57,12 @@ module BagIt
     # Generate manifest files for all the tag files (except the tag
     # manifest files)
     def tagmanifest!(tags=nil)
-      
+
       tags = tag_files if tags == nil
 
       # nuke all the existing tagmanifest files
       tagmanifest_files.each { |f| FileUtils::rm f }
-      
+
       # ensure presence of manfiest files
       manifest_files.each do |manifest|
         tags << manifest unless tags.include?(manifest)
@@ -81,36 +81,36 @@ module BagIt
 
     def add_tag_file(path, src_path=nil)
 
-      f = File.join(@bag_dir, path) 
+      f = File.join(@bag_dir, path)
       raise "Tag file already in manifest: #{path}" if tag_files.include?(f)
-      
+
       if not File.exist? f
         FileUtils::mkdir_p File.dirname(f)
 
         # write file
         if src_path.nil?
-          open(f, 'w') { |io| yield io }
+          File.open(f, 'w') { |io| yield io }
         else
           FileUtils::cp src_path, f
         end
         # this adds the manifest and bag info files on initial creation
-        # it must only run when the manifest doesn't already exist or it will 
+        # it must only run when the manifest doesn't already exist or it will
         # infinitely recall add_tag_file. Better way of doing this?
-        tagmanifest! 
-      elsif not src_path.nil? 
+        tagmanifest!
+      elsif not src_path.nil?
         raise "Tag file already exists, will not overwrite: #{path}\n Use add_tag_file(path) to add an existing tag file."
       end
 
-      data = open(f) { |io| io.read }
+      data = File.open(f) { |io| io.read }
       rel_path = Pathname.new(f).relative_path_from(Pathname.new(bag_dir)).to_s
 
       # sha1
       sha1 = Digest::SHA1.hexdigest data
-      open(tagmanifest_file(:sha1), 'a') { |io| io.puts "#{sha1} #{rel_path}" }
+      File.open(tagmanifest_file(:sha1), 'a') { |io| io.puts "#{sha1} #{rel_path}" }
 
       # md5
       md5 = Digest::MD5.hexdigest data
-      open(tagmanifest_file(:md5), 'a') { |io| io.puts "#{md5} #{rel_path}" }
+      File.open(tagmanifest_file(:md5), 'a') { |io| io.puts "#{md5} #{rel_path}" }
       tag_files
     end
 
@@ -146,11 +146,11 @@ module BagIt
 
         # check it, an unknown algorithm is always true
         unless algo == :unknown
-          lines = open(mf) { |io| io.readlines }
+          lines = File.open(mf) { |io| io.readlines }
 
           lines.all? do |line|
             manifested_digest, path = line.chomp.split /\s+/, 2
-            actual_digest = open(File.join(@bag_dir, path)) { |io| algo.hexdigest io.read }
+            actual_digest = File.open(File.join(@bag_dir, path)) { |io| algo.hexdigest io.read }
             actual_digest == manifested_digest
           end
 

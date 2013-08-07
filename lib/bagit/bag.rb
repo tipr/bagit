@@ -62,33 +62,33 @@ module BagIt
       FileUtils::mkdir_p File.dirname(path)
 
       if src_path.nil?
-        f = open(path, 'w') { |io| yield io }
+        f = File.open(path, 'w') { |io| yield io }
       else
         f = FileUtils::cp src_path, path
       end
       write_bag_info
       return f
     end
-    
+
     # Remove a bag file
     def remove_file(base_path)
       path = File.join(data_dir, base_path)
       raise "Bag file does not exist: #{base_path}" unless File.exist? path
       FileUtils::rm path
     end
-    
+
     # Retrieve the IO handle for a file in the bag
     def get(base_path)
       path = File.join(data_dir, base_path)
       return nil unless File.exist?(path)
       File.open(path)
     end
-    
+
     # Test if this bag is empty (no files)
     def empty?
       self.bag_files.empty?
     end
-    
+
     # Get all bag file paths relative to the data dir
     def paths
       self.bag_files.collect { |f| f.sub(data_dir + '/', '') }
@@ -103,7 +103,7 @@ module BagIt
       end
       return bytes.to_s + '.' + bag_files.count.to_s
     end
-    
+
     # Remove all empty directory trees from the bag
     def gc!
       Dir.entries(data_dir).each do |f|

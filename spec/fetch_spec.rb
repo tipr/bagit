@@ -11,7 +11,7 @@ describe "fetch.txt" do
     @bag = BagIt::Bag.new @bag_path
 
     # add some files
-    open('/dev/urandom') do |rio|
+    File.open('/dev/urandom') do |rio|
 
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
@@ -31,7 +31,7 @@ describe "fetch.txt" do
                          'a3bd7ab2442028bb91b51d9f6722ec98')
 
     path = File.join @bag_path, 'fetch.txt'
-    @lines = open(path) { |io| io.readlines }
+    @lines = File.open(path) { |io| io.readlines }
   end
 
   it "should not be empty" do
@@ -44,7 +44,7 @@ describe "fetch.txt" do
 
   it "should contain manifested files" do
     path = File.join @bag_path, 'manifest-sha1.txt'
-    data = open(path) { |io| io.read }
+    data = File.open(path) { |io| io.read }
     data.should include('gnu.png')
   end
 

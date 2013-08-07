@@ -11,7 +11,7 @@ describe "Tag Info Files" do
     @bag = BagIt::Bag.new @bag_path
 
     # add some files
-    open('/dev/urandom') do |rio|
+    File.open('/dev/urandom') do |rio|
       10.times do |n|
         @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
       end
@@ -27,7 +27,7 @@ describe "Tag Info Files" do
 
     before do
       path = File.join @bag_path, 'bagit.txt'
-      @lines = open(path) { |io| io.readlines }
+      @lines = File.open(path) { |io| io.readlines }
     end
 
     it "should create a file bagit.txt on bag initialization" do
@@ -54,7 +54,7 @@ describe "Tag Info Files" do
 
     before(:each) do
       path = File.join @bag_path, 'bag-info.txt'
-      @lines = open(path) { |io| io.readlines }
+      @lines = File.open(path) { |io| io.readlines }
     end
 
     it "should not be empty" do
@@ -87,7 +87,7 @@ LOREM
     it "should specify a bag software agent" do
       @bag.bag_info.keys.should include("Bag-Software-Agent")
     end
-    
+
     it "should contain a valid bagging date" do
       @bag.bag_info.keys.should include("Bagging-Date")
       @bag.bag_info["Bagging-Date"] =~ /^^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
