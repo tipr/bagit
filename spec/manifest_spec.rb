@@ -118,14 +118,6 @@ describe "BagIt Manifests" do
         end
       end
     end
-    it "should still be valid after the datafiles have been remanifested" do
-      @bag.bag_files
-      open(File.join(@bag.bag_dir, 'manuallyAddedFile')) do |io|
-        io.write rio.read(16) 
-      end
-      @bag.manifest!
-      @bag.should be_valid
-    end
     describe "removing tracked files" do
       before(:each) do
         @bag.remove_tag_file "tag-1"
