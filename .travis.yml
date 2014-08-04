@@ -7,3 +7,4 @@ rvm:
 branches:
   only:
     - master
+    - get_working_with_travis
