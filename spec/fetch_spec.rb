@@ -55,15 +55,13 @@ describe "fetch.txt" do
 
   it "should actually contain manifested files after fetch" do
     @bag.fetch!
-    good_path = File.join @bag_path, 'data', 'gnu.png'
-    File.exist?(good_path).should be_true
-    bad_path = File.join @bag_path, 'gnu2.png'
-    File.exist?(bad_path).should be_false
+    File.join(@bag_path, "data", "gnu.png").should exist_on_fs
+    File.join(@bag_path, "gnu2.png").should_not exist_on_fs
   end
 
   it "should be gone when fetch is complete" do
     @bag.fetch!
-    File.exist?(File.join(@bag_path, 'fetch.txt')).should_not be_true
+    File.join(@bag_path, "fetch.txt").should_not exist_on_fs
   end
 
 end
