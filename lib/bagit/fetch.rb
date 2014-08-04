@@ -9,9 +9,11 @@ module BagIt
     end
 
     def add_remote_file(url, path, size, sha1, md5)
-      open(fetch_txt_file, 'a') { |io| io.puts "#{url} #{size || '-'} #{path}" }
-      open(manifest_file('sha1'), 'a') { |io| io.puts "#{sha1} #{File.join 'data', path}" }
-      open(manifest_file('md5'), 'a') { |io| io.puts "#{md5} #{File.join 'data', path}" }
+      if path =~ /^data\//
+        open(fetch_txt_file, 'a') { |io| io.puts "#{url} #{size || '-'} #{path}" }
+        open(manifest_file('sha1'), 'a') { |io| io.puts "#{sha1} #{File.join path}" }
+        open(manifest_file('md5'), 'a') { |io| io.puts "#{md5} #{File.join path}" }
+      end
     end
 
     # feth all remote files

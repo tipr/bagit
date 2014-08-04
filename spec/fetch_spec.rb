@@ -26,7 +26,10 @@ describe "fetch.txt" do
   end
 
   before(:each) do
-    @bag.add_remote_file('http://www.gnu.org/graphics/heckert_gnu.small.png', 'gnu.png', 6322,
+    @bag.add_remote_file('http://www.gnu.org/graphics/heckert_gnu.small.png', 'data/gnu.png', 6322,
+                         '390c0a30976f899cbdf951eab5cce60fe9743ac9',
+                         'a3bd7ab2442028bb91b51d9f6722ec98')
+    @bag.add_remote_file('http://www.gnu.org/graphics/heckert_gnu.small.png', 'gnu2.png', 6322,
                          '390c0a30976f899cbdf951eab5cce60fe9743ac9',
                          'a3bd7ab2442028bb91b51d9f6722ec98')
 
@@ -45,7 +48,14 @@ describe "fetch.txt" do
   it "should contain manifested files" do
     path = File.join @bag_path, 'manifest-sha1.txt'
     data = File.open(path) { |io| io.read }
-    data.should include('gnu.png')
+    data.should include('data/gnu.png')
+    data.should_not include('data/data/gnu.png')
+  end
+
+  it "should not contain stray non-payload files" do
+    path = File.join @bag_path, 'manifest-sha1.txt'
+    data = File.open(path) { |io| io.read }
+    data.should_not include('gnu2.png')
   end
 
   it "should be gone when fetch is complete" do
