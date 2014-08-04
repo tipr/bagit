@@ -53,7 +53,7 @@ describe "fetch.txt" do
     data.should_not include('gnu2.png')
   end
 
-  it "should actually contained manifested files after fetch" do
+  it "should actually contain manifested files after fetch" do
     @bag.fetch!
     good_path = File.join @bag_path, 'data', 'gnu.png'
     File.exist?(good_path).should be_true
