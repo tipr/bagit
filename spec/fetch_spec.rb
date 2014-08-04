@@ -45,17 +45,20 @@ describe "fetch.txt" do
     @lines.each { |line| line.chomp.should =~ /^[^\s]+\s+(\d+|\-)\s+[^\s]+$/ }
   end
 
-  it "should contain manifested files" do
+  it "should list fetched files in the manifest" do
     path = File.join @bag_path, 'manifest-sha1.txt'
     data = File.open(path) { |io| io.read }
     data.should include('data/gnu.png')
     data.should_not include('data/data/gnu.png')
+    data.should_not include('gnu2.png')
   end
 
-  it "should not contain stray non-payload files" do
-    path = File.join @bag_path, 'manifest-sha1.txt'
-    data = File.open(path) { |io| io.read }
-    data.should_not include('gnu2.png')
+  it "should actually contained manifested files after fetch" do
+    @bag.fetch!
+    good_path = File.join @bag_path, 'data', 'gnu.png'
+    File.exist?(good_path).should be_true
+    bad_path = File.join @bag_path, 'gnu2.png'
+    File.exist?(bad_path).should be_false
   end
 
   it "should be gone when fetch is complete" do

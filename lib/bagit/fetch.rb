@@ -16,7 +16,7 @@ module BagIt
       end
     end
 
-    # feth all remote files
+    # fetch all remote files
     def fetch!
 
       open(fetch_txt_file) do |io|
@@ -24,9 +24,12 @@ module BagIt
         io.readlines.each do |line|
           
           (url, length, path) = line.chomp.split(/\s+/, 3)
-          
-          add_file(path) do |io|
-            io.write open(url)
+
+          if path =~ /^data\//
+            path.gsub!(/^data\//, '')
+            add_file(path) do |io|
+              io.write open(url)
+            end
           end
           
         end
