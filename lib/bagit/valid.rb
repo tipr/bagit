@@ -14,6 +14,10 @@ module BagIt
     # covered.
     def complete?
 
+      if manifest_files == []
+        errors.add  :completeness, "there are no manifest files"
+      end
+
       unmanifested_files.each do |file|
         errors.add :completeness, "#{file} is present but not manifested"
       end
