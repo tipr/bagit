@@ -22,9 +22,10 @@ module BagIt
 
     # Generate manifest files for all the bag files
     def manifest!
-      if Dir[File.join(@bag_dir, 'data/*')].count ==  0
+      #first check for an empty data directory
+      if empty?
         raise "Unable to create manifest because the bag is empty."
-       end
+      end
 
       # nuke all the existing manifest files
       manifest_files.each { |f| FileUtils::rm f }
