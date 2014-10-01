@@ -99,22 +99,6 @@ describe "a valid bag" do
   end
 
   describe "tag manifest validation" do
-    it "should be invalid if there are no manifest files at all even when there are no files" do
-      #remove all files, tag/manifest files & tagmanifest files through the back door
-      @bag.bag_files.each do |bag_file|
-        FileUtils::rm bag_file
-      end
-      @bag.tag_files.each do |tag_file|
-        FileUtils::rm tag_file
-      end
-      @bag.tagmanifest_files.each do |tagmanifest_file|
-        FileUtils::rm tagmanifest_file
-      end
-
-      # @bag.should_not be_valid
-      @bag.should_not be_valid
-      @bag.errors.on(:completeness).should_not be_empty
-    end
 
     it "should be invalid if listed tag file does not exist" do
       # add a file and then remove it through the back door
