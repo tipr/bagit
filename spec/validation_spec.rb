@@ -99,7 +99,6 @@ describe "a valid bag" do
   end
 
   describe "tag manifest validation" do
-
     it "should be invalid if listed tag file does not exist" do
       # add a file and then remove it through the back door
       @bag.add_tag_file("tag-k") { |io| io.puts 'time to go' }
