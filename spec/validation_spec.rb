@@ -82,6 +82,14 @@ describe "a valid bag" do
     expected.should == '12be64c30968bb90136ee695dc58f4b2276968c6'
   end
 
+  it "should raise an sensible error when the manifest algorithm is unknown" do
+    # add a manifest with an unsupported algorithm
+    File.open(File.join(@bag.bag_dir, 'manifest-sha256.txt'), 'w') do |io|
+      io.puts "digest-does-not-matter data/file-0\n"
+    end
+    expect { @bag.valid? }.to raise_error ArgumentError
+  end
+
   it "should validate by oxum when needed" do
     @bag.valid_oxum?.should == true
   end
