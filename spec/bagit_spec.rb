@@ -41,7 +41,7 @@ describe BagIt::Bag do
     end
 
     it "should be a directory" do
-      File.directory?(@bag_path).should be_true
+      expect(File.directory?(@bag_path)).to be true
     end
 
     it "should not be empty" do
@@ -50,7 +50,7 @@ describe BagIt::Bag do
 
     it "should have a sub-directory called data" do
       data_path = File.join @bag_path, 'data'
-      File.directory?(data_path).should be_true
+      expect(File.directory?(data_path)).to be true
     end
 
     describe "#add_file" do
@@ -149,11 +149,12 @@ describe BagIt::Bag do
     describe "#gc!" do
       it "should clean up empty directories" do
         f = File.join "1", "2", "3", "file"
+        test_dir = File.dirname(File.join(@bag_path, 'data', f))
         @bag.add_file(f) { |io| io.puts 'all alone' }
         @bag.remove_file f
-        File.exist?(File.dirname(File.join(@bag_path, 'data', f))).should be_true
+        expect(File.exist?(test_dir)).to be true
         @bag.gc!
-        File.exist?(File.dirname(File.join(@bag_path, 'data', f))).should be_false
+        expect(File.exist?(test_dir)).to be false
       end
     end
   end
