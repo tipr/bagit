@@ -28,7 +28,7 @@ describe "a valid bag" do
   end
 
   it "should validate with no errors" do
-    @bag.should be_valid
+    expect(@bag).to be_valid
   end
 
   it "should not be lewd (some file is not covered by the manifest)" do
@@ -38,8 +38,8 @@ describe "a valid bag" do
     end
 
     @bag.validate_only('true_for/completeness')
-    @bag.errors.on(:completeness).should_not be_empty
-    @bag.should_not be_valid
+    expect(@bag.errors.on(:completeness)).not_to be_empty
+    expect(@bag).not_to be_valid
   end
 
   it "should not be prude (the manifest covers files that do not exist)" do
@@ -50,8 +50,8 @@ describe "a valid bag" do
     FileUtils::rm File.join(@bag.bag_dir, 'data', 'file-k')
 
     @bag.validate_only('true_for/completeness')
-    @bag.errors.on(:completeness).should_not be_empty
-    @bag.should_not be_valid
+    expect(@bag.errors.on(:completeness)).not_to be_empty
+    expect(@bag).not_to be_valid
   end
 
   it "should be consistent (fixity)" do
@@ -59,8 +59,8 @@ describe "a valid bag" do
     File.open(@bag.bag_files[0], 'a') { |io| io.puts 'oops!' }
 
     @bag.validate_only('true_for/consistency')
-    @bag.errors.on(:consistency).should_not be_empty
-    @bag.should_not be_valid
+    expect(@bag.errors.on(:consistency)).not_to be_empty
+    expect(@bag).not_to be_valid
   end
 
   it "should calculate sha1 correctly for a big file" do
@@ -79,23 +79,23 @@ describe "a valid bag" do
         checksums[path] = fixity
     end
     expected = checksums['data/big-data-file']
-    expected.should == '12be64c30968bb90136ee695dc58f4b2276968c6'
+    expect(expected).to eq('12be64c30968bb90136ee695dc58f4b2276968c6')
   end
 
   it "should validate by oxum when needed" do
-    @bag.valid_oxum?.should == true
+    expect(@bag.valid_oxum?).to eq(true)
   end
 
   it "should validate false by oxum when file count is incorrect" do
     # tweak oxum through backdoor
     File.open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: " + @bag.bag_info["Payload-Oxum"].split('.')[0] + '.0' }
-    @bag.valid_oxum?.should == false
+    expect(@bag.valid_oxum?).to eq(false)
   end
 
   it "should validate false by oxum when octetstream size is incorrect" do
     # tweak oxum through backdoor
     File.open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: 1." + @bag.bag_info["Payload-Oxum"].split('.')[1] }
-    @bag.valid_oxum?.should == false
+    expect(@bag.valid_oxum?).to eq(false)
   end
 
   describe "tag manifest validation" do
@@ -107,8 +107,8 @@ describe "a valid bag" do
       FileUtils::rm File.join(@bag.bag_dir, 'tag-k')
 
       # @bag.should_not be_valid
-      @bag.should_not be_valid
-      @bag.errors.on(:completeness).should_not be_empty
+      expect(@bag).not_to be_valid
+      expect(@bag.errors.on(:completeness)).not_to be_empty
     end
   end
 
