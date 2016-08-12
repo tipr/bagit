@@ -1,7 +1,7 @@
 BagIt (for ruby)
 ================
 
-[![Build Status](https://secure.travis-ci.org/no-reply/bagit.png)](http://travis-ci.org/no-reply/bagit)
+[![Build Status](https://travis-ci.org/little9/bagit.svg?branch=master)](http://travis-ci.org/no-reply/bagit)
 
 Based on the [BagItspec v0.97](https://confluence.ucop.edu/display/Curation/BagIt).
 
