@@ -50,7 +50,7 @@ describe "fetch.txt" do
 
   it "should be gone when fetch is complete" do
     @bag.fetch!
-    File.exist?(File.join(@bag_path, 'fetch.txt')).should_not be_true
+    File.exist?(File.join(@bag_path, 'fetch.txt')).should_not be true
   end
 
 end

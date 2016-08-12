@@ -41,7 +41,7 @@ describe BagIt::Bag do
     end
 
     it "should be a directory" do
-      File.directory?(@bag_path).should be_true
+      File.directory?(@bag_path).should be true
     end
 
     it "should not be empty" do
@@ -50,7 +50,7 @@ describe BagIt::Bag do
 
     it "should have a sub-directory called data" do
       data_path = File.join @bag_path, 'data'
-      File.directory?(data_path).should be_true
+      File.directory?(data_path).should be true
     end
 
     describe "#add_file" do
@@ -72,7 +72,7 @@ describe BagIt::Bag do
       end
 
       it "should not allow overwriting of files" do
-        lambda { @bag.add_file("file-0") { |io| io.puts 'overwrite!' } }.should raise_error
+        lambda { @bag.add_file("file-0") { |io| io.puts 'overwrite!' } }.should raise_error(RuntimeError)
       end
 
       it "should update payload oxum" do
@@ -84,7 +84,7 @@ describe BagIt::Bag do
 
     describe "#remove_file" do
       it "should raise an error when deleing non existant files" do
-        lambda { @bag.remove_file("file-x") }.should raise_error
+        lambda { @bag.remove_file("file-x") }.should raise_error(RuntimeError)
       end
     end
 
@@ -151,9 +151,9 @@ describe BagIt::Bag do
         f = File.join "1", "2", "3", "file"
         @bag.add_file(f) { |io| io.puts 'all alone' }
         @bag.remove_file f
-        File.exist?(File.dirname(File.join(@bag_path, 'data', f))).should be_true
+        File.exist?(File.dirname(File.join(@bag_path, 'data', f))).should be true
         @bag.gc!
-        File.exist?(File.dirname(File.join(@bag_path, 'data', f))).should be_false
+        File.exist?(File.dirname(File.join(@bag_path, 'data', f))).should be false
       end
     end
   end
