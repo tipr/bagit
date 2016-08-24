@@ -7,8 +7,8 @@ module BagIt
   # Requires response to bag_dir, tag_files, bag_files
   module Manifest
     def encode_filename(s)
-     s = s.tr("\r",'%0D')
-     s = s.tr("\n",'%0A')
+     s = s.gsub(/\r/, '%0D')
+     s = s.gsub(/\n/,'%0A')
      return s
     end
 

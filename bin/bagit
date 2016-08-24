@@ -48,7 +48,6 @@ begin
       puts bag.valid_oxum?.to_s
     else
       puts bag.valid?.to_s
-      puts bag.errors
     end
     # validation commands MUST NOT change manifest or bag-info files
     exit

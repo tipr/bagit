@@ -12,9 +12,8 @@ module BagIt
   module Validity
 
     def decode_filename(s)
-      s = s.tr("%0D", "")
-      s = s.tr("%0A", "
-")
+      s = s.gsub('%0D',"\r")
+      s = s.gsub('%0A',"\n")
       return s
     end
     
@@ -23,13 +22,16 @@ module BagIt
     def complete?
 
       unmanifested_files.each do |file|
+        puts "#{file} is present but not manifested"
         errors.add :completeness, "#{file} is present but not manifested"
       end
 
       empty_manifests.each do |file|
+        puts  "#{file} is manifested but not present"
         errors.add :completeness, "#{file} is manifested but not present"
       end
       tag_empty_manifests.each do |file|
+        puts  "#{file} is a manifested tag but not present"
         errors.add :completeness, "#{file} is a manifested tag but not present"
       end
 
@@ -53,12 +55,17 @@ module BagIt
         File.open(mf) do |io|
           io.each_line do |line|
             expected, path = line.chomp.split /\s+/, 2
-            file = File.join(bag_dir, path)
-            puts file
+            file = File.join(bag_dir, decode_filename(path))
+
             
             if File.exist? file
+              
               actual = algo.file(file).hexdigest
+              
+              
+              
               if expected != actual
+                
                 errors.add :consistency, "expected #{file} to have #{algo}: #{expected}, actual is #{actual}"
               end
             end
@@ -68,6 +75,7 @@ module BagIt
 
 
       errors.on(:consistency).nil?
+      
     end
 
     # Checks for validity against Payload-Oxum
@@ -107,7 +115,7 @@ module BagIt
 
           io.readlines.map do |line|
             digest, path = line.chomp.split /\s+/, 2
-            path
+            decode_filename(path)
           end
 
         end
