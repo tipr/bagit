@@ -15,7 +15,7 @@ describe "BagIt Manifests" do
     File.open('/dev/urandom') do |rio|
 
       10.times do |n|
-        @bag.add_file("file-#{n}-💩") { |io| io.write rio.read(16) }
+        @bag.add_file("file-#{n}-💩") { |io| io.write rio.read(16) }
         @bag.add_tag_file("tag-#{n}") { |io| io.write rio.read(16) }
       end
 
@@ -49,7 +49,7 @@ describe "BagIt Manifests" do
     it "should only contain lines of the format CHECKSUM FILENAME" do
       @manifest_files.each do |file|
         File.open(file) do |io|
-          io.each_line { |line| expect(line.chomp).to match(/^[a-fA-F0-9]+\s+[^\s].+$/) }
+          io.each_line { |line| expect(line).to match(/^[a-fA-F0-9]+\s+[^\s].+$/) }
         end
       end
     end
