@@ -1,5 +1,6 @@
 require 'validatable'
-
+require 'open-uri'
+require 'cgi'
 module BagIt
 
   class Bag
@@ -10,6 +11,13 @@ module BagIt
 
   module Validity
 
+    def decode_filename(s)
+      s = s.tr("%0D", "")
+      s = s.tr("%0A", "
+")
+      return s
+    end
+    
     # Return true if the manifest cover all files and all files are
     # covered.
     def complete?
@@ -46,6 +54,8 @@ module BagIt
           io.each_line do |line|
             expected, path = line.chomp.split /\s+/, 2
             file = File.join(bag_dir, path)
+            puts file
+            
             if File.exist? file
               actual = algo.file(file).hexdigest
               if expected != actual

@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'spec_helper'
 
 # based on v0.96 http://www.cdlib.org/inside/diglib/bagit/bagitspec.html
@@ -31,7 +32,7 @@ describe BagIt::Bag do
       # add some files
       File.open('/dev/urandom') do |rio|
         10.times do |n|
-          @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
+          @bag.add_file("file-#{n}-💩") { |io| io.write rio.read(16) }
         end
       end
     end
@@ -72,7 +73,7 @@ describe BagIt::Bag do
       end
 
       it "should not allow overwriting of files" do
-        expect { @bag.add_file("file-0") { |io| io.puts 'overwrite!' } }.to raise_error(RuntimeError)
+        expect { @bag.add_file("file-0-💩") { |io| io.puts 'overwrite!' } }.to raise_error(RuntimeError)
       end
 
       it "should update payload oxum" do
@@ -131,7 +132,7 @@ describe BagIt::Bag do
       end
 
       it "should return relative paths to all files in the data directory" do
-        expect(@paths).to match_array((0..9).collect { |x| "file-#{x}" })
+        expect(@paths).to match_array((0..9).collect { |x| "file-#{x}-💩" })
       end
     end
 
