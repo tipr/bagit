@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'spec_helper'
 
 describe "fetch.txt" do
@@ -14,7 +15,7 @@ describe "fetch.txt" do
     File.open('/dev/urandom') do |rio|
 
       10.times do |n|
-        @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
+        @bag.add_file("file-#{n}-💩") { |io| io.write rio.read(16) }
       end
 
     end
@@ -35,22 +36,22 @@ describe "fetch.txt" do
   end
 
   it "should not be empty" do
-    @lines.should_not be_empty
+    expect(@lines).not_to be_empty
   end
 
   it "should only contain lines of the format URL LENGTH FILENAME" do
-    @lines.each { |line| line.chomp.should =~ /^[^\s]+\s+(\d+|\-)\s+[^\s]+$/ }
+    @lines.each { |line| expect(line.chomp).to match(/^[^\s]+\s+(\d+|\-)\s+[^\s]+$/) }
   end
 
   it "should contain manifested files" do
     path = File.join @bag_path, 'manifest-sha1.txt'
     data = File.open(path) { |io| io.read }
-    data.should include('gnu.png')
+    expect(data).to include('gnu.png')
   end
 
   it "should be gone when fetch is complete" do
     @bag.fetch!
-    File.exist?(File.join(@bag_path, 'fetch.txt')).should_not be_true
+    expect(File.exist?(File.join(@bag_path, 'fetch.txt'))).not_to be true
   end
 
 end

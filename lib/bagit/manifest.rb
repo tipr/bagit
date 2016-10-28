@@ -6,7 +6,13 @@ module BagIt
 
   # Requires response to bag_dir, tag_files, bag_files
   module Manifest
+    def encode_filename(s)
+     s = s.gsub(/\r/, '%0D')
+     s = s.gsub(/\n/,'%0A')
+     return s
+    end
 
+  
     # All tag files that are bag manifest files (manifest-[algorithm].txt)
     def manifest_files
       files = Dir[File.join(@bag_dir, '*')].select { |f|
@@ -28,8 +34,8 @@ module BagIt
 
       # manifest each tag file for each algorithm
       bag_files.each do |f|
-        rel_path = Pathname.new(f).relative_path_from(Pathname.new(bag_dir)).to_s
-
+        rel_path = encode_filename(Pathname.new(f).relative_path_from(Pathname.new(bag_dir)).to_s)
+        
         # sha1
         sha1 = Digest::SHA1.file f
         File.open(manifest_file(:sha1), 'a') { |io| io.puts "#{sha1} #{rel_path}" }

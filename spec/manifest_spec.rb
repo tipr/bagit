@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'spec_helper'
 
 describe "BagIt Manifests" do
@@ -14,10 +15,13 @@ describe "BagIt Manifests" do
     File.open('/dev/urandom') do |rio|
 
       10.times do |n|
-        @bag.add_file("file-#{n}") { |io| io.write rio.read(16) }
+        @bag.add_file("file-#{n}-💩") { |io| io.write rio.read(16) }
         @bag.add_tag_file("tag-#{n}") { |io| io.write rio.read(16) }
       end
 
+      
+     
+      
     end
 
   end
@@ -35,17 +39,17 @@ describe "BagIt Manifests" do
 
     it "should have valid algorithm in the name (at least md5 or sha1)" do
       algorithms = @manifest_files.map { |mf| mf =~ /manifest-(.*).txt$/; $1 }
-      algorithms.each { |a| a.should be_in('md5', 'sha1') }
+      algorithms.each { |a| expect(a).to be_in('md5', 'sha1') }
     end
 
     it "should not be an empty file" do
-      @manifest_files.each { |mf| File.size(mf).should_not == 0 }
+      @manifest_files.each { |mf| expect(File.size(mf)).not_to eq(0) }
     end
 
     it "should only contain lines of the format CHECKSUM FILENAME" do
       @manifest_files.each do |file|
         File.open(file) do |io|
-          io.each_line { |line| line.chomp.should =~ /^[a-fA-F0-9]+\s+[^\s].+$/ }
+          io.each_line { |line| expect(line).to match(/^[a-fA-F0-9]+\s+[^\s].+$/) }
         end
       end
     end
@@ -53,7 +57,7 @@ describe "BagIt Manifests" do
     it "should validate after adding a file and remanifesting" do
       @bag.add_file('newfile.txt') { |io| io.puts("new file to remanifest") }
       @bag.manifest!
-      @bag.should be_valid
+      expect(@bag).to be_valid
     end
 
   end
@@ -67,14 +71,14 @@ describe "BagIt Manifests" do
     it_behaves_like "a manifest file"
 
     it "should have a manifest file" do
-      @bag.manifest_files.should_not be_empty
+      expect(@bag.manifest_files).not_to be_empty
     end
 
     it "should only contain bag files" do
       @bag.manifest_files.each do |mf|
         File.open(mf) do |io|
           io.each_line do |line|
-            line.chomp.should =~ /^[a-f0-9]+\s+data\/[^\s].+$/
+            expect(line.chomp).to match(/^[a-f0-9]+\s+data\/[^\s].+$/)
           end
         end
       end
@@ -91,30 +95,30 @@ describe "BagIt Manifests" do
     it_should_behave_like "a manifest file"
 
     it "should have a tag manifest file" do
-      @bag.tagmanifest_files.should_not be_empty
+      expect(@bag.tagmanifest_files).not_to be_empty
     end
     it "should only contain tag files" do
       @bag.tagmanifest_files.each do |mf|
         File.open(mf) do |io|
           io.each_line do |line|
-            line.chomp.should =~ /^[a-fA-F0-9]+\s+(?!data\/)[^\s].+$/
+            expect(line.chomp).to match(/^[a-fA-F0-9]+\s+(?!data\/)[^\s].+$/)
           end
         end
       end
     end
     it "should contain manifest and bag info files" do
       @bag.tagmanifest_files.each do |mf|
-        File.open(mf).read.should include(File.basename(@bag.bag_info_txt_file))
-        File.open(mf).read.should include(File.basename(@bag.bagit_txt_file))
+        expect(File.open(mf).read).to include(File.basename(@bag.bag_info_txt_file))
+        expect(File.open(mf).read).to include(File.basename(@bag.bagit_txt_file))
         @bag.manifest_files.each do |man|
-          File.open(mf).read.should include(man)
+          expect(File.open(mf).read).to include(man)
         end
       end
     end
     it "should not contain the untracked tag file" do
       @bag.tagmanifest_files.each do |mf|
         File.open(mf) do |io|
-          io.read.should_not include "tag-notrack"
+          expect(io.read).not_to include "tag-notrack"
         end
       end
     end
@@ -124,16 +128,16 @@ describe "BagIt Manifests" do
         @bag.delete_tag_file "tag-2"
       end
       it "should still have the untracked tag file on the file system" do
-        File.join(@bag_path, "tag-1").should exist_on_fs
+        expect(File.join(@bag_path, "tag-1")).to exist_on_fs
       end
       it "should not have the deleted tag file on the file system" do
-        File.join(@bag_path, "tag-2").should_not exist_on_fs
+        expect(File.join(@bag_path, "tag-2")).not_to exist_on_fs
       end
       it "should not have the removed or deleted tag files in the manifest" do
         @bag.tagmanifest_files.each do |mf|
           File.open(mf) do |io|
-            io.read.should_not include "tag-1"
-            io.read.should_not include "tag-2"
+            expect(io.read).not_to include "tag-1"
+            expect(io.read).not_to include "tag-2"
           end
         end
       end
