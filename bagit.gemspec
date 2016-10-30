@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake', '~> 10.4'
-  spec.add_development_dependency 'rspec', '~> 3.5'
+  spec.add_development_dependency 'rspec', '~> 3'
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
