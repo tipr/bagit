@@ -16,8 +16,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'validatable', '~> 1.6'
   spec.add_dependency 'docopt', '~> 0.5.0'
 
-  spec.add_development_dependency 'bundler', '~> 1.13', '>= 1.13.6'
-  spec.add_development_dependency 'rake', '~> 10.4', '>= 10.4.2'
+  spec.add_development_dependency 'bundler', '~> 1.13'
+  spec.add_development_dependency 'rake', '~> 10.4'
   spec.add_development_dependency 'rspec', '~> 3.5'
 
   spec.files         = `git ls-files`.split($/)
