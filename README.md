@@ -7,17 +7,15 @@ Based on the [BagItspec v0.97](https://confluence.ucop.edu/display/Curation/BagI
 
 Supported Features:
 -------------------
-* bag compiling
-* manifest & tagmanifest generation
-* generation of tag files bag-info.txt and bagit.txt
-* fetching remote files (fetch.txt)
-* bag validation
+* Bag creation
+* Manifest & tagmanifest generation
+* Generation of tag files bag-info.txt and bagit.txt
+* Fetching remote files (fetch.txt)
+* Bag validation
 
 Installation
 ------------
-    % gem install bagit validatable
-The rubyforge gem is deprecated.
-
+    # gem install bagit validatable
 
 Example: making a bag
 ---------------------
@@ -54,17 +52,9 @@ Console Tool
     # for other commands
     bagit --help
 
-TODO
-----
-* deep directory add/delete for bag and tag files in console tools
-* better holy bag (fetch.txt) generation
-* better error reporting.
-
----
-
 Copyright © 2009, [Francesco Lazzarino](mailto:flazzarino@gmail.com).
 
-Current maintainer: [Tom Johnson](mailto:thomas.johnson@oregonstate.edu).
+Current maintainer: [Jamie Little](mailto:jamie@jamielittle.org).
 
 Initial development sponsored by [Florida Center for Library Automation](http://www.fcla.edu).
 
