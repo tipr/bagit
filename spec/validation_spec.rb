@@ -15,7 +15,8 @@ describe "a valid bag" do
     File.open('/dev/urandom') do |rio|
 
       10.times do |n|
-        @bag.add_file("file-#{n}-💩") { |io| io.write rio.read(16) }
+        @bag.add_file("file-#{n}-💩
+") { |io| io.write rio.read(16) }
         @bag.add_tag_file("tag-#{n}") { |io| io.write rio.read(16) }
       end
 
@@ -32,7 +33,7 @@ describe "a valid bag" do
     expect(@bag).to be_valid
   end
 
-  it "should not be lewd (some file is not covered by the manifest)" do
+  it "should be invalid if there is a file that's in the bag, but not in the manifest" do
     # add a file into the bag through the back door
     File.open(File.join(@bag.data_dir, 'not-manifested'), 'w') do |io|
       io.puts 'nothing to see here, move along'
@@ -43,7 +44,7 @@ describe "a valid bag" do
     expect(@bag).not_to be_valid
   end
 
-  it "should not be prude (the manifest covers files that do not exist)" do
+  it "should be invalid if there are files that are in the manifest but not in the bag" do
     # add a file and then remove it through the back door
     @bag.add_file("file-k") { |io| io.puts 'time to go' }
     @bag.manifest!
@@ -55,7 +56,7 @@ describe "a valid bag" do
     expect(@bag).not_to be_valid
   end
 
-  it "should be consistent (fixity)" do
+  it "should be invalid if there is a fixity problem" do
     # tweak a file through the back door
     File.open(@bag.bag_files[0], 'a') { |io| io.puts 'oops!' }
 

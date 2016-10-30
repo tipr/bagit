@@ -6,7 +6,6 @@ require 'bagit/string'
 require 'bagit/valid'
 
 module BagIt
-
   # Represents the state of a bag on a filesystem
   class Bag
     attr_reader :bag_dir

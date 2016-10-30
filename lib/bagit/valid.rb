@@ -1,6 +1,8 @@
 require 'validatable'
 require 'open-uri'
 require 'cgi'
+require 'logger'
+
 module BagIt
 
   class Bag
@@ -10,7 +12,6 @@ module BagIt
   end
 
   module Validity
-
     def decode_filename(s)
       s = s.gsub('%0D',"\r")
       s = s.gsub('%0A',"\n")
@@ -20,18 +21,18 @@ module BagIt
     # Return true if the manifest cover all files and all files are
     # covered.
     def complete?
-
+      logger = Logger.new(STDOUT)
       unmanifested_files.each do |file|
-        puts "#{file} is present but not manifested"
+        logger.error("#{file} is present but not manifested".red)
         errors.add :completeness, "#{file} is present but not manifested"
       end
 
       empty_manifests.each do |file|
-        puts  "#{file} is manifested but not present"
+        logger.error("#{file} is manifested but not present".red)
         errors.add :completeness, "#{file} is manifested but not present"
       end
       tag_empty_manifests.each do |file|
-        puts  "#{file} is a manifested tag but not present"
+        logger.error("#{file} is a manifested tag but not present".red)
         errors.add :completeness, "#{file} is a manifested tag but not present"
       end
 
@@ -57,13 +58,9 @@ module BagIt
             expected, path = line.chomp.split /\s+/, 2
             file = File.join(bag_dir, decode_filename(path))
 
-            
             if File.exist? file
-              
+
               actual = algo.file(file).hexdigest
-              
-              
-              
               if expected != actual
                 
                 errors.add :consistency, "expected #{file} to have #{algo}: #{expected}, actual is #{actual}"
@@ -73,9 +70,7 @@ module BagIt
         end
       end
 
-
       errors.on(:consistency).nil?
-      
     end
 
     # Checks for validity against Payload-Oxum
@@ -84,7 +79,7 @@ module BagIt
     end
 
     protected
-
+    
     # Returns all files in the instance that are not manifested
     def unmanifested_files
       mfs = manifested_files.map { |f| File.join bag_dir, f }

@@ -8,17 +8,17 @@ Gem::Specification.new do |spec|
   spec.version     = BagIt::VERSION
   spec.summary     = "BagIt package generation and validation"
   spec.description = "Ruby Library and Command Line tools for bagit"
-  spec.email       = "johnson.tom@gmail.com"
+  spec.email       = "jamie@jamielittle.org"
   spec.homepage    = 'http://github.com/tipr/bagit'
-  spec.authors     = ["Tom Johnson, Francesco Lazzarino"]
+  spec.authors     = ["Tom Johnson, Francesco Lazzarino, Jamie Little"]
   spec.license     = "MIT"
 
   spec.add_dependency 'validatable', '~> 1.6'
   spec.add_dependency 'docopt', '~> 0.5.0'
 
-  spec.add_development_dependency "bundler", "~> 1.3"
-  spec.add_development_dependency 'rake'
-  spec.add_development_dependency  'rspec', ">= 3.0"
+  spec.add_development_dependency 'bundler', '~> 1.13', '>= 1.13.6'
+  spec.add_development_dependency 'rake', '~> 10.4', '>= 10.4.2'
+  spec.add_development_dependency 'rspec', '~> 3.5'
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }

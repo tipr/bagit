@@ -2,6 +2,9 @@
 
 require 'bagit'
 require 'docopt'
+require 'logger'
+
+logger = Logger.new(STDOUT)
 
 doc = <<DOCOPT
 BagIt.
@@ -45,9 +48,9 @@ begin
   #####################################
   if opts['validate']
     if opts['--oxum']
-      puts bag.valid_oxum?.to_s
+      logger.info(bag.valid_oxum?.to_s)
     else
-      puts bag.valid?.to_s
+      logger.info(bag.valid?.to_s)
     end
     # validation commands MUST NOT change manifest or bag-info files
     exit
@@ -83,7 +86,7 @@ begin
           bag.remove_file(File.basename(datafile))
         end
       rescue Exception => e
-        puts "Failed operation on bag file: #{e.message}"
+        logger.error("Failed operation on bag file: #{e.message}")
       end
     }  
   end
@@ -107,7 +110,7 @@ begin
           bag.remove_tag_file(File.basename(tagfile))
         end
       rescue Exception => e
-        puts "Failed operation on tag file: #{e.message}"
+        logger.error("Failed operation on tag file: #{e.message}".red)
       end
     }
   end
@@ -118,6 +121,6 @@ begin
   bag.manifest!
 
 rescue Docopt::Exit => e
-  puts e.message
+  logger.error(e.message.red)
 end
 
