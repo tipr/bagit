@@ -43,14 +43,21 @@ module BagIt
     def consistent?
       (manifest_files|tagmanifest_files).each do |mf|
         # get the algorithm implementation
-        File.basename(mf) =~ /manifest-(.+).txt$/
-        algo = case $1
+        readAlgo = /manifest-(.+).txt$/.match(File.basename(mf))[1]
+        algo = case readAlgo
                when /sha1/i
                  Digest::SHA1
                when /md5/i
                  Digest::MD5
+               when /sha256/i
+                 Digest::SHA256
+               when /sha384/i
+                 Digest::SHA384
+               when /sha512/i
+                 Digest::SHA512
                else
-                 :unknown
+                 errors.add :consistency, "Algorithm #{readAlgo} is invalid, unsupported, or could not be read."
+							   return false
                end
         # Check every file in the manifest
         File.open(mf) do |io|
