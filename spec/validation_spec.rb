@@ -88,6 +88,14 @@ describe "a valid bag" do
     expect(@bag.valid_oxum?).to eq(true)
   end
 
+   it "should raise an sensible error when the manifest algorithm is unknown" do
+     # add a manifest with an unsupported algorithm
+     File.open(File.join(@bag.bag_dir, 'manifest-sha999.txt'), 'w') do |io|
+       io.puts "digest-does-not-matter data/file-0\n"
+     end
+     expect { @bag.valid? }.to raise_error ArgumentError
+   end
+  
   it "should validate false by oxum when file count is incorrect" do
     # tweak oxum through backdoor
     File.open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: " + @bag.bag_info["Payload-Oxum"].split('.')[0] + '.0' }
@@ -99,6 +107,25 @@ describe "a valid bag" do
     File.open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: 1." + @bag.bag_info["Payload-Oxum"].split('.')[1] }
     expect(@bag.valid_oxum?).to eq(false)
   end
+
+   describe "tag manifest validation" do
+    it "should be invalid if there are no manifest files at all even when there are no files" do
+      #remove all files, tag/manifest files & tagmanifest files through the back door
+      @bag.bag_files.each do |bag_file|
+        FileUtils::rm bag_file
+      end
+      @bag.tag_files.each do |tag_file|
+        FileUtils::rm tag_file
+      end
+      @bag.tagmanifest_files.each do |tagmanifest_file|
+        FileUtils::rm tagmanifest_file
+      end
+
+      # @bag.should_not be_valid
+      expect(@bag).not_to be_valid
+      expect(@bag.errors.on(:completeness)).not_to be_empty
+    end
+   end
 
   describe "tag manifest validation" do
     it "should be invalid if listed tag file does not exist" do

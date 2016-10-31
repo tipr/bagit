@@ -22,6 +22,11 @@ module BagIt
     # covered.
     def complete?
       logger = Logger.new(STDOUT)
+
+      if manifest_files == []
+        errors.add  :completeness, "there are no manifest files"
+      end
+      
       unmanifested_files.each do |file|
         logger.error("#{file} is present but not manifested".red)
         errors.add :completeness, "#{file} is present but not manifested"
@@ -44,13 +49,20 @@ module BagIt
       (manifest_files|tagmanifest_files).each do |mf|
         # get the algorithm implementation
         File.basename(mf) =~ /manifest-(.+).txt$/
-        algo = case $1
+        manifest_type = $1
+        algo = case manifest_type
                when /sha1/i
                  Digest::SHA1
                when /md5/i
                  Digest::MD5
+               when /sha256/i
+                 Digest::SHA256
+               when /sha384/i
+                 Digest::SHA384
+               when /sha512/i
+                 Digest::SHA512
                else
-                 :unknown
+                 raise ArgumentError.new("Algorithm #{manifest_type} is not supported.")
                end
         # Check every file in the manifest
         File.open(mf) do |io|
