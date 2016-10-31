@@ -40,17 +40,23 @@ DOCOPT
 
 begin
   opts = Docopt::docopt(doc, version: BagIt::VERSION)
-  
-  bag = BagIt::Bag.new(opts['BAGPATH'])
 
+  unless opts['validate']
+    bag = BagIt::Bag.new(opts['BAGPATH'])
+  end
   #####################################
   # commands that don't alter the bag #
   #####################################
   if opts['validate']
-    if opts['--oxum']
-      logger.info(bag.valid_oxum?.to_s)
+    if File.exists?(opts['BAGPATH']+'/bag-info.txt') && File.directory?(opts['BAGPATH']+'/data') && File.exists?(opts['BAGPATH']+'/manifest-md5.txt') || File.exists?(opts['BAGPATH']+'/manifest-sha1.txt')
+      bag = BagIt::Bag.new(opts['BAGPATH'])
+      if opts['--oxum']
+        logger.info(bag.valid_oxum?.to_s)
+      else
+        logger.info(bag.valid?.to_s)
+      end
     else
-      logger.info(bag.valid?.to_s)
+      logger.error("Not a valid bag")
     end
     # validation commands MUST NOT change manifest or bag-info files
     exit

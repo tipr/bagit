@@ -16,9 +16,10 @@ module BagIt
     include Fetch               # fetch related functionality
 
     # Make a new Bag based at path
-    def initialize(path, info={})
+    def initialize(path, info={}, create=false)
+    
+        
       @bag_dir = path
-
       # make the dir structure if it doesn't exist
       FileUtils::mkdir bag_dir unless File.directory? bag_dir
       FileUtils::mkdir data_dir unless File.directory? data_dir
@@ -31,6 +32,7 @@ module BagIt
       unless File.exist? bag_info_txt_file
         write_bag_info(info)
       end
+     
     end
 
     # Return the path to the data directory
