@@ -90,7 +90,7 @@ describe "a valid bag" do
 
    it "should raise an sensible error when the manifest algorithm is unknown" do
      # add a manifest with an unsupported algorithm
-     File.open(File.join(@bag.bag_dir, 'manifest-sha256.txt'), 'w') do |io|
+     File.open(File.join(@bag.bag_dir, 'manifest-sha999.txt'), 'w') do |io|
        io.puts "digest-does-not-matter data/file-0\n"
      end
      expect { @bag.valid? }.to raise_error ArgumentError

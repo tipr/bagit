@@ -55,6 +55,12 @@ module BagIt
                  Digest::SHA1
                when /md5/i
                  Digest::MD5
+               when /sha256/i
+                 Digest::SHA256
+               when /sha384/i
+                 Digest::SHA384
+               when /sha512/i
+                 Digest::SHA512
                else
                  raise ArgumentError.new("Algorithm #{manifest_type} is not supported.")
                end
