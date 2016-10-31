@@ -44,13 +44,14 @@ module BagIt
       (manifest_files|tagmanifest_files).each do |mf|
         # get the algorithm implementation
         File.basename(mf) =~ /manifest-(.+).txt$/
-        algo = case $1
+        manifest_type = $1
+        algo = case manifest_type
                when /sha1/i
                  Digest::SHA1
                when /md5/i
                  Digest::MD5
                else
-                 :unknown
+                 raise ArgumentError.new("Algorithm #{manifest_type} is not supported.")
                end
         # Check every file in the manifest
         File.open(mf) do |io|

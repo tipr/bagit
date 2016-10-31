@@ -88,6 +88,14 @@ describe "a valid bag" do
     expect(@bag.valid_oxum?).to eq(true)
   end
 
+   it "should raise an sensible error when the manifest algorithm is unknown" do
+     # add a manifest with an unsupported algorithm
+     File.open(File.join(@bag.bag_dir, 'manifest-sha256.txt'), 'w') do |io|
+       io.puts "digest-does-not-matter data/file-0\n"
+     end
+     expect { @bag.valid? }.to raise_error ArgumentError
+   end
+  
   it "should validate false by oxum when file count is incorrect" do
     # tweak oxum through backdoor
     File.open(@bag.bag_info_txt_file, 'a') { |f| f.write "Payload-Oxum: " + @bag.bag_info["Payload-Oxum"].split('.')[0] + '.0' }
