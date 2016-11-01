@@ -1,6 +1,10 @@
 require 'rubygems'
 require 'bundler'
+require 'coveralls'
+
 Bundler.require(:default, :test)
+
+Coveralls.wear!
 
 require File.expand_path('./util/bagit_matchers', File.dirname(__FILE__))
 
