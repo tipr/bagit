@@ -12,14 +12,6 @@ module BagitMatchers
       @expected.include? @target
     end
 
-    def failure_message
-      "expected <#{@target}> to be in collection <#{@expected}>"
-    end
-
-    def failure_message_when_negated
-      "expected <#{@target}> to not be in collection <#{@expected}>"
-    end
-    alias negative_failure_message failure_message_when_negated
 
   end
 
@@ -35,14 +27,6 @@ module BagitMatchers
       File.exist? target
     end
 
-    def failure_message
-      "expected <#{@target}> to exist, but it doesn't"
-    end
-
-    def failure_message_when_negated
-      "expected <#{@target}> to not exist but it does"
-    end
-    alias negative_failure_message failure_message_when_negated
 
   end
 

@@ -1,10 +1,20 @@
 require 'rubygems'
 require 'bundler'
 require 'coveralls'
-
+require 'simplecov'
 Bundler.require(:default, :test)
 
-Coveralls.wear!
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+  SimpleCov::Formatter::HTMLFormatter,
+  Coveralls::SimpleCov::Formatter
+]
+SimpleCov.start
+
+
+
+#Coveralls.wear!
+
+
 
 require File.expand_path('./util/bagit_matchers', File.dirname(__FILE__))
 
