@@ -37,12 +37,15 @@ module BagIt
         rel_path = encode_filename(Pathname.new(f).relative_path_from(Pathname.new(bag_dir)).to_s)
         
         # sha1
+        BagIt::logger.info('Creating sha1 manifest')
         sha1 = Digest::SHA1.file f
         File.open(manifest_file(:sha1), 'a') { |io| io.puts "#{sha1} #{rel_path}" }
-
+        BagIt::logger.info("#{sha1} #{rel_path}".green)
         # md5
+        BagIt::logger.info('Creating md5 manifest')
         md5 = Digest::MD5.file f
         File.open(manifest_file(:md5), 'a') { |io| io.puts "#{md5} #{rel_path}" }
+        BagIt::logger.info("#{md5} #{rel_path}")
       end
       tagmanifest!
     end

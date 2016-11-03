@@ -11,4 +11,12 @@ require 'logger'
 module BagIt
   # The version of the BagIt specification the code is conforming to.
   SPEC_VERSION = '0.97'
+  
+  def logger
+    Logging.logger
+  end
+  
+  def self.logger
+    @logger ||= Logger.new(STDOUT)
+  end
 end

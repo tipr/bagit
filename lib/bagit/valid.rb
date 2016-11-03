@@ -1,7 +1,6 @@
 require 'validatable'
 require 'open-uri'
 require 'cgi'
-require 'logger'
 
 module BagIt
 
@@ -21,23 +20,23 @@ module BagIt
     # Return true if the manifest cover all files and all files are
     # covered.
     def complete?
-      logger = Logger.new(STDOUT)
+      
 
       if manifest_files == []
         errors.add  :completeness, "there are no manifest files"
       end
       
       unmanifested_files.each do |file|
-        logger.error("#{file} is present but not manifested".red)
+        BagIt::logger.error("#{file} is present but not manifested".red)
         errors.add :completeness, "#{file} is present but not manifested"
       end
 
       empty_manifests.each do |file|
-        logger.error("#{file} is manifested but not present".red)
+        BagIt::logger.error("#{file} is manifested but not present".red)
         errors.add :completeness, "#{file} is manifested but not present"
       end
       tag_empty_manifests.each do |file|
-        logger.error("#{file} is a manifested tag but not present".red)
+        BagIt::logger.error("#{file} is a manifested tag but not present".red)
         errors.add :completeness, "#{file} is a manifested tag but not present"
       end
 
