@@ -15,13 +15,13 @@ describe "BagIt Manifests" do
     File.open('/dev/urandom') do |rio|
 
       10.times do |n|
-        @bag.add_file("file-#{n}-💩") { |io| io.write rio.read(16) }
+        @bag.add_file("file-#{n}-💩") { |io| io.write rio.read(16) }
         @bag.add_tag_file("tag-#{n}") { |io| io.write rio.read(16) }
       end
 
-      
-     
-      
+
+
+
     end
 
   end
