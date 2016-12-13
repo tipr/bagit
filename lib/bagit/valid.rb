@@ -71,10 +71,8 @@ module BagIt
             file = File.join(bag_dir, decode_filename(path))
 
             if File.exist? file
-
               actual = algo.file(file).hexdigest
-              if expected != actual
-                
+              if expected.downcase != actual         
                 errors.add :consistency, "expected #{file} to have #{algo}: #{expected}, actual is #{actual}"
               end
             end
