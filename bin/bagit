@@ -58,6 +58,8 @@ begin
 
     if valid
       logger.info(valid)
+    else
+      logger.error("#{valid}: #{bag.errors.full_messages.join(', ')}" )
     end
 
     # validation commands MUST NOT change manifest or bag-info files
