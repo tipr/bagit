@@ -48,16 +48,18 @@ begin
   # commands that don't alter the bag #
   #####################################
   if opts['validate']
-    if File.exists?(opts['BAGPATH']+'/bag-info.txt') && File.directory?(opts['BAGPATH']+'/data') && File.exists?(opts['BAGPATH']+'/manifest-md5.txt') || File.exists?(opts['BAGPATH']+'/manifest-sha1.txt')
-      bag = BagIt::Bag.new(opts['BAGPATH'])
-      if opts['--oxum']
-        logger.info(bag.valid_oxum?.to_s)
-      else
-        logger.info(bag.valid?.to_s)
-      end
+    bag = BagIt::Bag.new(opts['BAGPATH'])
+
+    if opts['--oxum']
+      valid = bag.valid_oxum?
     else
-      logger.error("Not a valid bag")
+      valid = bag.valid?
     end
+
+    if valid
+      logger.info(valid)
+    end
+
     # validation commands MUST NOT change manifest or bag-info files
     exit
   end
