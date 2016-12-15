@@ -86,6 +86,19 @@ describe "BagIt Manifests" do
 
   end
 
+  describe "an empty bag having manifest! called on it" do
+
+    before do
+      Dir[File.join(@bag_path, "/data/*")].each do |file|
+        FileUtils::rm file
+      end
+    end
+
+    it "should raise an error" do
+      lambda {@bag.manifest!}.should raise_error("Unable to create manifest because the bag is empty.")
+    end
+  end
+
   describe "tag manifest files" do
 
     before do
