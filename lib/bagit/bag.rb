@@ -56,10 +56,10 @@ module BagIt
       files
     end
 
-    # Add a bag file
-    def add_file(base_path, src_path=nil)
-      path = File.join(data_dir, base_path)
-      raise "Bag file exists: #{base_path}" if File.exist? path
+    # Add a bag file at the given path relative to data_dir
+    def add_file(relative_path, src_path=nil)
+      path = File.join(data_dir, relative_path)
+      raise "Bag file exists: #{relative_path}" if File.exist? path
       FileUtils::mkdir_p File.dirname(path)
 
       if src_path.nil?
@@ -71,16 +71,17 @@ module BagIt
       return f
     end
 
-    # Remove a bag file
-    def remove_file(base_path)
-      path = File.join(data_dir, base_path)
-      raise "Bag file does not exist: #{base_path}" unless File.exist? path
+    # Remove a bag file at the given path relative to data_dir
+    def remove_file(relative_path)
+      path = File.join(data_dir, relative_path)
+      raise "Bag file does not exist: #{relative_path}" unless File.exist? path
       FileUtils::rm path
     end
 
-    # Retrieve the IO handle for a file in the bag
-    def get(base_path)
-      path = File.join(data_dir, base_path)
+    # Retrieve the IO handle for a file in the bag at a given path relative to
+    # data_dir
+    def get(relative_path)
+      path = File.join(data_dir, relative_path)
       return nil unless File.exist?(path)
       File.open(path)
     end
