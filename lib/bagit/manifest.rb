@@ -16,7 +16,7 @@ module BagIt
     # All tag files that are bag manifest files (manifest-[algorithm].txt)
     def manifest_files
       files = Dir[File.join(@bag_dir, '*')].select { |f|
-        File.file? f and File.basename(f) =~ /^manifest-.*.txt/
+        File.file? f and File.basename(f) =~ /^manifest-.*.txt$/
       }
       files
     end
@@ -50,7 +50,7 @@ module BagIt
     # All tag files that are bag manifest files (tagmanifest-[algorithm].txt)
     def tagmanifest_files
       files = Dir[File.join(@bag_dir, '*')].select { |f|
-        File.file? f and File.basename(f) =~ /^tagmanifest-.*.txt/
+        File.file? f and File.basename(f) =~ /^tagmanifest-.*.txt$/
       }
       files
     end
