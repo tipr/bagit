@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.license     = "MIT"
 
   spec.required_ruby_version = '~> 2.0'
-  
+
   spec.add_dependency 'validatable', '~> 1.6'
   spec.add_dependency 'docopt', '~> 0.5.0'
 
@@ -22,6 +22,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 10.4'
   spec.add_development_dependency 'rspec', '~> 3'
   spec.add_development_dependency 'coveralls'
+  spec.add_development_dependency 'pry'
+  spec.add_development_dependency 'pry-byebug'
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }

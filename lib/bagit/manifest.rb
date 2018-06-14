@@ -12,7 +12,7 @@ module BagIt
      return s
     end
 
-  
+
     # All tag files that are bag manifest files (manifest-[algorithm].txt)
     def manifest_files
       files = Dir[File.join(@bag_dir, '*')].select { |f|
@@ -27,7 +27,7 @@ module BagIt
     end
 
     # Generate manifest files for all the bag files
-    def manifest!
+    def manifest!(algo: 'default')
 
       # nuke all the existing manifest files
       manifest_files.each { |f| FileUtils::rm f }
@@ -35,16 +35,42 @@ module BagIt
       # manifest each tag file for each algorithm
       bag_files.each do |f|
         rel_path = encode_filename(Pathname.new(f).relative_path_from(Pathname.new(bag_dir)).to_s)
-        
-        # sha1
-        sha1 = Digest::SHA1.file f
-        File.open(manifest_file(:sha1), 'a') { |io| io.puts "#{sha1} #{rel_path}" }
 
-        # md5
-        md5 = Digest::MD5.file f
-        File.open(manifest_file(:md5), 'a') { |io| io.puts "#{md5} #{rel_path}" }
+        case algo
+        when 'sha1'
+          write_sha1(f, rel_path)
+        when 'md5'
+          write_md5(f, rel_path)
+        when 'sha256'
+          write_sha256(f, rel_path)
+        when 'sha512'
+          write_sha256(f, rel_path)
+        when 'default'
+          write_sha1(f, rel_path)
+          write_md5(f, rel_path)
+        end
       end
       tagmanifest!
+    end
+
+    def write_sha1(f, rel_path)
+      sha1 = Digest::SHA1.file f
+      File.open(manifest_file(:sha1), 'a') { |io| io.puts "#{sha1} #{rel_path}" }
+    end
+
+    def write_md5(f, rel_path)
+      md5 = Digest::MD5.file f
+      File.open(manifest_file(:md5), 'a') { |io| io.puts "#{md5} #{rel_path}" }
+    end
+
+    def write_sha256(f, rel_path)
+      sha256 = Digest::SHA256.file f
+      File.open(manifest_file(:sha256), 'a') { |io| io.puts "#{sha256} #{rel_path}" }
+    end
+
+    def write_sha512(f, rel_path)
+      sha512 = Digest::SHA512.file f
+      File.open(manifest_file(:sha512), 'a') { |io| io.puts "#{sha512} #{rel_path}" }
     end
 
     # All tag files that are bag manifest files (tagmanifest-[algorithm].txt)

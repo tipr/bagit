@@ -3,22 +3,23 @@
 require 'bagit'
 require 'docopt'
 require 'logger'
-
+require 'pry'
 logger = Logger.new(STDOUT)
 
 doc = <<DOCOPT
 BagIt.
 
-Usage: 
-  bagit add [-f <file>...] [-t <tagfile>...] BAGPATH
+Usage:
+  bagit add [-f <file>...] [-t <tagfile>...] [-a <algo>] BAGPATH
   bagit delete [-f <file>...] [-t <tagfile>...] BAGPATH
   bagit remove [-t <tagfile>...] BAGPATH
-  bagit validate [-o] BAGPATH 
+  bagit validate [-o] BAGPATH
   bagit manifest [-T] BAGPATH
-  bagit list [--tags | --all] BAGPATH 
+  bagit list [--tags | --all] BAGPATH
   bagit -h | --version
 
 Options:
+  -a             A selected hashing algorithm. (md5, sha1, sha256)
   -h --help      Show this help screen.
   --version      Show version.
   -f <file>      File to add to/delete from bag. Repeatable.
@@ -31,11 +32,11 @@ Options:
 DOCOPT
 
   # Possible commands for bag-info write
-  # 
-  # bagit new [--source-organization <org>] [--organization-address <org-addr>] [--contact-name <contact>] 
-  #             [--contact-phone <phone>] [--contact-email <email>] [--external-description <ext-desc>] 
-  #             [--external-identifier <ext-id>] [--group-identifier <group-id>] [--count <count>] 
-  #             [--internal-sender-identifier <sender-id>] [--internal-sender-description <sender-desc>] 
+  #
+  # bagit new [--source-organization <org>] [--organization-address <org-addr>] [--contact-name <contact>]
+  #             [--contact-phone <phone>] [--contact-email <email>] [--external-description <ext-desc>]
+  #             [--external-identifier <ext-id>] [--group-identifier <group-id>] [--count <count>]
+  #             [--internal-sender-identifier <sender-id>] [--internal-sender-description <sender-desc>]
   #             [--bag-info-entry <label> <value>] [-f <file>...] [-t <tagfile>...] BAGPATH
 
 begin
@@ -86,7 +87,7 @@ begin
   #TODO: implement delete for data and tag files; remove for tag files.
 
   # handle add/delete bag data files
-  unless opts['-f'].nil? 
+  unless opts['-f'].nil?
     #TODO: add files in nested directories
     opts['-f'].each { |datafile|
       begin
@@ -98,11 +99,11 @@ begin
       rescue Exception => e
         logger.error("Failed operation on bag file: #{e.message}")
       end
-    }  
+    }
   end
 
   # handle adding tag files
-  unless opts['-t'].nil? 
+  unless opts['-t'].nil?
     #TODO: add files in nested directories
     opts['-t'].each { |tagfile|
       begin
@@ -126,11 +127,15 @@ begin
   end
 
   # if we haven't quit yet, we need to re-manifest
-  # only do tags if tag files have been explictly added/removed or it is explictly called 
+  # only do tags if tag files have been explictly added/removed or it is explictly called
   bag.tagmanifest! if opts['-T'] or not opts['-t'].nil?
-  bag.manifest!
+
+  unless opts['-a'].nil?
+    bag.manifest!(algo: opts['<algo>'])
+  else
+    bag.manifest!
+  end
 
 rescue Docopt::Exit => e
   logger.error(e.message.red)
 end
-
