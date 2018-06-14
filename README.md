@@ -30,7 +30,7 @@ Example: making a bag
     end
 
     # generate the manifest and tagmanifest files
-    bag.manifest!
+    bag.manifest!(algo: 'sha256')
 
 Example: validating an existing bag
 -----------------------------------
