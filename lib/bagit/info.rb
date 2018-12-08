@@ -1,25 +1,23 @@
 require 'set'
 
 module BagIt
-
   module Info
-
     @@bag_info_headers = {
-      :agent => 'Bag-Software-Agent',
-      :org => 'Source-Organization',
-      :org_addr => 'Organization-Address',
-      :contact_name => 'Contact-Name',
-      :contact_phone => 'Contact-Phone',
-      :contact_email => 'Contact-Email',
-      :ext_desc => 'External-Description',
-      :ext_id => 'External-Identifier',
-      :size => 'Bag-Size',
-      :group_id => 'Bag-Group-Identifier',
-      :group_count => 'Bag-Count',
-      :sender_id => 'Internal-Sender-Identifier',
-      :int_desc => 'Internal-Sender-Description',
-      :date => 'Bagging-Date',
-      :oxum => 'Payload-Oxum'
+      agent: 'Bag-Software-Agent',
+      org: 'Source-Organization',
+      org_addr: 'Organization-Address',
+      contact_name: 'Contact-Name',
+      contact_phone: 'Contact-Phone',
+      contact_email: 'Contact-Email',
+      ext_desc: 'External-Description',
+      ext_id: 'External-Identifier',
+      size: 'Bag-Size',
+      group_id: 'Bag-Group-Identifier',
+      group_count: 'Bag-Count',
+      sender_id: 'Internal-Sender-Identifier',
+      int_desc: 'Internal-Sender-Description',
+      date: 'Bagging-Date',
+      oxum: 'Payload-Oxum'
     }
 
     def bag_info_txt_file
@@ -27,16 +25,14 @@ module BagIt
     end
 
     def bag_info
-      begin
-        read_info_file bag_info_txt_file
-      rescue
-        {}
-      end
+      read_info_file bag_info_txt_file
+    rescue
+      {}
     end
 
-    def write_bag_info(hash={})
+    def write_bag_info(hash = {})
       hash = bag_info.merge(hash)
-      hash[@@bag_info_headers[:agent]] = "BagIt Ruby Gem (http://bagit.rubyforge.org)" if hash[@@bag_info_headers[:agent]].nil?
+      hash[@@bag_info_headers[:agent]] = "BagIt Ruby Gem (https://github.com/tipr/bagit)" if hash[@@bag_info_headers[:agent]].nil?
       hash[@@bag_info_headers[:date]] = Date.today.strftime('%Y-%m-%d') if hash[@@bag_info_headers[:date]].nil?
       hash[@@bag_info_headers[:oxum]] = payload_oxum
       write_info_file bag_info_txt_file, hash
@@ -61,48 +57,38 @@ module BagIt
 
     protected
 
-    def read_info_file(file)
+      def read_info_file(file)
+        File.open(file) do |io|
+          entries = io.read.split(/\n(?=[^\s])/)
 
-      File.open(file) do |io|
+          entries.inject({}) do |hash, line|
+            name, value = line.chomp.split(/\s*:\s*/, 2)
+            hash.merge(name => value)
+          end
+        end
+      end
 
-        entries = io.read.split /\n(?=[^\s])/
-
-        entries.inject({}) do |hash, line|
-          name, value = line.chomp.split /\s*:\s*/, 2
-          hash.merge({name => value})
+      def write_info_file(file, hash)
+        dups = hash.keys.inject(Set.new) do |acc, key|
+          a = hash.keys.grep(/#{key}/i)
+          acc + (a.size > 1 ? a : [])
         end
 
-      end
+        raise "Multiple labels (#{dups.to_a.join ', '}) in #{file}" unless dups.empty?
 
-    end
+        File.open(file, 'w') do |io|
+          hash.each do |name, value|
+            simple_entry = "#{name}: #{value.gsub(/\s+/, ' ')}"
 
-    def write_info_file(file, hash)
+            entry = if simple_entry.length > 79
+                      simple_entry.wrap(77).indent(2)
+                    else
+                      simple_entry
+                    end
 
-      dups = hash.keys.inject(Set.new) do |acc, key|
-        a = hash.keys.grep(/#{key}/i)
-        acc + (a.size > 1 ? a : [])
-      end
-
-      raise "Multiple labels (#{dups.to_a.join ', '}) in #{file}" unless dups.empty?
-
-      File.open(file, 'w') do |io|
-
-        hash.each do |name, value|
-          simple_entry = "#{name}: #{value.gsub /\s+/, ' '}"
-
-          entry = if simple_entry.length > 79
-                    simple_entry.wrap(77).indent(2)
-                  else
-                    simple_entry
-                  end
-
-          io.puts entry
+            io.puts entry
+          end
         end
-
       end
-
-    end
-
   end
-
 end

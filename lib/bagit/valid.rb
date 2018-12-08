@@ -4,29 +4,26 @@ require 'cgi'
 require 'logger'
 
 module BagIt
-
   class Bag
     include Validatable
-    validates_true_for :consistency, :logic => Proc.new { consistent? }
-    validates_true_for :completeness, :logic => Proc.new { complete? }
+    validates_true_for :consistency, logic: proc { consistent? }
+    validates_true_for :completeness, logic: proc { complete? }
   end
 
   module Validity
     def decode_filename(s)
-      s = s.gsub('%0D',"\r")
-      s = s.gsub('%0A',"\n")
-      return s
+      s = s.gsub('%0D', "\r")
+      s = s.gsub('%0A', "\n")
+      s
     end
-    
+
     # Return true if the manifest cover all files and all files are
     # covered.
     def complete?
       logger = Logger.new(STDOUT)
 
-      if manifest_files == []
-        errors.add  :completeness, "there are no manifest files"
-      end
-      
+      errors.add :completeness, "there are no manifest files" if manifest_files == []
+
       unmanifested_files.each do |file|
         logger.error("#{file} is present but not manifested".red)
         errors.add :completeness, "#{file} is present but not manifested"
@@ -44,38 +41,39 @@ module BagIt
       errors.on(:completeness).nil?
     end
 
+    def manifest_type(type)
+      case type
+      when /sha1/i
+        Digest::SHA1
+      when /md5/i
+        Digest::MD5
+      when /sha256/i
+        Digest::SHA256
+      when /sha384/i
+        Digest::SHA384
+      when /sha512/i
+        Digest::SHA512
+      else
+        raise ArgumentError, "Algorithm #{manifest_type} is not supported."
+      end
+    end
+
     # Return true if all manifested files message digests match.
     def consistent?
-      (manifest_files|tagmanifest_files).each do |mf|
+      (manifest_files | tagmanifest_files).each do |mf|
         # get the algorithm implementation
         File.basename(mf) =~ /manifest-(.+).txt$/
-        manifest_type = $1
-        algo = case manifest_type
-               when /sha1/i
-                 Digest::SHA1
-               when /md5/i
-                 Digest::MD5
-               when /sha256/i
-                 Digest::SHA256
-               when /sha384/i
-                 Digest::SHA384
-               when /sha512/i
-                 Digest::SHA512
-               else
-                 raise ArgumentError.new("Algorithm #{manifest_type} is not supported.")
-               end
+        type = Regexp.last_match(1)
+        algo = manifest_type(type)
         # Check every file in the manifest
         File.open(mf) do |io|
           io.each_line do |line|
-            expected, path = line.chomp.split /\s+/, 2
+            expected, path = line.chomp.split(/\s+/, 2)
             file = File.join(bag_dir, decode_filename(path))
 
-            if File.exist? file
-              actual = algo.file(file).hexdigest
-              if expected.downcase != actual         
-                errors.add :consistency, "expected #{file} to have #{algo}: #{expected}, actual is #{actual}"
-              end
-            end
+            next unless File.exist? file
+            actual = algo.file(file).hexdigest
+            errors.add :consistency, "expected #{file} to have #{algo}: #{expected}, actual is #{actual}" if expected.downcase != actual
           end
         end
       end
@@ -89,59 +87,53 @@ module BagIt
     end
 
     protected
-    
-    # Returns all files in the instance that are not manifested
-    def unmanifested_files
-      mfs = manifested_files.map { |f| File.join bag_dir, f }
-      bag_files.reject { |f| mfs.member? f }
-    end
 
-    # Returns a list of manifested files that are not present
-    def empty_manifests
-      bfs = bag_files
-      manifested_files.reject { |f| bfs.member? File.join(bag_dir, f) }
-    end
-    # Returns a list of tag manifested files that are not present
-    def tag_empty_manifests
-      empty = []
-      tag_manifested_files.each do |f|
-        if !File.exists?(File.join(bag_dir,f))
-          empty.push f
-        end
+      # Returns all files in the instance that are not manifested
+      def unmanifested_files
+        mfs = manifested_files.map { |f| File.join bag_dir, f }
+        bag_files.reject { |f| mfs.member? f }
       end
-      return empty
-    end
-    # Returns a list of all files present in the manifest files
-    def manifested_files
 
-      manifest_files.inject([]) do |acc, mf|
+      # Returns a list of manifested files that are not present
+      def empty_manifests
+        bfs = bag_files
+        manifested_files.reject { |f| bfs.member? File.join(bag_dir, f) }
+      end
 
-        files = File.open(mf) do |io|
+      # Returns a list of tag manifested files that are not present
+      def tag_empty_manifests
+        empty = []
+        tag_manifested_files.each do |f|
+          empty.push f unless File.exist?(File.join(bag_dir, f))
+        end
+        empty
+      end
 
-          io.readlines.map do |line|
-            digest, path = line.chomp.split /\s+/, 2
-            decode_filename(path)
+      # Returns a list of all files present in the manifest files
+      def manifested_files
+        manifest_files.inject([]) do |acc, mf|
+          files = File.open(mf) do |io|
+            io.readlines.map do |line|
+              _digest, path = line.chomp.split(/\s+/, 2)
+              decode_filename(path)
+            end
           end
 
+          (acc + files).uniq
         end
-
-        (acc + files).uniq
       end
 
-    end
-    # Returns a list of all files in the tag manifest files
-    def tag_manifested_files
-      tagmanifest_files.inject([]) do |acc, mf|
-        files = File.open(mf) do |io|
-          io.readlines.map do |line|
-            digest, path = line.chomp.split /\s+/, 2
-            path
+      # Returns a list of all files in the tag manifest files
+      def tag_manifested_files
+        tagmanifest_files.inject([]) do |acc, mf|
+          files = File.open(mf) do |io|
+            io.readlines.map do |line|
+              _digest, path = line.chomp.split(/\s+/, 2)
+              path
+            end
           end
+          (acc + files).uniq
         end
-        (acc+files).uniq
       end
-    end
-
   end
-
 end

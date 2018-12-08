@@ -18,14 +18,15 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'validatable', '~> 1.6'
   spec.add_dependency 'docopt', '~> 0.5.0'
 
+  spec.add_development_dependency 'bixby'
   spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'rake', '~> 10.4'
-  spec.add_development_dependency 'rspec', '~> 3'
   spec.add_development_dependency 'coveralls'
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'pry-byebug'
+  spec.add_development_dependency 'rake', '~> 10.4'
+  spec.add_development_dependency 'rspec', '~> 3'
 
-  spec.files         = `git ls-files`.split($/)
+  spec.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]

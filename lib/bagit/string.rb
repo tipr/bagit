@@ -1,6 +1,5 @@
 # Some mixed in functionality for String
 class String
-  
   # Wrap a string to lines of a specified width. All existing newlines
   # are not guaranteed to be preserved
   def wrap(width)
@@ -11,7 +10,6 @@ class String
     else
       s
     end
-
   end
 
   # Indent each line of a string by n spaces
@@ -20,8 +18,8 @@ class String
     gsub '\n', "\n#{indent}"
   end
 
-# Colorize logs
- def color(color_code)
+  # Colorize logs
+  def color(color_code)
     "\e[#{color_code}m#{self}\e[0m"
   end
 

@@ -16,23 +16,16 @@ module BagIt
     include Fetch               # fetch related functionality
 
     # Make a new Bag based at path
-    def initialize(path, info={}, create=false)
-    
-        
+    def initialize(path, info = {}, _create = false)
       @bag_dir = path
       # make the dir structure if it doesn't exist
-      FileUtils::mkdir bag_dir unless File.directory? bag_dir
-      FileUtils::mkdir data_dir unless File.directory? data_dir
+      FileUtils.mkdir bag_dir unless File.directory? bag_dir
+      FileUtils.mkdir data_dir unless File.directory? data_dir
 
       # write some tag info if its not there
-      unless File.exist? bagit_txt_file
-        write_bagit("BagIt-Version" => SPEC_VERSION, "Tag-File-Character-Encoding" => "UTF-8")
-      end
+      write_bagit("BagIt-Version" => SPEC_VERSION, "Tag-File-Character-Encoding" => "UTF-8") unless File.exist? bagit_txt_file
 
-      unless File.exist? bag_info_txt_file
-        write_bag_info(info)
-      end
-     
+      write_bag_info(info) unless File.exist? bag_info_txt_file
     end
 
     # Return the path to the data directory
@@ -50,32 +43,32 @@ module BagIt
       files = []
       if tagmanifest_files != []
         File.open(tagmanifest_files.first) do |f|
-          f.each_line{|line| files << File.join(@bag_dir, line.split(' ')[1])}
+          f.each_line { |line| files << File.join(@bag_dir, line.split(' ')[1]) }
         end
       end
       files
     end
 
     # Add a bag file at the given path relative to data_dir
-    def add_file(relative_path, src_path=nil)
+    def add_file(relative_path, src_path = nil)
       path = File.join(data_dir, relative_path)
       raise "Bag file exists: #{relative_path}" if File.exist? path
-      FileUtils::mkdir_p File.dirname(path)
+      FileUtils.mkdir_p File.dirname(path)
 
-      if src_path.nil?
-        f = File.open(path, 'w') { |io| yield io }
-      else
-        f = FileUtils::cp src_path, path
-      end
+      f = if src_path.nil?
+            File.open(path, 'w') { |io| yield io }
+          else
+            FileUtils.cp src_path, path
+          end
       write_bag_info
-      return f
+      f
     end
 
     # Remove a bag file at the given path relative to data_dir
     def remove_file(relative_path)
       path = File.join(data_dir, relative_path)
       raise "Bag file does not exist: #{relative_path}" unless File.exist? path
-      FileUtils::rm path
+      FileUtils.rm path
     end
 
     # Retrieve the IO handle for a file in the bag at a given path relative to
@@ -88,28 +81,28 @@ module BagIt
 
     # Test if this bag is empty (no files)
     def empty?
-      self.bag_files.empty?
+      bag_files.empty?
     end
 
     # Get all bag file paths relative to the data dir
     def paths
-      self.bag_files.collect { |f| f.sub(data_dir + '/', '') }
+      bag_files.collect { |f| f.sub(data_dir + '/', '') }
     end
 
     # Get the Oxum for the payload files
     def payload_oxum
       bytes = 0
       bag_files.each do |f|
-        #TODO: filesystem quirks? Are we getting the stream size or the size on disk?
+        # TODO: filesystem quirks? Are we getting the stream size or the size on disk?
         bytes += File.size(f)
       end
-      return bytes.to_s + '.' + bag_files.count.to_s
+      bytes.to_s + '.' + bag_files.count.to_s
     end
 
     # Remove all empty directory trees from the bag
     def gc!
       Dir.entries(data_dir).each do |f|
-        unless %w{.. .}.include? f
+        unless %w[.. .].include? f
           abs_path = File.join data_dir, f
           File.clean abs_path
         end
