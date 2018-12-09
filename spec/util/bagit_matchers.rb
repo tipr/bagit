@@ -1,8 +1,5 @@
 module BagitMatchers
-
-  class BeIn 
-
-
+  class BeIn
     def initialize(*expected_collection)
       @expected = expected_collection
     end
@@ -20,16 +17,13 @@ module BagitMatchers
       "expected <#{@target}> to not be in collection <#{@expected}>"
     end
     alias negative_failure_message failure_message_when_negated
-
   end
 
   def be_in(*expected_collection)
     BeIn.new(*expected_collection)
   end
 
-  class ExistOnFS 
-
-
+  class ExistOnFS
     def matches?(target)
       @target = target
       File.exist? target
@@ -43,14 +37,9 @@ module BagitMatchers
       "expected <#{@target}> to not exist but it does"
     end
     alias negative_failure_message failure_message_when_negated
-
   end
 
-  def exist_on_fs 
+  def exist_on_fs
     ExistOnFS.new
   end
-
-  
-
-
 end

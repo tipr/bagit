@@ -10,5 +10,5 @@ require 'date'
 require 'logger'
 module BagIt
   # The version of the BagIt specification the code is conforming to.
-  SPEC_VERSION = '0.97'
+  SPEC_VERSION = '0.97'.freeze
 end

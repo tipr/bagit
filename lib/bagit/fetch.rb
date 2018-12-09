@@ -1,9 +1,7 @@
 require 'open-uri'
 
 module BagIt
-  
   module Fetch
-    
     def fetch_txt_file
       File.join @bag_dir, 'fetch.txt'
     end
@@ -16,35 +14,31 @@ module BagIt
 
     # feth all remote files
     def fetch!
-
       open(fetch_txt_file) do |io|
-        
         io.readlines.each do |line|
-          
-          (url, length, path) = line.chomp.split(/\s+/, 3)
-          
-          add_file(path) do |io|
-            io.write open(url)
+          (url, _length, path) = line.chomp.split(/\s+/, 3)
+
+          add_file(path) do |file_io|
+            file_io.write open(url)
           end
-          
         end
-        
       end
 
-      # rename the old fetch.txt
-      Dir["#{fetch_txt_file}.?*"].sort.reverse.each do |f|
-        
-        if f =~ /fetch.txt.(\d+)$/
-          new_f = File.join File.dirname(f), "fetch.txt.#{$1.to_i + 1}"
-          FileUtils::mv f, new_f
-        end
-        
-      end
-
-      # move the current fetch_txt
-      FileUtils::mv fetch_txt_file, "#{fetch_txt_file}.0"
+      rename_old_fetch_txt(fetch_txt_file)
+      move_current_fetch_txt(fetch_txt_file)
     end
-    
+
+    def rename_old_fetch_txt(fetch_txt_file)
+      Dir["#{fetch_txt_file}.?*"].sort.reverse.each do |f|
+        if f =~ /fetch.txt.(\d+)$/
+          new_f = File.join File.dirname(f), "fetch.txt.#{Regexp.last_match(1).to_i + 1}"
+          FileUtils.mv f, new_f
+        end
+      end
+    end
+
+    def move_current_fetch_txt(fetch_txt_file)
+      FileUtils.mv fetch_txt_file, "#{fetch_txt_file}.0"
+    end
   end
-  
 end

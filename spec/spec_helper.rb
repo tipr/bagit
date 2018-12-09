@@ -12,26 +12,24 @@ RSpec.configure do |config|
   config.include(BagitMatchers)
 end
 
-$:.unshift File.expand_path('../lib', File.dirname(__FILE__))
+$LOAD_PATH.unshift File.expand_path('../lib', File.dirname(__FILE__))
 require 'bagit'
 
 require 'tempfile'
 
 class Sandbox
-
   def initialize
     tf = Tempfile.open 'sandbox'
     @path = tf.path
     tf.close!
-    FileUtils::mkdir @path
+    FileUtils.mkdir @path
   end
 
   def cleanup!
-    FileUtils::rm_rf @path
+    FileUtils.rm_rf @path
   end
 
   def to_s
     @path
   end
-
 end
