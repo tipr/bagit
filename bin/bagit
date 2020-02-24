@@ -4,7 +4,6 @@
 require 'bagit'
 require 'docopt'
 require 'logger'
-require 'pry'
 logger = Logger.new(STDOUT)
 
 doc = <<DOCOPT
