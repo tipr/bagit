@@ -1,4 +1,6 @@
 # coding: utf-8
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 # based on v0.96 http://www.cdlib.org/inside/diglib/bagit/bagitspec.html

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class File
   # Clean out all the empty dirs
   def self.clean(file_name)

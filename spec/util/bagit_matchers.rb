@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BagitMatchers
   class BeIn
     def initialize(*expected_collection)
