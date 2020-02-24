@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bagit/fetch'
 require 'bagit/file'
 require 'bagit/info'

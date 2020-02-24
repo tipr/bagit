@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BagIt
-  VERSION = "0.4.3".freeze
+  VERSION = "0.4.3"
 end

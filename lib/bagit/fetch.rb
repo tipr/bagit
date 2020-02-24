@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'open-uri'
 
 module BagIt
@@ -29,7 +31,7 @@ module BagIt
     end
 
     def rename_old_fetch_txt(fetch_txt_file)
-      Dir["#{fetch_txt_file}.?*"].sort.reverse.each do |f|
+      Dir["#{fetch_txt_file}.?*"].sort.reverse_each do |f|
         if f =~ /fetch.txt.(\d+)$/
           new_f = File.join File.dirname(f), "fetch.txt.#{Regexp.last_match(1).to_i + 1}"
           FileUtils.mv f, new_f

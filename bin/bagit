@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'bagit'
 require 'docopt'
@@ -84,42 +85,36 @@ begin
   # TODO: implement delete for data and tag files; remove for tag files.
 
   # handle add/delete bag data files
-  unless opts['-f'].nil?
-    # TODO: add files in nested directories
-    opts['-f'].each do |datafile|
-      begin
-        if opts['add'] || opts['new']
-          bag.add_file(File.basename(datafile), datafile)
-        elsif opts['delete']
-          bag.remove_file(File.basename(datafile))
-        end
-      rescue StandardError => e
-        logger.error("Failed operation on bag file: #{e.message}")
+  opts['-f']&.each do |datafile|
+    begin
+      if opts['add'] || opts['new']
+        bag.add_file(File.basename(datafile), datafile)
+      elsif opts['delete']
+        bag.remove_file(File.basename(datafile))
       end
+    rescue StandardError => e
+      logger.error("Failed operation on bag file: #{e.message}")
     end
   end
 
   # handle adding tag files
-  unless opts['-t'].nil?
-    # TODO: add files in nested directories
-    opts['-t'].each do |tagfile|
-      begin
-        if opts['add'] || opts['new']
-          # if it does, try to manifest it
-          if File.exist?(File.join(bag.bag_dir, File.basename(tagfile)))
-            bag.add_tag_file(tagfile)
-            # otherwise, add it
-          else
-            bag.add_tag_file(File.basename(tagfile), tagfile)
-          end
-        elsif opts['delete']
-          bag.delete_tag_file(File.basename(tagfile))
-        elsif opts['remove']
-          bag.remove_tag_file(File.basename(tagfile))
+  opts['-t']&.each do |tagfile|
+    begin
+      if opts['add'] || opts['new']
+        # if it does, try to manifest it
+        if File.exist?(File.join(bag.bag_dir, File.basename(tagfile)))
+          bag.add_tag_file(tagfile)
+          # otherwise, add it
+        else
+          bag.add_tag_file(File.basename(tagfile), tagfile)
         end
-      rescue StandardError => e
-        logger.error("Failed operation on tag file: #{e.message}".red)
+      elsif opts['delete']
+        bag.delete_tag_file(File.basename(tagfile))
+      elsif opts['remove']
+        bag.remove_tag_file(File.basename(tagfile))
       end
+    rescue StandardError => e
+      logger.error("Failed operation on tag file: #{e.message}".red)
     end
   end
 

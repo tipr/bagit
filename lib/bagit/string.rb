@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Some mixed in functionality for String
 class String
   # Wrap a string to lines of a specified width. All existing newlines
