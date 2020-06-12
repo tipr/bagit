@@ -59,38 +59,38 @@ module BagIt
 
     protected
 
-      def read_info_file(file)
-        File.open(file) do |io|
-          entries = io.read.split(/\n(?=[^\s])/)
+    def read_info_file(file)
+      File.open(file) do |io|
+        entries = io.read.split(/\n(?=[^\s])/)
 
-          entries.inject({}) do |hash, line|
-            name, value = line.chomp.split(/\s*:\s*/, 2)
-            hash.merge(name => value)
-          end
+        entries.inject({}) do |hash, line|
+          name, value = line.chomp.split(/\s*:\s*/, 2)
+          hash.merge(name => value)
         end
       end
+    end
 
-      def write_info_file(file, hash)
-        dups = hash.keys.inject(Set.new) do |acc, key|
-          a = hash.keys.grep(/#{key}/i)
-          acc + (a.size > 1 ? a : [])
-        end
+    def write_info_file(file, hash)
+      dups = hash.keys.inject(Set.new) do |acc, key|
+        a = hash.keys.grep(/#{key}/i)
+        acc + (a.size > 1 ? a : [])
+      end
 
-        raise "Multiple labels (#{dups.to_a.join ', '}) in #{file}" unless dups.empty?
+      raise "Multiple labels (#{dups.to_a.join ', '}) in #{file}" unless dups.empty?
 
-        File.open(file, 'w') do |io|
-          hash.each do |name, value|
-            simple_entry = "#{name}: #{value.gsub(/\s+/, ' ')}"
+      File.open(file, 'w') do |io|
+        hash.each do |name, value|
+          simple_entry = "#{name}: #{value.gsub(/\s+/, ' ')}"
 
-            entry = if simple_entry.length > 79
-                      simple_entry.wrap(77).indent(2)
-                    else
-                      simple_entry
-                    end
+          entry = if simple_entry.length > 79
+                    simple_entry.wrap(77).indent(2)
+                  else
+                    simple_entry
+                  end
 
-            io.puts entry
-          end
+          io.puts entry
         end
       end
+    end
   end
 end
