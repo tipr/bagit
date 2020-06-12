@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
-require 'pathname'
-require 'digest/sha1'
-require 'digest/md5'
+require "pathname"
+require "digest/sha1"
+require "digest/md5"
 
 module BagIt
   # Requires response to bag_dir, tag_files, bag_files
   module Manifest
     def encode_filename(s)
-      s = s.gsub(/\r/, '%0D')
-      s = s.gsub(/\n/, '%0A')
+      s = s.gsub(/\r/, "%0D")
+      s = s.gsub(/\n/, "%0A")
       s
     end
 
     # All tag files that are bag manifest files (manifest-[algorithm].txt)
     def manifest_files
-      files = Dir[File.join(@bag_dir, '*')].select do |f|
+      files = Dir[File.join(@bag_dir, "*")].select { |f|
         File.file?(f) && File.basename(f) =~ /^manifest-.*.txt$/
-      end
+      }
       files
     end
 
@@ -27,7 +27,7 @@ module BagIt
     end
 
     # Generate manifest files for all the bag files
-    def manifest!(algo: 'default')
+    def manifest!(algo: "default")
       # nuke all the existing manifest files
       manifest_files.each { |f| FileUtils.rm f }
 
@@ -42,15 +42,15 @@ module BagIt
 
     def write_checksum(checksum_algo:, relative_path:, file:)
       case checksum_algo
-      when 'sha1'
+      when "sha1"
         write_sha1(file, relative_path)
-      when 'md5'
+      when "md5"
         write_md5(file, relative_path)
-      when 'sha256'
+      when "sha256"
         write_sha256(file, relative_path)
-      when 'sha512'
+      when "sha512"
         write_sha256(file, relative_path)
-      when 'default'
+      when "default"
         write_sha1(file, relative_path)
         write_md5(file, relative_path)
       end
@@ -58,29 +58,29 @@ module BagIt
 
     def write_sha1(f, rel_path)
       sha1 = Digest::SHA1.file f
-      File.open(manifest_file(:sha1), 'a') { |io| io.puts "#{sha1} #{rel_path}" }
+      File.open(manifest_file(:sha1), "a") { |io| io.puts "#{sha1} #{rel_path}" }
     end
 
     def write_md5(f, rel_path)
       md5 = Digest::MD5.file f
-      File.open(manifest_file(:md5), 'a') { |io| io.puts "#{md5} #{rel_path}" }
+      File.open(manifest_file(:md5), "a") { |io| io.puts "#{md5} #{rel_path}" }
     end
 
     def write_sha256(f, rel_path)
       sha256 = Digest::SHA256.file f
-      File.open(manifest_file(:sha256), 'a') { |io| io.puts "#{sha256} #{rel_path}" }
+      File.open(manifest_file(:sha256), "a") { |io| io.puts "#{sha256} #{rel_path}" }
     end
 
     def write_sha512(f, rel_path)
       sha512 = Digest::SHA512.file f
-      File.open(manifest_file(:sha512), 'a') { |io| io.puts "#{sha512} #{rel_path}" }
+      File.open(manifest_file(:sha512), "a") { |io| io.puts "#{sha512} #{rel_path}" }
     end
 
     # All tag files that are bag manifest files (tagmanifest-[algorithm].txt)
     def tagmanifest_files
-      files = Dir[File.join(@bag_dir, '*')].select do |f|
+      files = Dir[File.join(@bag_dir, "*")].select { |f|
         File.file?(f) && File.basename(f) =~ /^tagmanifest-.*.txt$/
-      end
+      }
       files
     end
 
@@ -122,7 +122,7 @@ module BagIt
 
         # write file
         if src_path.nil?
-          File.open(f, 'w') { |io| yield io }
+          File.open(f, "w") { |io| yield io }
         else
           FileUtils.cp src_path, f
         end
@@ -139,11 +139,11 @@ module BagIt
 
       # sha1
       sha1 = Digest::SHA1.hexdigest data
-      File.open(tagmanifest_file(:sha1), 'a') { |io| io.puts "#{sha1} #{rel_path}" }
+      File.open(tagmanifest_file(:sha1), "a") { |io| io.puts "#{sha1} #{rel_path}" }
 
       # md5
       md5 = Digest::MD5.hexdigest data
-      File.open(tagmanifest_file(:md5), 'a') { |io| io.puts "#{md5} #{rel_path}" }
+      File.open(tagmanifest_file(:md5), "a") { |io| io.puts "#{md5} #{rel_path}" }
       tag_files
     end
 
@@ -175,7 +175,7 @@ module BagIt
                  Digest::MD5
                else
                  :unknown
-               end
+        end
 
         # check it, an unknown algorithm is always true
         if algo == :unknown

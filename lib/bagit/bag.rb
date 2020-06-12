@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-require 'bagit/fetch'
-require 'bagit/file'
-require 'bagit/info'
-require 'bagit/manifest'
-require 'bagit/string'
-require 'bagit/valid'
+require "bagit/fetch"
+require "bagit/file"
+require "bagit/info"
+require "bagit/manifest"
+require "bagit/string"
+require "bagit/valid"
 
 module BagIt
   # Represents the state of a bag on a filesystem
   class Bag
     attr_reader :bag_dir
 
-    include Validity            # Validity functionality
-    include Info                # bagit & bag info functionality
-    include Manifest            # manifest related functionality
-    include Fetch               # fetch related functionality
+    include Validity # Validity functionality
+    include Info # bagit & bag info functionality
+    include Manifest # manifest related functionality
+    include Fetch # fetch related functionality
 
     # Make a new Bag based at path
     def initialize(path, info = {}, _create = false)
@@ -32,12 +32,12 @@ module BagIt
 
     # Return the path to the data directory
     def data_dir
-      File.join @bag_dir, 'data'
+      File.join @bag_dir, "data"
     end
 
     # Return the paths to each bag file relative to bag_dir
     def bag_files
-      Dir[File.join(data_dir, '**', '*')].select { |f| File.file? f }
+      Dir[File.join(data_dir, "**", "*")].select { |f| File.file? f }
     end
 
     # Return the paths to each tag file relative to bag_dir
@@ -45,7 +45,7 @@ module BagIt
       files = []
       if tagmanifest_files != []
         File.open(tagmanifest_files.first) do |f|
-          f.each_line { |line| files << File.join(@bag_dir, line.split(' ')[1]) }
+          f.each_line { |line| files << File.join(@bag_dir, line.split(" ")[1]) }
         end
       end
       files
@@ -58,10 +58,10 @@ module BagIt
       FileUtils.mkdir_p File.dirname(path)
 
       f = if src_path.nil?
-            File.open(path, 'w') { |io| yield io }
-          else
-            FileUtils.cp src_path, path
-          end
+        File.open(path, "w") { |io| yield io }
+      else
+        FileUtils.cp src_path, path
+      end
       write_bag_info
       f
     end
@@ -88,7 +88,7 @@ module BagIt
 
     # Get all bag file paths relative to the data dir
     def paths
-      bag_files.collect { |f| f.sub(data_dir + '/', '') }
+      bag_files.collect { |f| f.sub(data_dir + "/", "") }
     end
 
     # Get the Oxum for the payload files
@@ -98,7 +98,7 @@ module BagIt
         # TODO: filesystem quirks? Are we getting the stream size or the size on disk?
         bytes += File.size(f)
       end
-      bytes.to_s + '.' + bag_files.count.to_s
+      bytes.to_s + "." + bag_files.count.to_s
     end
 
     # Remove all empty directory trees from the bag

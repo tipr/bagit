@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'validatable'
-require 'open-uri'
-require 'cgi'
-require 'logger'
+require "validatable"
+require "open-uri"
+require "cgi"
+require "logger"
 
 module BagIt
   class Bag
@@ -14,8 +14,8 @@ module BagIt
 
   module Validity
     def decode_filename(s)
-      s = s.gsub('%0D', "\r")
-      s = s.gsub('%0A', "\n")
+      s = s.gsub("%0D", "\r")
+      s = s.gsub("%0A", "\n")
       s
     end
 
@@ -114,12 +114,12 @@ module BagIt
     # Returns a list of all files present in the manifest files
     def manifested_files
       manifest_files.inject([]) do |acc, mf|
-        files = File.open(mf) do |io|
+        files = File.open(mf) { |io|
           io.readlines.map do |line|
             _digest, path = line.chomp.split(/\s+/, 2)
             decode_filename(path)
           end
-        end
+        }
 
         (acc + files).uniq
       end
@@ -128,12 +128,12 @@ module BagIt
     # Returns a list of all files in the tag manifest files
     def tag_manifested_files
       tagmanifest_files.inject([]) do |acc, mf|
-        files = File.open(mf) do |io|
+        files = File.open(mf) { |io|
           io.readlines.map do |line|
             _digest, path = line.chomp.split(/\s+/, 2)
             path
           end
-        end
+        }
         (acc + files).uniq
       end
     end
