@@ -1,7 +1,6 @@
-# coding: utf-8
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "spec_helper"
 
 describe BagIt::Bag do
   describe "BagIt Manifests" do
@@ -9,13 +8,14 @@ describe BagIt::Bag do
       @sandbox = Sandbox.new
 
       # make the bag
-      @bag_path = File.join @sandbox.to_s, 'the_bag'
+      @bag_path = File.join @sandbox.to_s, "the_bag"
       @bag = described_class.new @bag_path
 
       # add some files
-      File.open('/dev/urandom') do |rio|
+      File.open("/dev/urandom") do |rio|
         10.times do |n|
-          @bag.add_file("file-#{n}-💩") { |io| io.write rio.read(16) }
+          @bag.add_file("file-#{n}-💩
+") { |io| io.write rio.read(16) }
           @bag.add_tag_file("tag-#{n}") { |io| io.write rio.read(16) }
         end
       end
@@ -27,13 +27,16 @@ describe BagIt::Bag do
 
     shared_examples_for "a manifest file" do
       before do
-        pattern = File.join @bag_path, '*manifest-*.txt'
+        pattern = File.join @bag_path, "*manifest-*.txt"
         @manifest_files = Dir.glob pattern
       end
 
       it "has a valid algorithm in the name (at least md5 or sha1)" do
-        algorithms = @manifest_files.map { |mf| mf =~ /manifest-(.*).txt$/; Regexp.last_match(1) }
-        algorithms.each { |a| expect(a).to be_in('md5', 'sha1') }
+        algorithms = @manifest_files.map { |mf|
+          mf =~ /manifest-(.*).txt$/
+          Regexp.last_match(1)
+        }
+        algorithms.each { |a| expect(a).to be_in("md5", "sha1") }
       end
 
       it "is not an empty file" do
@@ -49,7 +52,7 @@ describe BagIt::Bag do
       end
 
       it "validates after adding a file and remanifesting" do
-        @bag.add_file('newfile.txt') { |io| io.puts("new file to remanifest") }
+        @bag.add_file("newfile.txt") { |io| io.puts("new file to remanifest") }
         @bag.manifest!
         expect(@bag).to be_valid
       end

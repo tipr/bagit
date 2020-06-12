@@ -1,27 +1,27 @@
 # frozen_string_literal: true
 
-require 'open-uri'
+require "open-uri"
 
 module BagIt
   module Fetch
     def fetch_txt_file
-      File.join @bag_dir, 'fetch.txt'
+      File.join @bag_dir, "fetch.txt"
     end
 
     def add_remote_file(url, path, size, sha1, md5)
-      open(fetch_txt_file, 'a') { |io| io.puts "#{url} #{size || '-'} #{path}" }
-      open(manifest_file('sha1'), 'a') { |io| io.puts "#{sha1} #{File.join 'data', path}" }
-      open(manifest_file('md5'), 'a') { |io| io.puts "#{md5} #{File.join 'data', path}" }
+      File.open(fetch_txt_file, "a") { |io| io.puts "#{url} #{size || "-"} #{path}" }
+      File.open(manifest_file("sha1"), "a") { |io| io.puts "#{sha1} #{File.join "data", path}" }
+      File.open(manifest_file("md5"), "a") { |io| io.puts "#{md5} #{File.join "data", path}" }
     end
 
     # feth all remote files
     def fetch!
-      open(fetch_txt_file) do |io|
+      File.open(fetch_txt_file) do |io|
         io.readlines.each do |line|
           (url, _length, path) = line.chomp.split(/\s+/, 3)
 
           add_file(path) do |file_io|
-            file_io.write open(url)
+            file_io.write URI.open(url)
           end
         end
       end
