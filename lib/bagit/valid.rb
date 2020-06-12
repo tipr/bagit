@@ -90,52 +90,52 @@ module BagIt
 
     protected
 
-      # Returns all files in the instance that are not manifested
-      def unmanifested_files
-        mfs = manifested_files.map { |f| File.join bag_dir, f }
-        bag_files.reject { |f| mfs.member? f }
-      end
+    # Returns all files in the instance that are not manifested
+    def unmanifested_files
+      mfs = manifested_files.map { |f| File.join bag_dir, f }
+      bag_files.reject { |f| mfs.member? f }
+    end
 
-      # Returns a list of manifested files that are not present
-      def empty_manifests
-        bfs = bag_files
-        manifested_files.reject { |f| bfs.member? File.join(bag_dir, f) }
-      end
+    # Returns a list of manifested files that are not present
+    def empty_manifests
+      bfs = bag_files
+      manifested_files.reject { |f| bfs.member? File.join(bag_dir, f) }
+    end
 
-      # Returns a list of tag manifested files that are not present
-      def tag_empty_manifests
-        empty = []
-        tag_manifested_files.each do |f|
-          empty.push f unless File.exist?(File.join(bag_dir, f))
-        end
-        empty
+    # Returns a list of tag manifested files that are not present
+    def tag_empty_manifests
+      empty = []
+      tag_manifested_files.each do |f|
+        empty.push f unless File.exist?(File.join(bag_dir, f))
       end
+      empty
+    end
 
-      # Returns a list of all files present in the manifest files
-      def manifested_files
-        manifest_files.inject([]) do |acc, mf|
-          files = File.open(mf) do |io|
-            io.readlines.map do |line|
-              _digest, path = line.chomp.split(/\s+/, 2)
-              decode_filename(path)
-            end
+    # Returns a list of all files present in the manifest files
+    def manifested_files
+      manifest_files.inject([]) do |acc, mf|
+        files = File.open(mf) do |io|
+          io.readlines.map do |line|
+            _digest, path = line.chomp.split(/\s+/, 2)
+            decode_filename(path)
           end
-
-          (acc + files).uniq
         end
-      end
 
-      # Returns a list of all files in the tag manifest files
-      def tag_manifested_files
-        tagmanifest_files.inject([]) do |acc, mf|
-          files = File.open(mf) do |io|
-            io.readlines.map do |line|
-              _digest, path = line.chomp.split(/\s+/, 2)
-              path
-            end
+        (acc + files).uniq
+      end
+    end
+
+    # Returns a list of all files in the tag manifest files
+    def tag_manifested_files
+      tagmanifest_files.inject([]) do |acc, mf|
+        files = File.open(mf) do |io|
+          io.readlines.map do |line|
+            _digest, path = line.chomp.split(/\s+/, 2)
+            path
           end
-          (acc + files).uniq
         end
+        (acc + files).uniq
       end
+    end
   end
 end

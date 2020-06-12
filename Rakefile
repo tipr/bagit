@@ -12,7 +12,7 @@ require 'rubocop/rake_task'
 Bundler::GemHelper.install_tasks
 
 desc 'Run rubocop'
-task :rubocop do
+task rubocop: :environment do
   RuboCop::RakeTask.new
 end
 

@@ -85,36 +85,32 @@ begin
 
   # handle add/delete bag data files
   opts['-f']&.each do |datafile|
-    begin
-      if opts['add'] || opts['new']
-        bag.add_file(File.basename(datafile), datafile)
-      elsif opts['delete']
-        bag.remove_file(File.basename(datafile))
-      end
-    rescue StandardError => e
-      logger.error("Failed operation on bag file: #{e.message}")
+    if opts['add'] || opts['new']
+      bag.add_file(File.basename(datafile), datafile)
+    elsif opts['delete']
+      bag.remove_file(File.basename(datafile))
     end
+  rescue StandardError => e
+    logger.error("Failed operation on bag file: #{e.message}")
   end
 
   # handle adding tag files
   opts['-t']&.each do |tagfile|
-    begin
-      if opts['add'] || opts['new']
-        # if it does, try to manifest it
-        if File.exist?(File.join(bag.bag_dir, File.basename(tagfile)))
-          bag.add_tag_file(tagfile)
-          # otherwise, add it
-        else
-          bag.add_tag_file(File.basename(tagfile), tagfile)
-        end
-      elsif opts['delete']
-        bag.delete_tag_file(File.basename(tagfile))
-      elsif opts['remove']
-        bag.remove_tag_file(File.basename(tagfile))
+    if opts['add'] || opts['new']
+      # if it does, try to manifest it
+      if File.exist?(File.join(bag.bag_dir, File.basename(tagfile)))
+        bag.add_tag_file(tagfile)
+        # otherwise, add it
+      else
+        bag.add_tag_file(File.basename(tagfile), tagfile)
       end
-    rescue StandardError => e
-      logger.error("Failed operation on tag file: #{e.message}".red)
+    elsif opts['delete']
+      bag.delete_tag_file(File.basename(tagfile))
+    elsif opts['remove']
+      bag.remove_tag_file(File.basename(tagfile))
     end
+  rescue StandardError => e
+    logger.error("Failed operation on tag file: #{e.message}".red)
   end
 
   # if we haven't quit yet, we need to re-manifest
