@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'coveralls'
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'pry-byebug'
-  spec.add_development_dependency 'rake', '~> 10.4'
+  spec.add_dependency "rake", ">= 12.3.3"
   spec.add_development_dependency 'rspec', '~> 3'
 
   spec.files         = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
