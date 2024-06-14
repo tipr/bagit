@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Tom Johnson, Francesco Lazzarino, Jamie Little"]
   spec.license = "MIT"
 
-  spec.required_ruby_version = ">= 2.0", "< 3.3"
+  spec.required_ruby_version = ">= 2.0", "< 3.4"
 
   spec.add_dependency "validatable", "~> 1.6"
   spec.add_dependency "docopt", "~> 0.5.0"
