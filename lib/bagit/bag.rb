@@ -8,9 +8,28 @@ require "bagit/string"
 require "bagit/valid"
 
 module BagIt
+  class FileFinder
+    def self.find(dir)
+      raise NotImplementedError
+    end
+  end
+
+  class StandardFileFinder < FileFinder
+    def self.find(dir)
+      Dir[File.join(dir, "**", "*")].select { |f| File.file? f }
+    end
+  end
+
+  class StandardWithHiddenFileFinder < FileFinder
+    def self.find(dir)
+      Dir.glob(File.join(dir, "**", "*"), File::FNM_DOTMATCH).select { |f| File.file? f }
+    end
+  end
+
   # Represents the state of a bag on a filesystem
   class Bag
     attr_reader :bag_dir
+    attr_reader :detect_hidden
 
     include Validity # Validity functionality
     include Info # bagit & bag info functionality
@@ -18,8 +37,11 @@ module BagIt
     include Fetch # fetch related functionality
 
     # Make a new Bag based at path
-    def initialize(path, info = {}, _create = false)
+    def initialize(path, info = {}, _create = false, detect_hidden = false)
       @bag_dir = path
+      @detect_hidden = detect_hidden
+      @file_finder = @detect_hidden ? StandardWithHiddenFileFinder : StandardFileFinder
+
       # make the dir structure if it doesn't exist
       FileUtils.mkdir bag_dir unless File.directory? bag_dir
       FileUtils.mkdir data_dir unless File.directory? data_dir
@@ -37,7 +59,7 @@ module BagIt
 
     # Return the paths to each bag file relative to bag_dir
     def bag_files
-      Dir[File.join(data_dir, "**", "*")].select { |f| File.file? f }
+      @file_finder.find(data_dir)
     end
 
     # Return the paths to each tag file relative to bag_dir

@@ -172,7 +172,7 @@ RSpec.describe BagIt::Bag do
 
       # make the bag
       @bag_path = File.join @sandbox.to_s, "the_bag"
-      @bag = described_class.new @bag_path, {}, false, false
+      @bag = described_class.new @bag_path, {}, false, true
 
       # add some files
       @bag.add_file(".keep") { |io| io.puts "" }
@@ -185,10 +185,10 @@ RSpec.describe BagIt::Bag do
 
     describe "#bag_files" do
       it "returns an array including non-hidden and hidden files" do
-        files = @bag.bag_files
+        files = @bag.bag_files.map { |f| f.sub(File.join(@bag_path, "data", ""), "") }
         expect(files).to be_a_kind_of(Array)
         expect(files).not_to be_empty
-        expect(files).to be([".keep", "test.txt"])
+        expect(files).to eq([".keep", "test.txt"])
       end
     end
   end
