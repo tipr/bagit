@@ -139,4 +139,38 @@ describe BagIt::Bag do
       end
     end
   end
+
+  describe "a bag with regular and hidden files" do
+    before do
+      @sandbox = Sandbox.new
+
+      # make the bag
+      @orig_bag_path = File.join @sandbox.to_s, "the_bag"
+      @orig_bag = described_class.new @orig_bag_path, {}, false, true
+
+      # add some files
+      @orig_bag.add_file(".keep") { |io| io.puts "" }
+      @orig_bag.add_file("test.txt") { |io| io.puts "testing testing" }
+      @orig_bag.manifest!
+
+      @unaware_bag = described_class.new @orig_bag_path, {}, false  # false
+      @aware_bag = described_class.new @orig_bag_path, {}, false, true
+    end
+
+    after do
+      @sandbox.cleanup!
+    end
+
+    it "passes validation when bag doing the validating is aware" do
+      expect(@aware_bag).to be_valid
+    end
+
+    it "fails validation and gives suggestion to detect hidden files" do
+      expect(@unaware_bag).not_to be_valid
+      expect(@unaware_bag.errors.on(:completeness)).not_to be_empty
+      expect(@unaware_bag.errors.on(:completeness)).to include(
+        "data/.keep is manifested but not present; consider turning on hidden file detection"
+      )
+    end
+  end
 end
