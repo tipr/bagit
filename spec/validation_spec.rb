@@ -145,27 +145,27 @@ describe BagIt::Bag do
       @sandbox = Sandbox.new
 
       # make the bag
-      @orig_bag_path = File.join @sandbox.to_s, "the_bag"
-      @orig_bag = described_class.new @orig_bag_path, {}, false, true
+      @source_bag_path = File.join @sandbox.to_s, "the_bag"
+      @source_bag = described_class.new @source_bag_path, {}, false, true
 
       # add some files
-      @orig_bag.add_file(".keep") { |io| io.puts "" }
-      @orig_bag.add_file("test.txt") { |io| io.puts "testing testing" }
-      @orig_bag.manifest!
+      @source_bag.add_file(".keep") { |io| io.puts "" }
+      @source_bag.add_file("test.txt") { |io| io.puts "testing testing" }
+      @source_bag.manifest!
 
-      @unaware_bag = described_class.new @orig_bag_path, {}, false  # false
-      @aware_bag = described_class.new @orig_bag_path, {}, false, true
+      @unaware_bag = described_class.new @source_bag_path, {}, false  # false
+      @aware_bag = described_class.new @source_bag_path, {}, false, true
     end
 
     after do
       @sandbox.cleanup!
     end
 
-    it "passes validation when bag doing the validating is aware" do
+    it "passes validation when bag is aware of hidden files" do
       expect(@aware_bag).to be_valid
     end
 
-    it "fails validation and gives suggestion to detect hidden files" do
+    it "fails validation when bag is unaware of hidden files and suggests option" do
       expect(@unaware_bag).not_to be_valid
       expect(@unaware_bag.errors.on(:completeness)).not_to be_empty
       expect(@unaware_bag.errors.on(:completeness)).to include(
