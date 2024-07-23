@@ -44,13 +44,15 @@ describe BagIt::Bag do
 
     it "is invalid if there are files that are in the manifest but not in the bag" do
       # add a file and then remove it through the back door
-      @bag.add_file("file-k") { |io| io.puts "time to go" }
+      file_name = "file-k"
+      @bag.add_file(file_name) { |io| io.puts "time to go" }
       @bag.manifest!
 
-      FileUtils.rm File.join(@bag.bag_dir, "data", "file-k")
+      FileUtils.rm File.join(@bag.bag_dir, "data", file_name)
 
       @bag.validate_only("true_for/completeness")
       expect(@bag.errors.on(:completeness)).not_to be_empty
+      expect(@bag.errors.on(:completeness)).to include("#{File.join("data", file_name)} is manifested but not present")
       expect(@bag).not_to be_valid
     end
 
