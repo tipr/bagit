@@ -34,7 +34,7 @@ module BagIt
       empty_manifests.each do |file|
         logger.error("#{file} is manifested but not present".red)
         error_message = "#{file} is manifested but not present"
-        if !detect_hidden && file.start_with?("data/.")
+        if !detect_hidden && file.start_with?(File.join("data", "."))
           error_message += "; consider turning on hidden file detection"
         end
         errors.add :completeness, error_message
