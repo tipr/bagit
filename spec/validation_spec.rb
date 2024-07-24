@@ -161,6 +161,7 @@ describe BagIt::Bag do
     it "fails validation when hidden file detection is on" do
       @aware_bag = described_class.new @source_bag_path, {}, false, true
       expect(@aware_bag).to_not be_valid
+      expect(@aware_bag.errors.on(:completeness)).not_to be_empty
     end
 
     it "passes validation when hidden file detection is off" do
