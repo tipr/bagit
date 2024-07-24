@@ -52,7 +52,9 @@ describe BagIt::Bag do
 
       @bag.validate_only("true_for/completeness")
       expect(@bag.errors.on(:completeness)).not_to be_empty
-      expect(@bag.errors.on(:completeness)).to include("#{File.join("data", file_name)} is manifested but not present")
+      expect(@bag.errors.on(:completeness)).to include(
+        "#{File.join("data", file_name)} is manifested but not present"
+      )
       expect(@bag).not_to be_valid
     end
 
