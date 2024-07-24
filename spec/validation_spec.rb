@@ -142,33 +142,57 @@ describe BagIt::Bag do
     end
   end
 
-  describe "a bag with regular and hidden files" do
+  describe "a bag with unmanifested hidden files" do
     before do
       @sandbox = Sandbox.new
 
-      # make the bag
+      # make a bag with hidden files not manifested
       @source_bag_path = File.join @sandbox.to_s, "the_bag"
-      @source_bag = described_class.new @source_bag_path, {}, false, true
-
-      # add some files
+      @source_bag = described_class.new @source_bag_path, {}, false, false
       @source_bag.add_file(".keep") { |io| io.puts "" }
       @source_bag.add_file("test.txt") { |io| io.puts "testing testing" }
       @source_bag.manifest!
-
-      @unaware_bag = described_class.new @source_bag_path, {}, false  # false
-      @aware_bag = described_class.new @source_bag_path, {}, false, true
     end
 
     after do
       @sandbox.cleanup!
     end
 
-    it "passes validation when bag is aware of hidden files" do
+    it "fails validation when hidden file detection is on" do
+      @aware_bag = described_class.new @source_bag_path, {}, false, true
+      expect(@aware_bag).to_not be_valid
+    end
+
+    it "passes validation when hidden file detection is off" do
+      @unaware_bag = described_class.new @source_bag_path, {}, false, false
+      expect(@unaware_bag).to be_valid
+    end
+  end
+
+  describe "a bag with manifested hidden files" do
+    before do
+      @sandbox = Sandbox.new
+
+      # make a bag with hidden files manifested
+      @source_bag_path = File.join @sandbox.to_s, "the_bag"
+      @source_bag = described_class.new @source_bag_path, {}, false, true
+      @source_bag.add_file(".keep") { |io| io.puts "" }
+      @source_bag.add_file("test.txt") { |io| io.puts "testing testing" }
+      @source_bag.manifest!
+    end
+
+    after do
+      @sandbox.cleanup!
+    end
+
+    it "passes validation when hidden file detection is on" do
+      @aware_bag = described_class.new @source_bag_path, {}, false, true
       expect(@aware_bag).to be_valid
     end
 
-    it "fails validation when bag is unaware of hidden files and suggests option" do
-      expect(@unaware_bag).not_to be_valid
+    it "fails validation when hidden file detection is off" do
+      @unaware_bag = described_class.new @source_bag_path, {}, false, false
+      expect(@unaware_bag).to_not be_valid
       expect(@unaware_bag.errors.on(:completeness)).not_to be_empty
       expect(@unaware_bag.errors.on(:completeness)).to include(
         "data/.keep is manifested but not present; consider turning on hidden file detection"
