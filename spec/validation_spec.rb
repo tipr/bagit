@@ -44,13 +44,17 @@ describe BagIt::Bag do
 
     it "is invalid if there are files that are in the manifest but not in the bag" do
       # add a file and then remove it through the back door
-      @bag.add_file("file-k") { |io| io.puts "time to go" }
+      file_name = "file-k"
+      @bag.add_file(file_name) { |io| io.puts "time to go" }
       @bag.manifest!
 
-      FileUtils.rm File.join(@bag.bag_dir, "data", "file-k")
+      FileUtils.rm File.join(@bag.bag_dir, "data", file_name)
 
       @bag.validate_only("true_for/completeness")
       expect(@bag.errors.on(:completeness)).not_to be_empty
+      expect(@bag.errors.on(:completeness)).to include(
+        "#{File.join("data", file_name)} is manifested but not present"
+      )
       expect(@bag).not_to be_valid
     end
 
@@ -137,6 +141,65 @@ describe BagIt::Bag do
         expect(@bag).not_to be_valid
         expect(@bag.errors.on(:completeness)).not_to be_empty
       end
+    end
+  end
+
+  describe "a bag with unmanifested hidden files" do
+    before do
+      @sandbox = Sandbox.new
+
+      # make a bag with hidden files not manifested
+      @source_bag_path = File.join @sandbox.to_s, "the_bag"
+      @source_bag = described_class.new @source_bag_path, {}, false, false
+      @source_bag.add_file(".keep") { |io| io.puts "" }
+      @source_bag.add_file("test.txt") { |io| io.puts "testing testing" }
+      @source_bag.manifest!
+    end
+
+    after do
+      @sandbox.cleanup!
+    end
+
+    it "fails validation when hidden file detection is on" do
+      @aware_bag = described_class.new @source_bag_path, {}, false, true
+      expect(@aware_bag).to_not be_valid
+      expect(@aware_bag.errors.on(:completeness)).not_to be_empty
+    end
+
+    it "passes validation when hidden file detection is off" do
+      @unaware_bag = described_class.new @source_bag_path, {}, false, false
+      expect(@unaware_bag).to be_valid
+    end
+  end
+
+  describe "a bag with manifested hidden files" do
+    before do
+      @sandbox = Sandbox.new
+
+      # make a bag with hidden files manifested
+      @source_bag_path = File.join @sandbox.to_s, "the_bag"
+      @source_bag = described_class.new @source_bag_path, {}, false, true
+      @source_bag.add_file(".keep") { |io| io.puts "" }
+      @source_bag.add_file("test.txt") { |io| io.puts "testing testing" }
+      @source_bag.manifest!
+    end
+
+    after do
+      @sandbox.cleanup!
+    end
+
+    it "passes validation when hidden file detection is on" do
+      @aware_bag = described_class.new @source_bag_path, {}, false, true
+      expect(@aware_bag).to be_valid
+    end
+
+    it "fails validation when hidden file detection is off, with suggested fix offered" do
+      @unaware_bag = described_class.new @source_bag_path, {}, false, false
+      expect(@unaware_bag).to_not be_valid
+      expect(@unaware_bag.errors.on(:completeness)).not_to be_empty
+      expect(@unaware_bag.errors.on(:completeness)).to include(
+        "data/.keep is manifested but not present; consider turning on hidden file detection"
+      )
     end
   end
 end
