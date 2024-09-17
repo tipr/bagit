@@ -49,7 +49,7 @@ module BagIt
       when "sha256"
         write_sha256(file, relative_path)
       when "sha512"
-        write_sha256(file, relative_path)
+        write_sha512(file, relative_path)
       when "default"
         write_sha1(file, relative_path)
         write_md5(file, relative_path)
