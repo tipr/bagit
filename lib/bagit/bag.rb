@@ -82,7 +82,7 @@ module BagIt
       f = if src_path.nil?
         File.open(path, "w") { |io| yield io }
       else
-        FileUtils.cp src_path, path
+        FileUtils.cp_r src_path, path
       end
       write_bag_info
       f
@@ -92,7 +92,7 @@ module BagIt
     def remove_file(relative_path)
       path = File.join(data_dir, relative_path)
       raise "Bag file does not exist: #{relative_path}" unless File.exist? path
-      FileUtils.rm path
+      FileUtils.rm_r path
     end
 
     # Retrieve the IO handle for a file in the bag at a given path relative to
