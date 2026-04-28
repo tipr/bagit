@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "validatable", "~> 1.6"
   spec.add_dependency "docopt", "~> 0.5.0"
+  spec.add_dependency "logger", "~> 1.7"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "coveralls"
