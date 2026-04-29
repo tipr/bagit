@@ -21,7 +21,7 @@ module BagIt
           (url, _length, path) = line.chomp.split(/\s+/, 3)
 
           add_file(path) do |file_io|
-            file_io.write URI.open(url)
+            file_io.write URI.parse(url).open
           end
         end
       end

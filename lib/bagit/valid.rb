@@ -8,6 +8,7 @@ require "logger"
 module BagIt
   class Bag
     include Validatable
+
     validates_true_for :consistency, logic: proc { consistent? }
     validates_true_for :completeness, logic: proc { complete? }
   end
@@ -15,14 +16,13 @@ module BagIt
   module Validity
     def decode_filename(s)
       s = s.gsub("%0D", "\r")
-      s = s.gsub("%0A", "\n")
-      s
+      s.gsub("%0A", "\n")
     end
 
     # Return true if the manifest cover all files and all files are
     # covered.
     def complete?
-      logger = Logger.new(STDOUT)
+      logger = Logger.new($stdout)
 
       errors.add :completeness, "there are no manifest files" if manifest_files == []
 

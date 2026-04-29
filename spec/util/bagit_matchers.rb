@@ -18,7 +18,7 @@ module BagitMatchers
     def failure_message_when_negated
       "expected <#{@target}> to not be in collection <#{@expected}>"
     end
-    alias negative_failure_message failure_message_when_negated
+    alias_method :negative_failure_message, :failure_message_when_negated
   end
 
   def be_in(*expected_collection)
@@ -38,7 +38,7 @@ module BagitMatchers
     def failure_message_when_negated
       "expected <#{@target}> to not exist but it does"
     end
-    alias negative_failure_message failure_message_when_negated
+    alias_method :negative_failure_message, :failure_message_when_negated
   end
 
   def exist_on_fs

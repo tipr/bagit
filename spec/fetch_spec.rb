@@ -40,7 +40,7 @@ describe BagIt::Bag do
 
     it "contains manifested files" do
       path = File.join @bag_path, "manifest-sha1.txt"
-      data = File.open(path, &:read)
+      data = File.read(path)
       expect(data).to include("gnu.png")
     end
 

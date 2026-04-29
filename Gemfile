@@ -7,4 +7,3 @@ gemspec
 group :development do
   gem "rdoc"
 end
-

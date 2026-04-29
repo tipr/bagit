@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "set"
-
 module BagIt
   module Info
     @@bag_info_headers = {
@@ -73,7 +71,7 @@ module BagIt
     def write_info_file(file, hash)
       dups = hash.keys.inject(Set.new) { |acc, key|
         a = hash.keys.grep(/#{key}/i)
-        acc + (a.size > 1 ? a : [])
+        acc + ((a.size > 1) ? a : [])
       }
 
       raise "Multiple labels (#{dups.to_a.join ", "}) in #{file}" unless dups.empty?

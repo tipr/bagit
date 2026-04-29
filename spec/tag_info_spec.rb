@@ -98,7 +98,7 @@ describe BagIt::Bag do
         @bag.write_bag_info "Source-Organization" => "Awesome Inc."
         @bag.write_bag_info "Bagging-Date" => "1901-01-01"
         @bag.write_bag_info
-        contents = File.open(path).read
+        contents = File.read(path)
         expect(contents).to include "Some Other Agent"
         expect(contents).to include "Awesome Inc."
         expect(contents).to include "1901-01-01"
@@ -107,7 +107,7 @@ describe BagIt::Bag do
         path = File.join @bag_path, "bag-info.txt"
         @bag.write_bag_info "Source-Organization" => "Awesome Inc."
         @bag.write_bag_info "Source-Organization" => "Awesome LLC."
-        contents = File.open(path).read
+        contents = File.read(path)
         expect(contents).to include "Awesome LLC."
         expect(contents).not_to include "Awesome Inc."
       end

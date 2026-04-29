@@ -8,7 +8,7 @@ class String
     s = gsub(/\s+/, " ").strip
 
     if s.length > width
-      s[0...width] + '\n' + s[width..-1].wrap(width)
+      s[0...width] + '\n' + s[width..].wrap(width)
     else
       s
     end
