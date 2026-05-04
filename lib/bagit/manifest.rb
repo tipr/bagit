@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "pathname"
 require "digest/sha1"
 require "digest/md5"
 
@@ -8,17 +7,15 @@ module BagIt
   # Requires response to bag_dir, tag_files, bag_files
   module Manifest
     def encode_filename(s)
-      s = s.gsub(/\r/, "%0D")
-      s = s.gsub(/\n/, "%0A")
-      s
+      s = s.gsub("\r", "%0D")
+      s.gsub("\n", "%0A")
     end
 
     # All tag files that are bag manifest files (manifest-[algorithm].txt)
     def manifest_files
-      files = Dir[File.join(@bag_dir, "*")].select { |f|
+      Dir[File.join(@bag_dir, "*")].select { |f|
         File.file?(f) && File.basename(f) =~ /^manifest-.*.txt$/
       }
-      files
     end
 
     # A path to a manifest file of the specified algorithm
@@ -78,10 +75,9 @@ module BagIt
 
     # All tag files that are bag manifest files (tagmanifest-[algorithm].txt)
     def tagmanifest_files
-      files = Dir[File.join(@bag_dir, "*")].select { |f|
+      Dir[File.join(@bag_dir, "*")].select { |f|
         File.file?(f) && File.basename(f) =~ /^tagmanifest-.*.txt$/
       }
-      files
     end
 
     # A path to a tagmanifest file of the specified algorithm
@@ -134,7 +130,7 @@ module BagIt
         raise "Tag file already exists, will not overwrite: #{path}\n Use add_tag_file(path) to add an existing tag file."
       end
 
-      data = File.open(f, &:read)
+      data = File.read(f)
       rel_path = Pathname.new(f).relative_path_from(Pathname.new(bag_dir)).to_s
 
       # sha1
@@ -169,12 +165,12 @@ module BagIt
         mf =~ /manifest-(.+).txt$/
 
         algo = case Regexp.last_match(1)
-               when /sha1/i
-                 Digest::SHA1
-               when /md5/i
-                 Digest::MD5
-               else
-                 :unknown
+        when /sha1/i
+          Digest::SHA1
+        when /md5/i
+          Digest::MD5
+        else
+          :unknown
         end
 
         # check it, an unknown algorithm is always true

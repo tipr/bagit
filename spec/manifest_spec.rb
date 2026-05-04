@@ -101,10 +101,10 @@ describe BagIt::Bag do
       end
       it "contains manifest and bag info files" do
         @bag.tagmanifest_files.each do |mf|
-          expect(File.open(mf).read).to include(File.basename(@bag.bag_info_txt_file))
-          expect(File.open(mf).read).to include(File.basename(@bag.bagit_txt_file))
+          expect(File.read(mf)).to include(File.basename(@bag.bag_info_txt_file))
+          expect(File.read(mf)).to include(File.basename(@bag.bagit_txt_file))
           @bag.manifest_files.each do |man|
-            expect(File.open(mf).read).to include(man)
+            expect(File.read(mf)).to include(man)
           end
         end
       end
